@@ -9,12 +9,27 @@
 asdasd
 <body>
 <form id="form1" name="form1" method="post" action="">
-	<input type="text" name="textfield" id="textfield" />
+	<input type="text" name="textfield" id="textfield" data-bvalidator="alpha" value="vrijednost1"/>
+	<input type="text" name="textfield3" id="textfield3" data-bvalidator="  "/>
+	<input type="text" name="textfield1" id="textfield1" data-bvalidator="aaa(3,5);ererter(s,t);"  value="vrijednost2"/>
+	<input type="text" name="textfield2" id="textfield2"/>
+	<input name="a[]" type="checkbox" value="chekirano3" checked="checked" data-bvalidator="rrrrree"/>
+	<input name="a[]" type="checkbox" value="chekirano3" checked="checked" />
+	<input name="a[]" type="checkbox" value="chekirano3" />
+	<select name="" data-bvalidator="rrrrree">
+		<option selected="selected" value="select_val1">asdasd</option>
+		<option value="select_val2">ereerer</option>
+	</select>
+	<input name="redio1" type="radio" value="1" data-bvalidator="rrrrree"/>
+	<input name="redio1" type="radio" value="2" checked="checked"/>
+	
 </form>
 
 <script type="text/javascript" defer="defer">   
 	
 	$('#form1').bValidator();
+	
+	//alert('aaaa:' + currentOptions.actionsAttr);
 	
 </script>
 
