@@ -97,9 +97,10 @@
 			for(var i in actions){
 				
 				// check if we have some options with validator
-				var validatorOptions = actions[i].match(/\((.*?)\)/);
+				var validatorOptions = actions[i].match(/\[(.*?)\]/);
 				if(validatorOptions && validatorOptions.length == 2){
-					validatorOptions = validatorOptions.split(',');
+					validatorOptions = validatorOptions[1].split(',');
+					alert(validatorOptions);
 				}
 				
 				var validatorName = $.trim(actions[i]);
