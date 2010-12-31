@@ -8,11 +8,6 @@ function uuueee(w, a,b,d){
 	
 	var options = {
 		
-		// when to validate
-		inputEvent: null,			// change, blur, keyup, null 
-		errorInputEvent: 'keyup',		// change, blur, keyup, null 
-		formEvent: 'submit',			// submit, null
-		
 		lang: 'en',				// default language for error messages 
 		
 		errorMessageAttr: 'data-validation-error', // name of the input attribute for overridden error message
@@ -21,11 +16,17 @@ function uuueee(w, a,b,d){
 		paramsDelimiter: ',',		// 
 		validatorsDelimiter: ';',		// 
 		
-		callBack: {
+		callback: {
 			onBeforeValidate: function(){},
-			onFail: function(){},
-			onSuccess: function(){},
+			onAfterValidate: function(){},
+			onValidateFail: function(){},
+			onValidateSuccess: function(){},
 		},
+		
+		
+		// when to validate
+		validateOn: 'keyup',			// null, 'change', 'blur', 'keyup'
+		errorValidateOn: 'keyup',		// null, 'change', 'blur', 'keyup'
 		
 		display : {
 			singleError: false,		// validate all inputs at once
@@ -78,49 +79,72 @@ function uuueee(w, a,b,d){
 		}
 	};
 	
+	// validator instance
+	var instance;
 	
 	$.fn.bValidator = function(overrideOptions) {
 
 		$.extend(true, options, overrideOptions);
-	
-		//alert(this.attr('id'));
+		
+		instance = new bValidator();
 		
 		// if selector is a form		
 		if (this.is('form')) {
 			
-			var v = new bValidator($(this).find(':input'));
-			v.validate(true);
 			// validate all input elements in form
-			//validate ($(this).find(':input'));
+			instance = new bValidator(getElementsForValidation(this));
 			
-			//$(this).data('bValidator', )
-			
-			//return this.each(function() {			
-			//	var form = $(this); 
-			//	instance = new Validator(form.find(":input"), form, options);	 
-			//	form.data("validator", instance);
-			//});
-			
-		} else {
-			instance = new Validator(this, this.eq(0).closest("form"), options);
-			return this.data("validator", instance);
-		}     
+			// bind validation on form submit
+			this.submit(function(e){
+				//e.preventDefault();
+				return instance.validate(true);
+			});
+		}
+		// if selector is something else
+		else 
+			instance = new bValidator(getElementsForValidation(this));
 		
+		this.data("bValidator", instance);
+		
+		return instance;
 	};
 	
 	
-	
-	bValidator = function(elements) {
+	getElementsForValidation = function(mainElement){
 		
-		this.validate = function(showMessages) {
-
+		if(mainElement.is(':input'))
+			var elements = element;
+		else{
+			//skip hidden and input fields witch we do not want to validate
+			var elements = mainElement.find(':input').not(":button, :image, :reset, :submit, :hidden, :disabled");
+		}
+		
+		// input validation event             
+		if (options.validateOn){
+			elements.bind(options.validateOn, {'bValidatorInstance': instance}, function(event) {
+				alert('validateOn');
+				event.data.bValidatorInstance.validate(true, $(this));
+			});
+		}
+		
+		return elements;
+	}
+	
+	
+	bValidator = function(elements){
+		
+		this.validate = function(showMessages, elementsOverride) {
+			
+			if(elementsOverride)
+				var elementsl = elementsOverride;
+			else
+				var elementsl = elements;
+			
+			// return value
 			var ret = true;
 			
-			//skip hidden and input fields witch we do not want to validate
-			elements = elements.not(":button, :image, :reset, :submit, :hidden");
-			
 			// validate each element
-			elements.each(function() {			
+			elementsl.each(function() {
 				
 				// value of validateActionsAttr input attribute
 				var actionsStr = $.trim($(this).attr(options.validateActionsAttr));
@@ -144,6 +168,9 @@ function uuueee(w, a,b,d){
 					if(!actions[i])
 						continue;
 					
+					if(callBack('onBeforeValidate', actions[i], $(this)) === false)
+						continue;
+					
 					// check if we have some parameters for validator
 					var validatorParams = actions[i].match(/^(.*?)\[(.*?)\]/);
 					
@@ -156,8 +183,6 @@ function uuueee(w, a,b,d){
 						var validatorName = actions[i];
 					}
 					
-					//onBeforeValidate
-					
 					// if validator exists
 					if(typeof validator[validatorName] == 'function'){
 						// call validator function
@@ -168,9 +193,10 @@ function uuueee(w, a,b,d){
 						var validationResult = window[validatorName](inputValue, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
 					}
 					
+					if(callBack('onAfterValidate', actions[i], $(this), validationResult) === false)
+						continue;
+					
 					if(!validationResult){
-						
-						//onFail
 						
 						if(showMessages){
 							// get error messsage
@@ -187,9 +213,21 @@ function uuueee(w, a,b,d){
 							errorMessages[errorMessages.length] = '';
 						
 						ret = false;
+						
+						if(callBack('onValidateFail', actions[i], $(this), errorMessages) === false)
+							continue;
+							
+						// input validation event             
+						if (options.errorValidateOn){
+							$(this).bind(options.errorValidateOn, {'bValidatorInstance': instance}, function(event) {
+								alert('errorValidateOn');
+								event.data.bValidatorInstance.validate(true, $(this));
+							});
+						}
 					}
 					else{
-						//onSuccess
+						if(callBack('onValidateSuccess', actions[i], $(this)) === false)
+							continue;
 					}
 				}
 				
@@ -198,7 +236,6 @@ function uuueee(w, a,b,d){
 						showTooltip($(this), errorMessages)
 						
 					$(this).addClass(options.display.errorClass);
-					//$(this).data('bValidatorMsg', errorMessages);
 				}
 			});
 			
@@ -216,7 +253,14 @@ function uuueee(w, a,b,d){
 	
 	showTooltip = function(element, messages){
 		
+		// if tooltip already exists remove it from DOM
+		var existingTooltip = element.data("bValidatorTooltip")
+		if(existingTooltip){
+			existingTooltip.remove();
+		}
+		
 		msg_container = $('<div class="bValidator0001"></div>').css('position','absolute');
+		element.data("bValidatorTooltip", msg_container);
 		msg_container.insertAfter(element);
 		
 		var messagesHtml = '';
@@ -267,6 +311,13 @@ function uuueee(w, a,b,d){
 		}
 		
 		return {top: top, left: left};
+	}
+	
+	// calls callback functions
+	callBack = function(type, param1, param2, param3) {
+	        if($.isFunction(options.callback[type])){
+	        	return options.callback[type](param1, param2, param3);
+	        }
 	}
 	
 	// gets element value	
