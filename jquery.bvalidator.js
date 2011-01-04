@@ -30,20 +30,17 @@ function uuueee(w, a,b,d){
 		
 		display : {
 			singleError: false,		// validate all inputs at once
-			offset: {x:0, y:0},
-			position: 'center right',
+			offset: {x:-20, y:-3},
+			position: {x:'right', y:'top'}, // left|center|right  top|center|bottom
 			template: '<div class="{tooltipClass}"><em/>{message}</div>',
 			showCloseIcon: true,		// put close icon on tooltip
-		
-			// show/hide effects
-			showEffect: 'default',	// show effect for tooltip
-			hideEffect: 'default',	// hide effect for tooltip
-			speed: 'normal',	// message's fade-in speed
+			showTooltipSpeed: 'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of miliseconds
 			
 			// css class names
 			closeIconClass: 'bvalidator_close_icon',// close tooltip icon class
 			tooltipClass: 'bvalidator_tooltip',	// tooltip class
 			errorClass: 'bvalidator_invalid',	// input field class name in case of validation error
+			validClass: '',		// input field class name in case of valid value
 		},
 		
 		regex: {
@@ -82,29 +79,36 @@ function uuueee(w, a,b,d){
 	// validator instance
 	var instance;
 	
+	var mainElement;
+	
 	$.fn.bValidator = function(overrideOptions) {
 
 		$.extend(true, options, overrideOptions);
 		
+		mainElement = this;
+		
 		instance = new bValidator();
 		
-		// if selector is a form		
-		if (this.is('form')) {
-			
-			// validate all input elements in form
-			instance = new bValidator(getElementsForValidation(this));
-			
-			// bind validation on form submit
-			this.submit(function(e){
-				//e.preventDefault();
-				return instance.validate(true);
-			});
-		}
-		// if selector is something else
-		else 
-			instance = new bValidator(getElementsForValidation(this));
+		if(this.data("bValidator"))
+			return this.data("bValidator");
 		
 		this.data("bValidator", instance);
+		
+		// if selector is a form
+		if (this.is('form')) {
+			// bind validation on form submit
+			this.bind('submit.bV', function(event){
+				return instance.validate(true);
+			});
+			
+			// bind reset on form reset
+			this.bind("reset.bV", function()  {
+				instance.reset();			
+			});
+		}
+		
+		if(options.validateOn)
+			bindValidateOn(getElementsForValidation(this));
 		
 		return instance;
 	};
@@ -119,15 +123,15 @@ function uuueee(w, a,b,d){
 			var elements = mainElement.find(':input').not(":button, :image, :reset, :submit, :hidden, :disabled");
 		}
 		
-		// input validation event             
-		if (options.validateOn){
-			elements.bind(options.validateOn, {'bValidatorInstance': instance}, function(event) {
-				alert('validateOn');
-				event.data.bValidatorInstance.validate(true, $(this));
-			});
-		}
-		
 		return elements;
+	}
+	
+	
+	bindValidateOn = function(elements){
+		elements.bind(options.validateOn + '.bV', {'bValidatorInstance': instance}, function(event) {
+			console.log('validateOn');
+			event.data.bValidatorInstance.validate(true, $(this));
+		});
 	}
 	
 	
@@ -138,7 +142,7 @@ function uuueee(w, a,b,d){
 			if(elementsOverride)
 				var elementsl = elementsOverride;
 			else
-				var elementsl = elements;
+				var elementsl = getElementsForValidation(mainElement);
 			
 			// return value
 			var ret = true;
@@ -186,11 +190,11 @@ function uuueee(w, a,b,d){
 					// if validator exists
 					if(typeof validator[validatorName] == 'function'){
 						// call validator function
-						var validationResult = validator[validatorName](inputValue, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
+						var validationResult = validator[validatorName](inputValue.value, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
 					}
 					// call custom user dafined function
 					else if(typeof window[validatorName] == 'function'){
-						var validationResult = window[validatorName](inputValue, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
+						var validationResult = window[validatorName](inputValue.value, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
 					}
 					
 					if(callBack('onAfterValidate', actions[i], $(this), validationResult) === false)
@@ -216,14 +220,6 @@ function uuueee(w, a,b,d){
 						
 						if(callBack('onValidateFail', actions[i], $(this), errorMessages) === false)
 							continue;
-							
-						// input validation event             
-						if (options.errorValidateOn){
-							$(this).bind(options.errorValidateOn, {'bValidatorInstance': instance}, function(event) {
-								alert('errorValidateOn');
-								event.data.bValidatorInstance.validate(true, $(this));
-							});
-						}
 					}
 					else{
 						if(callBack('onValidateSuccess', actions[i], $(this)) === false)
@@ -231,11 +227,42 @@ function uuueee(w, a,b,d){
 					}
 				}
 				
+				// if validation failed
 				if(errorMessages.length){
 					if(showMessages)
 						showTooltip($(this), errorMessages)
-						
-					$(this).addClass(options.display.errorClass);
+					
+					$(this).removeClass(options.display.validClass);
+					if(options.display.errorClass)
+						$(this).addClass(options.display.errorClass);
+					
+					// input validation event             
+					if (options.errorValidateOn){
+						if(options.validateOn)
+							$(this).unbind(options.validateOn + '.bV');
+						$(this).unbind(options.errorValidateOn + '.bVerror');
+						$(this).bind(options.errorValidateOn + '.bVerror', {'bValidatorInstance': instance}, function(event) {
+							console.log('errorValidateOn');
+							event.data.bValidatorInstance.validate(true, $(this));
+						});
+					}
+					
+					if (options.display.singleError)
+						return false;
+				}
+				else{
+					removeTooltip($(this));
+					$(this).removeClass(options.display.errorClass);
+					
+					if(options.display.validClass)
+						$(this).addClass(options.display.validClass);
+					
+					if (options.errorValidateOn)
+						$(this).unbind(options.errorValidateOn + '.bVerror');
+					if (options.validateOn){
+						$(this).unbind(options.validateOn + '.bV');
+						bindValidateOn($(this));
+					}
 				}
 			});
 			
@@ -249,18 +276,46 @@ function uuueee(w, a,b,d){
 		this.isValid = function() {
 			return this.validate(false);
 		}
+		
+		this.removeTooltip = function(element){
+			removeTooltip(element);
+		}
+		
+		this.getElements = function(){
+			return getElementsForValidation(mainElement);
+		}
+		
+		this.bindValidateOn = function(element){
+			bindValidateOn(element);
+		}
+		
+		this.reset = function() {
+			elements = getElementsForValidation(mainElement);
+			if (options.validateOn)
+				bindValidateOn(elements);
+			elements.each(function(){
+				removeTooltip($(this));
+				$(this).unbind('.bVerror');
+				$(this).removeClass(options.display.errorClass);
+				$(this).removeClass(options.display.validClass);
+			});
+		}
+		
+		this.destroy = function() {
+			if (mainElement.is('form'))
+				mainElement.unbind('.bV');
+				
+			this.reset();
+		}
 	}
 	
 	showTooltip = function(element, messages){
 		
 		// if tooltip already exists remove it from DOM
-		var existingTooltip = element.data("bValidatorTooltip")
-		if(existingTooltip){
-			existingTooltip.remove();
-		}
+		removeTooltip(element);
 		
-		msg_container = $('<div class="bValidator0001"></div>').css('position','absolute');
-		element.data("bValidatorTooltip", msg_container);
+		msg_container = $('<div class="bVtooltipContainer"></div>').css('position','absolute');
+		element.data("tooltip.bV", msg_container);
 		msg_container.insertAfter(element);
 		
 		var messagesHtml = '';
@@ -281,20 +336,26 @@ function uuueee(w, a,b,d){
 		
 		var pos = getTooltipPosition(element, tooltip); 
 		
-		tooltip.css({ visibility: 'visible', position: 'absolute', top: pos.top, left: pos.left }).fadeIn(options.display.speed);
+		tooltip.css({ visibility: 'visible', position: 'absolute', top: pos.top, left: pos.left }).fadeIn(options.display.showTooltipSpeed);
+	}
+	
+	// removes tooltip from DOM
+	removeTooltip = function(element){
+		var existingTooltip = element.data("tooltip.bV")
+		if(existingTooltip){
+			existingTooltip.remove();
+		}
 	}
 	
 	// calculates error message position relative to the input	
 	getTooltipPosition = function(input, tooltip) {
-		
-	        // get origin top/left position
-	        var  pos = options.display.position.split(/,?\s+/),
-	 		y = pos[0],
-	 		x = pos[1];
 	        
-	        var tooltipContainer = input.next('.bValidator0001');
-	        var top  = - (input.outerHeight() + tooltip.outerHeight()) - options.display.offset.x;
-	        var left = (input.offset().left + input.outerWidth()) - tooltipContainer.offset().left + options.display.offset.y;
+	        var tooltipContainer = input.data("tooltip.bV");
+	        var top  = - ((tooltipContainer.offset().top - input.offset().top) + tooltip.outerHeight() - options.display.offset.y);
+	        var left = (input.offset().left + input.outerWidth()) - tooltipContainer.offset().left + options.display.offset.x;
+		
+		var x = options.display.position.x;
+		var y = options.display.position.y;
 		
 		// adjust Y
 		if(y == 'center' || y == 'bottom'){
@@ -306,7 +367,7 @@ function uuueee(w, a,b,d){
 		// adjust X
 		if(x == 'center' || x == 'left'){
 			var width = input.outerWidth();
-			if (x == 'center') 	{ left -= (width  + tooltip.outerWidth()) / 2; }
+			if (x == 'center') 	{ left -= width / 2; }
 			if (x == 'left')  	{ left -= width; }
 		}
 		

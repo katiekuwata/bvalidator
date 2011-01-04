@@ -13,7 +13,7 @@ asdasd
 	<p>
 		<input type="text" name="textfield" id="textfield" data-bvalidator="alpha" value="vrijednost1"/>
 		<input type="text" name="textfield3" id="textfield3" data-bvalidator="  "/>
-		<input type="text" name="textfield1" id="textfield1" data-bvalidator="aaa[3,5];uuueee[777,t];"  value="vrijednost2"/>
+		<input type="text" name="textfield1" id="textfield1" data-bvalidator="aaa[3,5];uuueee[777,t];assdaa[3,5];"  value="vrijednost2"/>
 		<input type="text" name="textfield2" id="textfield2"/>
 		<input name="a[]" type="checkbox" value="chekirano3" checked="checked" data-bvalidator="rrrrree"/>
 		<input name="a[]" type="checkbox" value="chekirano3" checked="checked" />
@@ -30,11 +30,13 @@ asdasd
 	<p>&nbsp;</p>
 	<p>
 		<input type="submit" name="button" id="button" value="Submit" />
+		<input type="reset" name="button2" id="button2" value="Reset" />
 	</p>
 </form>
 
 <script type="text/javascript" defer="defer">   
 	
+	$('#form1').bValidator();
 	$('#form1').bValidator();
 	
 	//alert('aaaa:' + currentOptions.actionsAttr);
