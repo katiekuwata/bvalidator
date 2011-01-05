@@ -1,6 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>bValidator docs & demo</title>
@@ -8,7 +7,6 @@
 <script type="text/javascript" src="jquery.bvalidator.js"></script>
 <link href="bvalidator.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
-
 .main_content {
 	font-family: Verdana, Geneva, sans-serif;
 	font-size: 9pt;
@@ -24,118 +22,144 @@
 	margin-right: auto;
 	margin-left: auto;
 }
+.content {
+	background-color: #FFF;
+}
 </style>
 </head>
 
 <body>
-<div class="header">
-	<strong>bValidator</strong>
-	<span style="font-size: 12pt;">documentation & demo</span>
-	
-</div>
-
+<div class="header"> <strong>bValidator</strong> <span style="font-size: 12pt;">documentation & demo</span> </div>
 <div class="main_content">
-
-<h1>What is bValidator</h1>
-<h1>Setup</h1>
-<h1>Configuration</h1>
-<h2>Callbacks</h2>
-<h2>Localization</h2>
-<h2>Scripting API</h2>
-<h1>Demos</h1>
-<h2>All validators in action</h2>
-<h2>Input specific error message</h2>
-<h2>custom validators</h2>
-<h2>Dinamic forms</h2>
-<h2>Server side validation</h2>
-<h2>Error message positionin and style</h2>
-
-
-<form id="form1">
-	<p>Alphabetic characters only:<br />
-		<input type="text" data-bvalidator="alpha"/>
-	</p>
-	
-	<p>Alphanumeric characters only:<br />
-		<input type="text" data-bvalidator="alphanum"/>
-	</p>
-	
-	<p>Only digits:<br />
-		<input type="text" data-bvalidator="digit"/>
-	</p>
-	
-	<p>Number:<br />
-		<input type="text" data-bvalidator="number"/>
-	</p>
-	
-	<p>Email:<br />
-		<input type="text" data-bvalidator="email"/>
-	</p>
-	
-	<p>Url:<br />
-		<input type="text" data-bvalidator="url"/>
-	</p>
-	
-	<p>IP address:<br />
-		<input type="text" data-bvalidator="ip4"/>
-	</p>
-	
-	<p>Date in format dd.mm.yyyy:<br />
-		<input type="text" data-bvalidator="date[dd.mm.yyyy]"/>
-	</p>
-	
-	<p>Mimimum value 10:<br />
-		<input type="text" data-bvalidator="min[10]"/>
-	</p>
-	
-	<p>Value between 100 and 200:<br />
-		<input type="text" data-bvalidator="between[100,200]"/>
-	</p>
-	
-	<p>Mimimum length is 10 characters:<br />
-		<input type="text" data-bvalidator="minlength[10]"/>
-	</p>
-	
-	<p>Maximum length is 10 characters:<br />
-		<input type="text" data-bvalidator="maxlength[10]"/>
-	</p>
-	
-	<p>Valid length is between 10 and 20 characters:<br />
-		<input type="text" data-bvalidator="rangelength[10,20]"/>
-	</p>
-	
-	<p>Value of the inputs must be equal:<br />
-		<input type="text" id="equalto1"/>
-		<input type="text" data-bvalidator="equalto[equalto1]"/>
-	</p>
-	
-	<p>Value of the inputs must not be equal:<br />
-		<input type="text" id="differs1"/>
-		<input type="text" data-bvalidator="differs[differs1]"/>
-	</p>
-	
-	<input type="text" name="textfield3" id="textfield3" data-bvalidator="  "/>
-	<input type="text" name="textfield1" id="textfield1" data-bvalidator="aaa[3,5];uuueee[777,t];assdaa[3,5];"  value="vrijednost2"/>
-	<input type="text" name="textfield2" id="textfield2"/>
-	<input name="a[]" type="checkbox" value="chekirano3" checked="checked" data-bvalidator="rrrrree"/>
-	<input name="a[]" type="checkbox" value="chekirano3" checked="checked" />
-	<input name="a[]" type="checkbox" value="chekirano3" />
-	<select name="" data-bvalidator="rrrrree">
-		<option selected="selected" value="select_val1">asdasd</option>
-		<option value="select_val2">ereerer</option>
-	</select>
-	<input name="redio1" type="radio" value="1" data-bvalidator="rrrrree"/>
-	<input name="redio1" type="radio" value="2" checked="checked"/>
-		
-	<p>&nbsp;</p>
-	<p>&nbsp;</p>
-	<p>
-		<input type="submit" name="button" id="button" value="Submit" />
-		<input type="reset" name="button2" id="button2" value="Reset" />
-	</p>
-</form>
+	<h1>What is bValidator</h1>
+	<div class="content">
+		<p>bValidator is a <a href="http://jquery.com/" target="_blank">jQuery</a> plugin for client side form validation. 
+			It supports fully customized error messages defined with template and css, many validation methods like date, email, URL, IP address, validation of dinamic forms, customized validation functions and more. </p>
+		<p>You can download it here: </p>
+	</div>
+	<h1>Setup</h1>
+	<div class="content">
+		<p>For basic setup you will need to include into your web page wich contains form you want to validate jquery.bvalidator.js file and, of course, jQuery:</p>
+		<blockquote>
+			<p><strong>include javascript:</strong></p>
+			<pre>
+&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-1.4.3.min.js&quot;&gt;&lt;/script&gt;<br />&lt;script type=&quot;text/javascript&quot; src=&quot;jquery.bvalidator.js&quot;&gt;&lt;/script&gt;</pre>
+		</blockquote>
+		<p>You will aso need to include CSS file with styles for error messages:</p>
+		<blockquote>
+			<p><strong>include css:</strong></p>
+			<pre>&lt;link href=&quot;bvalidator.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</pre>
+		</blockquote>
+		<p>The web page should include elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form.</p>
+		<blockquote>
+			<p><strong>HTML:</strong></p>
+			<pre>&lt;form id=&quot;myform&quot;&gt;
+	Email: &lt;input type=&quot;text&quot; data-bvalidator=&quot;required,email&quot;/&gt;<br />	Url: &lt;input type=&quot;text&quot; data-bvalidator=&quot;url&quot;/&gt;
+&lt;/form&gt;</pre>
+		</blockquote>
+		<p>And at last you need to intialize validator for the form.</p>
+		<blockquote>
+			<p><strong>javascript:</strong></p>
+			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	$('#myform).bValidator();
+&lt;/script&gt;
+</pre>
+			<p><strong>or</strong> you can  use jQuery's $(document).ready to execute the script as soon as the webpage's Document Object Model (DOM) has been loaded.</p>
+			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	$(document).ready(function () {<br />		$('#myform).bValidator();<br />	});<br />&lt;/script&gt;
+</pre>
+		</blockquote>
+	</div>
+	<h1>Configuration</h1>
+	<div class="content"> sadasd </div>
+	<h2>Callbacks</h2>
+	<div class="content"> sadasd </div>
+	<h2>Localization</h2>
+	<div class="content"> sadasd </div>
+	<h2>Scripting API</h2>
+	<div class="content"> sadasd </div>
+	<h1>Demos</h1>
+	<div class="content"> sadasd </div>
+	<h2>All validators in action</h2>
+	<div class="content"> sadasd </div>
+	<h2>Input specific error message</h2>
+	<div class="content"> sadasd </div>
+	<h2>custom validators</h2>
+	<div class="content"> sadasd </div>
+	<h2>Dinamic forms</h2>
+	<div class="content"> sadasd </div>
+	<h2>Server side validation</h2>
+	<div class="content"> sadasd </div>
+	<h2>Error message positionin and style</h2>
+	<div class="content"> sadasd </div>
+	<form id="form1">
+		<p>Alphabetic characters only:<br />
+			<input type="text" data-bvalidator="alpha"/>
+		</p>
+		<p>Alphanumeric characters only:<br />
+			<input type="text" data-bvalidator="alphanum"/>
+		</p>
+		<p>Only digits:<br />
+			<input type="text" data-bvalidator="digit"/>
+		</p>
+		<p>Number:<br />
+			<input type="text" data-bvalidator="number"/>
+		</p>
+		<p>Email:<br />
+			<input type="text" data-bvalidator="email"/>
+		</p>
+		<p>Url:<br />
+			<input type="text" data-bvalidator="url"/>
+		</p>
+		<p>IP address:<br />
+			<input type="text" data-bvalidator="ip4"/>
+		</p>
+		<p>Date in format dd.mm.yyyy:<br />
+			<input type="text" data-bvalidator="date[dd.mm.yyyy]"/>
+		</p>
+		<p>Mimimum value 10:<br />
+			<input type="text" data-bvalidator="min[10]"/>
+		</p>
+		<p>Value between 100 and 200:<br />
+			<input type="text" data-bvalidator="between[100,200]"/>
+		</p>
+		<p>Mimimum length is 10 characters:<br />
+			<input type="text" data-bvalidator="minlength[10]"/>
+		</p>
+		<p>Maximum length is 10 characters:<br />
+			<input type="text" data-bvalidator="maxlength[10]"/>
+		</p>
+		<p>Valid length is between 10 and 20 characters:<br />
+			<input type="text" data-bvalidator="rangelength[10,20]"/>
+		</p>
+		<p>Value of the inputs must be equal:<br />
+			<input type="text" id="equalto1"/>
+			<input type="text" data-bvalidator="equalto[equalto1]"/>
+		</p>
+		<p>Value of the inputs must not be equal:<br />
+			<input type="text" id="differs1"/>
+			<input type="text" data-bvalidator="differs[differs1]"/>
+		</p>
+		<input type="text" name="textfield3" id="textfield3" data-bvalidator="  "/>
+		<input type="text" name="textfield1" id="textfield1" data-bvalidator="aaa[3,5];uuueee[777,t];assdaa[3,5];"  value="vrijednost2"/>
+		<input type="text" name="textfield2" id="textfield2"/>
+		<input name="a[]" type="checkbox" value="chekirano3" checked="checked" data-bvalidator="rrrrree"/>
+		<input name="a[]" type="checkbox" value="chekirano3" checked="checked" />
+		<input name="a[]" type="checkbox" value="chekirano3" />
+		<select name="" data-bvalidator="rrrrree">
+			<option selected="selected" value="select_val1">asdasd</option>
+			<option value="select_val2">ereerer</option>
+		</select>
+		<input name="redio1" type="radio" value="1" data-bvalidator="rrrrree"/>
+		<input name="redio1" type="radio" value="2" checked="checked"/>
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<p>
+			<input type="submit" name="button" id="button" value="Submit" />
+			<input type="reset" name="button2" id="button2" value="Reset" />
+		</p>
+	</form>
 </div>
-
 <script type="text/javascript" defer="defer">   
 	
 	$('#form1').bValidator();
@@ -143,6 +167,5 @@
 	//alert('aaaa:' + currentOptions.actionsAttr);
 	
 </script>
-
 </body>
 </html>
