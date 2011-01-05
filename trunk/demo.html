@@ -1,31 +1,132 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>bValidator demo</title>
+<title>bValidator docs & demo</title>
 <script type="text/javascript" src="jquery-1.4.3.min.js"></script>
 <script type="text/javascript" src="jquery.bvalidator.js"></script>
-<link href="styles.css" rel="stylesheet" type="text/css" />
+<link href="bvalidator.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+
+.main_content {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 9pt;
+	background-color: #CCC;
+	width: 800px;
+	margin-right: auto;
+	margin-left: auto;
+}
+.header {
+	font-family: Verdana, Geneva, sans-serif;
+	width: 800px;
+	font-size: 40pt;
+	margin-right: auto;
+	margin-left: auto;
+}
+</style>
 </head>
-asdasd
+
 <body>
-<form id="form1" name="form1" method="post" action="">
-	<p>
-		<input type="text" name="textfield" id="textfield" data-bvalidator="alpha" value="vrijednost1"/>
-		<input type="text" name="textfield3" id="textfield3" data-bvalidator="  "/>
-		<input type="text" name="textfield1" id="textfield1" data-bvalidator="aaa[3,5];uuueee[777,t];assdaa[3,5];"  value="vrijednost2"/>
-		<input type="text" name="textfield2" id="textfield2"/>
-		<input name="a[]" type="checkbox" value="chekirano3" checked="checked" data-bvalidator="rrrrree"/>
-		<input name="a[]" type="checkbox" value="chekirano3" checked="checked" />
-		<input name="a[]" type="checkbox" value="chekirano3" />
-		<select name="" data-bvalidator="rrrrree">
-			<option selected="selected" value="select_val1">asdasd</option>
-			<option value="select_val2">ereerer</option>
-		</select>
-		<input name="redio1" type="radio" value="1" data-bvalidator="rrrrree"/>
-		<input name="redio1" type="radio" value="2" checked="checked"/>
-		
+<div class="header">
+	<strong>bValidator</strong>
+	<span style="font-size: 12pt;">documentation & demo</span>
+	
+</div>
+
+<div class="main_content">
+
+<h1>What is bValidator</h1>
+<h1>Setup</h1>
+<h1>Configuration</h1>
+<h2>Callbacks</h2>
+<h2>Localization</h2>
+<h2>Scripting API</h2>
+<h1>Demos</h1>
+<h2>All validators in action</h2>
+<h2>Input specific error message</h2>
+<h2>custom validators</h2>
+<h2>Dinamic forms</h2>
+<h2>Server side validation</h2>
+<h2>Error message positionin and style</h2>
+
+
+<form id="form1">
+	<p>Alphabetic characters only:<br />
+		<input type="text" data-bvalidator="alpha"/>
 	</p>
+	
+	<p>Alphanumeric characters only:<br />
+		<input type="text" data-bvalidator="alphanum"/>
+	</p>
+	
+	<p>Only digits:<br />
+		<input type="text" data-bvalidator="digit"/>
+	</p>
+	
+	<p>Number:<br />
+		<input type="text" data-bvalidator="number"/>
+	</p>
+	
+	<p>Email:<br />
+		<input type="text" data-bvalidator="email"/>
+	</p>
+	
+	<p>Url:<br />
+		<input type="text" data-bvalidator="url"/>
+	</p>
+	
+	<p>IP address:<br />
+		<input type="text" data-bvalidator="ip4"/>
+	</p>
+	
+	<p>Date in format dd.mm.yyyy:<br />
+		<input type="text" data-bvalidator="date[dd.mm.yyyy]"/>
+	</p>
+	
+	<p>Mimimum value 10:<br />
+		<input type="text" data-bvalidator="min[10]"/>
+	</p>
+	
+	<p>Value between 100 and 200:<br />
+		<input type="text" data-bvalidator="between[100,200]"/>
+	</p>
+	
+	<p>Mimimum length is 10 characters:<br />
+		<input type="text" data-bvalidator="minlength[10]"/>
+	</p>
+	
+	<p>Maximum length is 10 characters:<br />
+		<input type="text" data-bvalidator="maxlength[10]"/>
+	</p>
+	
+	<p>Valid length is between 10 and 20 characters:<br />
+		<input type="text" data-bvalidator="rangelength[10,20]"/>
+	</p>
+	
+	<p>Value of the inputs must be equal:<br />
+		<input type="text" id="equalto1"/>
+		<input type="text" data-bvalidator="equalto[equalto1]"/>
+	</p>
+	
+	<p>Value of the inputs must not be equal:<br />
+		<input type="text" id="differs1"/>
+		<input type="text" data-bvalidator="differs[differs1]"/>
+	</p>
+	
+	<input type="text" name="textfield3" id="textfield3" data-bvalidator="  "/>
+	<input type="text" name="textfield1" id="textfield1" data-bvalidator="aaa[3,5];uuueee[777,t];assdaa[3,5];"  value="vrijednost2"/>
+	<input type="text" name="textfield2" id="textfield2"/>
+	<input name="a[]" type="checkbox" value="chekirano3" checked="checked" data-bvalidator="rrrrree"/>
+	<input name="a[]" type="checkbox" value="chekirano3" checked="checked" />
+	<input name="a[]" type="checkbox" value="chekirano3" />
+	<select name="" data-bvalidator="rrrrree">
+		<option selected="selected" value="select_val1">asdasd</option>
+		<option value="select_val2">ereerer</option>
+	</select>
+	<input name="redio1" type="radio" value="1" data-bvalidator="rrrrree"/>
+	<input name="redio1" type="radio" value="2" checked="checked"/>
+		
 	<p>&nbsp;</p>
 	<p>&nbsp;</p>
 	<p>
@@ -33,10 +134,10 @@ asdasd
 		<input type="reset" name="button2" id="button2" value="Reset" />
 	</p>
 </form>
+</div>
 
 <script type="text/javascript" defer="defer">   
 	
-	$('#form1').bValidator();
 	$('#form1').bValidator();
 	
 	//alert('aaaa:' + currentOptions.actionsAttr);
