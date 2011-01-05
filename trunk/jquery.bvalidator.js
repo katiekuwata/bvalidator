@@ -5,7 +5,7 @@
  *
  * Copyright (c) 2011 Bojan Mauser
  *
- * $Id: jquery.validate.js 6403 2009-06-17 14:27:16Z joern.zaefferer $
+ * $Id: ssdfdf $
  *
  * Dual licensed under the MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
