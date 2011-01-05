@@ -1,28 +1,34 @@
-function uuueee(w, a,b,d){
-	//alert('iz uuu' + a + b +d)
-}
-
-
+/*
+ * jQuery bValidator plugin
+ *
+ * http://code.google.com/p/bvalidator/
+ *
+ * Copyright (c) 2011 Bojan Mauser
+ *
+ * $Id: jquery.validate.js 6403 2009-06-17 14:27:16Z joern.zaefferer $
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ *   http://www.opensource.org/licenses/mit-license.php
+ *   http://www.gnu.org/licenses/gpl.html
+ */
 
 (function($) {	
 	
 	var options = {
 		
-		lang: 'en',				// default language for error messages 
+		lang: 'en', 				// default language for error messages 
+		errorMessageAttr: 'data-bvalidator-msg',// name of the attribute for overridden error message
+		validateActionsAttr: 'data-bvalidator', // name of the attribute which stores info what validation actions to do
+		paramsDelimiter: ',',			// delimiter for validator options inside []
+		validatorsDelimiter: ';',		// delimiter for validators
 		
-		errorMessageAttr: 'data-validation-error', // name of the input attribute for overridden error message
-		validateActionsAttr: 'data-bvalidator', // name of the input attribute wich stores info what validation actions to do
-		
-		paramsDelimiter: ',',		// 
-		validatorsDelimiter: ';',		// 
-		
+		// callback functions
 		callback: {
-			onBeforeValidate: function(){},
-			onAfterValidate: function(){},
-			onValidateFail: function(){},
-			onValidateSuccess: function(){},
+			onBeforeValidate: null,
+			onAfterValidate: null,
+			onValidateFail: null,
+			onValidateSuccess: null,
 		},
-		
 		
 		// when to validate
 		validateOn: 'keyup',			// null, 'change', 'blur', 'keyup'
@@ -30,19 +36,19 @@ function uuueee(w, a,b,d){
 		
 		display : {
 			singleError: false,		// validate all inputs at once
-			offset: {x:-20, y:-3},
-			position: {x:'right', y:'top'}, // left|center|right  top|center|bottom
-			template: '<div class="{tooltipClass}"><em/>{message}</div>',
-			showCloseIcon: true,		// put close icon on tooltip
+			offset: {x:-20, y:-3},		// offset position for error messages
+			position: {x:'right', y:'top'}, // error message placement x:left|center|right  y:top|center|bottom
+			template: '<div class="{tooltipClass}"><em/>{message}</div>', // template for error message
+			showCloseIcon: true,		// put close icon on error message
 			showTooltipSpeed: 'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of miliseconds
-			
 			// css class names
 			closeIconClass: 'bvalidator_close_icon',// close tooltip icon class
 			tooltipClass: 'bvalidator_tooltip',	// tooltip class
 			errorClass: 'bvalidator_invalid',	// input field class name in case of validation error
-			validClass: '',		// input field class name in case of valid value
+			validClass: '',				// input field class name in case of valid value
 		},
 		
+		// regular expressions used by validator methods
 		regex: {
 			alpha:    /^[a-z ._-]+$/i,
 			alphanum: /^[a-z0-9 ._-]+$/i,
@@ -53,6 +59,7 @@ function uuueee(w, a,b,d){
 			url:      /^(http|https|ftp)\:\/\/[a-z0-9\-\.]+\.[a-z]{2,3}(:[a-z0-9]*)?\/?([a-z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*$/i
 		},
 		
+		// default error messages
 		errorMessages: {
 			en: {
 				default:    'Please correct this value.',
