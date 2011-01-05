@@ -25,6 +25,9 @@
 .content {
 	background-color: #FFF;
 }
+.insource {
+	font-family: "Courier New", Courier, monospace;
+}
 </style>
 </head>
 
@@ -50,7 +53,7 @@
 			<p><strong>include css:</strong></p>
 			<pre>&lt;link href=&quot;bvalidator.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</pre>
 		</blockquote>
-		<p>The web page should include elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form.</p>
+		<p>The web page should include elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form. Note the <span class="insource">data-bvalidator</span>  input field attribute which tells validator which validation actions to do for the field. The name of that attribute can be changed and this can be for example <span class="insource">class</span> or <span class="insource">rel</span>, see options for details.</p>
 		<blockquote>
 			<p><strong>HTML:</strong></p>
 			<pre>&lt;form id=&quot;myform&quot;&gt;
@@ -64,15 +67,15 @@
 	$('#myform).bValidator();
 &lt;/script&gt;
 </pre>
-			<p><strong>or</strong> you can  use jQuery's $(document).ready to execute the script as soon as the webpage's Document Object Model (DOM) has been loaded.</p>
+			<p>this code should be inserted after the form <strong>or</strong> you can  use jQuery's <span class="insource">$(document).ready</span> to execute the script as soon as the webpage's Document Object Model (DOM) has been loaded. In that case this javascript code can be before or after the form.</p>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	$(document).ready(function () {<br />		$('#myform).bValidator();<br />	});<br />&lt;/script&gt;
 </pre>
 		</blockquote>
 	</div>
-	<h1>Configuration</h1>
+	<h1>Configuration options</h1>
 	<div class="content">
-		<p>Validator can be configured by passing object with options to constructor:</p>
+		<p>Validator can be configured<strong> by passing object with options  to constructor</strong>. That passed options will override default options.</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -83,9 +86,22 @@
 
 	$('#myform).bValidator(options);
 
-&lt;/script&gt; </pre>
+&lt;/script&gt;</pre></blockquote>
+		<p><strong>OR</strong> by defining <strong>global object with options</strong> called <strong>bValidatorOptions</strong>. Validatior will check if this object exists and if does will load options from it and override default options.</p>
+		<blockquote>
+			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	
+	var bValidatorOptions = {
+		singleError: true,
+		showCloseIcon: false
+	};
+
+	$('#myform).bValidator();
+
+&lt;/script&gt;</pre>
 		</blockquote>
-		<p>Available options are:</p>
+<p><strong>OR BOTH</strong>, you can define global <strong>bValidatorOptions</strong> object and also pass opitions to<strong> validator constructor</strong>. In that case options from <span class="insource">bValidatorOptions</span> object override default options and options passed as argument to constructor will override options from <span class="insource">bValidatorOptions</span>.</p>
+<p><strong>Available options:</strong></p>
 		<table width="100%">
 			<tr>
 				<th nowrap="nowrap">Property</th>
@@ -95,117 +111,394 @@
 			<tr>
 				<td nowrap="nowrap">singleError</td>
 				<td>false</td>
-				<td>&nbsp;</td>
+				<td>Enabling this shows only first validation error at a time. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">offset</td>
 				<td nowrap="nowrap">{x:-20, y:-3}</td>
-				<td>&nbsp;</td>
+				<td>Fine tunes the error message tooltip position specified with the <span class="insource">position</span> property.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">position</td>
 				<td nowrap="nowrap">{x:'right', y:'top'}</td>
-				<td>&nbsp;</td>
+				<td>Specifies the position of the error message tooltip. Valid values for <strong>x</strong> are: <span class="insource">left</span>,<span class="insource">center</span>,<span class="insource">right</span> and for <strong>y</strong> are <span class="insource">top</span>,<span class="insource">center</span>,<span class="insource">bottom</span></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">template</td>
-				<td>&lt;div class=&quot;{tooltipClass}&quot;&gt;&lt;em/&gt;{message}&lt;/div&gt;</td>
-				<td>&nbsp;</td>
+				<td>&lt;div class=&quot;{errMsgClass}&quot;&gt;&lt;em/&gt;{message}&lt;/div&gt;</td>
+				<td> <p>HTML template for the error message tooltip. This HTML code will be put inside container div element and appended after the input field. <span class="insource">{errMsgClass}</span> will be replaced with value of the <span class="insource">errMsgClass</span> propery and <span class="insource">{message}</span> will be replaced with error messages text.</p></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">showCloseIcon</td>
 				<td>true</td>
-				<td>&nbsp;</td>
+				<td>Controls if the error message tooltip has close icon. If <span class="insource">true</span> user can click on it and close error message tooltip.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">showTooltipSpeed</td>
+				<td nowrap="nowrap">showErrMsgSpeed</td>
 				<td>normal</td>
-				<td>&nbsp;</td>
+				<td> Error message's fade-in speed. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">closeIconClass</td>
 				<td nowrap="nowrap">bvalidator_close_icon</td>
-				<td>&nbsp;</td>
+				<td>CSS class for error message tooltip close icon.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">tooltipClass</td>
-				<td nowrap="nowrap">bvalidator_tooltip</td>
-				<td>&nbsp;</td>
+				<td nowrap="nowrap">errMsgClass</td>
+				<td nowrap="nowrap">bvalidator_errmsg</td>
+				<td>CSS class for error message tooltip.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">errorClass</td>
 				<td nowrap="nowrap">bvalidator_invalid</td>
-				<td>&nbsp;</td>
+				<td>CSS class for input field with invalid value.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">validClass</td>
 				<td>&nbsp;</td>
-				<td>&nbsp;</td>
+				<td>CSS class for input field with valid value.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">lang</td>
 				<td>en</td>
-				<td>&nbsp;</td>
+				<td>Language for localization.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">errorMessageAttr</td>
 				<td nowrap="nowrap">data-bvalidator-msg</td>
-				<td>&nbsp;</td>
+				<td>Input field attribute which holds error message text. That text will override default messages or localized error messages.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">validateActionsAttr</td>
 				<td>data-bvalidator</td>
-				<td>&nbsp;</td>
+				<td>Input field attribute which tells validator which validation actions to do for the field.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">paramsDelimiter</td>
 				<td>,</td>
-				<td>&nbsp;</td>
+				<td>Delimiter for validator action options inside square brackets []. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">validatorsDelimiter</td>
 				<td>;</td>
-				<td>&nbsp;</td>
+				<td>Delimiter for validator actions in <span class="insource">validateActionsAttr</span> attribute.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">validateOn</td>
 				<td>null</td>
-				<td>&nbsp;</td>
+				<td>On which input field event to start validation. Values can be null, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'</span></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">errorValidateOn</td>
-				<td>keyup</td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
+				<td>'keyup'</td>
+				<td>On which input field event to start validation if error message is already shown. Values can be null, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'</span></td>
 			</tr>
 		</table>
 		<p>&nbsp;</p>
 	</div>
 	<h2>Callbacks</h2>
-	<div class="content"> sadasd </div>
+	<div class="content"> 
+		<p>Callbacks are user defined functions that are called by validator in certain moment. Callbacks are defined the same way as configuration options. Callback functions are called for each validator action.	Example	of defineing callback is:</p>
+		<blockquote>
+			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	
+	var options = {
+		onBeforeValidate: function(element, action){
+			// do something here
+		},
+	};
+
+	$('#myform).bValidator(options);
+
+&lt;/script&gt;
+</pre></blockquote>
+		<p><strong>Available callbacks:</strong></p>
+		<table width="100%">
+			<tr>
+				<th nowrap="nowrap">Callback</th>
+				<th>Arguments</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">onBeforeValidate</td>
+				<td><ol>
+					<li>jQuery object containing input field</li>
+					<li>string validator action (example: min[5])</li>
+				</ol></td>
+				<td>Called before the validation routine starts. Returning false will cause the validation to be skipped for that validator action.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">onAfterValidate</td>
+				<td><ol>
+					<li>jQuery object containing input field</li>
+					<li>string validator action (example: max[10])</li>
+					<li>validation result (true or false)</li>
+				</ol></td>
+				<td>Called after the validation routine ends. Returning false will stop executing that validator action,  displaying error messages and binding events to input fields will be skipped.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">onValidateFail</td>
+				<td><ol>
+					<li>jQuery object containing input field</li>
+					<li>string validator action (example: max[10])</li>
+					<li>array of all error messages for this input element</li>
+				</ol></td>
+				<td>Called after validation action fails,  but before error messages are displayed to the user. Returning false will stop executing that validator action,  displaying error messages and binding events to input fields will be skipped.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">onValidateSuccess</td>
+				<td><ol>
+					<li>jQuery object containing input field</li>
+					<li>string validator action (example: max[10])</li>
+				</ol></td>
+				<td>Called after validation is sucessfull. Returning false will stop executing that validator action,  hiding error messages (if any) and binding events to input fields will be skipped.</td>
+			</tr>
+		</table>
+		<p>&nbsp;</p>
+	</div>
 	<h2>Localization</h2>
-	<div class="content"> sadasd </div>
-	<h2>Scripting API</h2>
-	<div class="content"> sadasd </div>
+	<div class="content">
+		<p>Error messages can be localized (translated). To do that you need to <strong>pass translated messages as options</strong> to validator constructor: </p>
+		<blockquote>
+			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	
+	var options = {
+		lang: 'hr',
+		errorMessages: {<br />			hr: {<br />				default:    'Ispravite ovu vrijednost.',<br />				equalto:    'Unesite ponovno istu vrijednost.',<br />				differs:    'Unesite različitu vrijednost.',
+				....<br />			}<br />		}
+	};
+
+	$('#myform).bValidator(options);
+
+&lt;/script&gt;</pre></blockquote>
+<p> <strong>OR</strong> define <strong>global <span class="insource">bValidatorOptions</span> object with translated error messages</strong> that will be used in all validator instances:</p>
+<blockquote>
+	<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	
+	var bValidatorOptions = {
+		lang: 'hr',
+		errorMessages: {<br />			hr: {<br />				default:    'Ispravite ovu vrijednost.',<br />				equalto:    'Unesite ponovno istu vrijednost.',<br />				differs:    'Unesite različitu vrijednost.',
+				....<br />			}<br />		}
+	};
+
+	$('#myform).bValidator();
+
+&lt;/script&gt;</pre>
+</blockquote>
+	</div>
+	<h2>API functions</h2>
+	<div class="content"> 
+		<p>When you make instance of validator you can call some functions on that instance:		</p>
+		<blockquote>
+			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	
+	var myvalidator = $('#myform).bValidator();
+	
+	// check if form is valid
+	if(myvalidator.isValid()){
+		// do somenthing
+	}
+
+&lt;/script&gt;</pre>
+		</blockquote>
+		<p>or you can access validator instance through jQuery data function:		</p>
+		<blockquote>
+			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	
+	$('#myform).bValidator();
+	
+	// check if form is valid
+	if($('#myform).data('bValidator').isValid()){
+		// do somenthing
+	}
+
+&lt;/script&gt;</pre>
+		</blockquote>
+		<table width="100%">
+			<tr>
+				<th nowrap="nowrap">Function</th>
+				<th>Arguments</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">getOptions</td>
+				<td>&nbsp;</td>
+				<td>Returns the options object of the current validator instance.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">isValid</td>
+				<td>&nbsp;</td>
+				<td>Just checks if inputs in current validator instance  is valid. Does not shows error messags. Calling this function is the same as calling <span class="insource">validate(true)</span> function.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">removeErrMsg</td>
+				<td><ol>
+					<li>jQuery object containing inputs</li>
+				</ol></td>
+				<td>Deletes error message </td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">getInputs</td>
+				<td>&nbsp;</td>
+				<td>Returns all input fields associated with the validator.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">bindValidateOn</td>
+				<td><ol>
+					<li>jQuery object containing inputs </li>
+				</ol></td>
+				<td>This function is helpful when using <span class="insource">validateOn</span> option and dinamic forms. If you add some new input elements to form after validator is already initialized and you want to validate them on event specified with  <span class="insource">validateOn</span> option you need to call this method. If you are not using <span class="insource">validateOn</span> option or you do not have dinamic forms you can forget about this function.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">reset</td>
+				<td>&nbsp;</td>
+				<td>Resets the validator. Hides all error messages like the validator is only initialized. If you have a reset button on your form this   reset function is automatically bind to it. </td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">destroy</td>
+				<td>&nbsp;</td>
+				<td>Removes existing validator instance.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">validate</td>
+				<td><ol>
+					<li>if true error messages are not displayed (optional)</li>
+					<li>jQuery object containing inputs to validate only (optional)</li>
+				</ol></td>
+				<td>Does validation.</td>
+			</tr>
+		</table>
+		<p>&nbsp;</p>
+	</div>
+	<h2>Validator actions</h2>
+	<div class="content">
+		<p>Validator actions are  functions that checks value of input field that is validated. Here are listed  built in actions but it is very simple to add custom validation functions.</p>
+		<p>Validations which validator will perform on a single input field are stated in <span class="insource">data-bvalidator</span> attribute by default. You can use different attribute like <span class="insource">class</span> or <span class="insource">rel</span> if you need that your HTML is valid. Just set the name of the attribute  in <span class="insource">validateActionsAttr</span> option.</p>
+		<p>Some validator actions can have parameters and those are stated in square brackets [] after the action name.</p>
+		<p>For example:</p>
+		<blockquote>
+			<pre>&lt;input type=&quot;text&quot; data-bvalidator=&quot;maxlength[10]&quot;/&gt;<br />&lt;input type=&quot;text&quot; data-bvalidator=&quot;max[10],email,required&quot;/&gt;<br />&lt;input type=&quot;text&quot; data-bvalidator=&quot;differs[someElementID]&quot;/&gt;
+			</pre>
+		</blockquote>
+		<table width="100%">
+			<tr>
+				<th nowrap="nowrap">Action</th>
+				<th>Parameters</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">alpha</td>
+				<td>&nbsp;</td>
+				<td>Checks if all characters are alphabetic.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">alphanum</td>
+				<td>&nbsp;</td>
+				<td>Checks if all characters are alphanumeric.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">digit</td>
+				<td>&nbsp;</td>
+				<td>Checks if all characters are digits.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">number</td>
+				<td>&nbsp;</td>
+				<td>Checks if value is a number.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">email</td>
+				<td>&nbsp;</td>
+				<td>Checks if value is a valid Email.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">image</td>
+				<td>&nbsp;</td>
+				<td>Checks if value ends with image file extenston like .jpg. Can be usefull for file fields.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">url</td>
+				<td>&nbsp;</td>
+				<td>Checks if value is a valid URL.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">regex</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">date</td>
+				<td><ol>
+					<li>date format</li>
+				</ol></td>
+				<td>Checks if value is a valid date in format specified by action parameter. Format can be any combination of mm,dd,yyyy with one character separator between. Example: 'mm.dd.yyyy' or 'yyyy-mm-dd'.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">required</td>
+				<td>&nbsp;</td>
+				<td>Is a value required</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">between</td>
+				<td><ol>
+					<li>minimum value</li>
+					<li>maximum value</li>
+				</ol></td>
+				<td>Checks is value between values in  action parameters. </td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">max</td>
+				<td><ol>
+					<li>maximum value</li>
+				</ol></td>
+				<td>Checks is value less or equel than action parameter value.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">min</td>
+				<td><ol>
+					<li>minimum value</li>
+				</ol></td>
+				<td>Checks is value greater or equel than action parameter value.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">rangelength</td>
+				<td><ol>
+					<li>minimum length</li>
+					<li>maximum length</li>
+				</ol></td>
+				<td>Checks if length of the value is between action parameters values. </td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">maxlength</td>
+				<td><ol>
+					<li>maximum length</li>
+				</ol></td>
+				<td>Checks if length of the value is smaller than action parameter value. </td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">minlength</td>
+				<td><ol>
+					<li>minimum length</li>
+				</ol></td>
+				<td>Checks if length of the value is greater than action parameter value. </td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">differs</td>
+				<td><ol>
+					<li>element id</li>
+				</ol></td>
+				<td>The value has to be diferent from the value of field which ID is passed as parameter.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">equalto</td>
+				<td><ol>
+					<li>element id</li>
+				</ol></td>
+				<td>The value has to be equel to the value of field which ID is passed as parameter.</td>
+			</tr>
+		</table>
+		<p>&nbsp;</p>
+	</div>
 	<h1>Demos</h1>
 	<div class="content"> sadasd </div>
 	<h2>All validators in action</h2>
@@ -290,7 +583,7 @@
 </div>
 <script type="text/javascript" defer="defer">   
 	
-	$('#form1').bValidator();
+	$('#form1').bValidator(optionsLocal);
 	
 	//alert('aaaa:' + currentOptions.actionsAttr);
 	

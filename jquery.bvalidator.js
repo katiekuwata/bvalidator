@@ -1,4 +1,43 @@
 /*
+var bValidatorOptions = {
+	
+	// callback functions
+	onBeforeValidate:    function(){console.log('onBeforeValidate');},
+	
+	// default error messages
+	errorMessages: {
+		hr: {
+			default:    'Ispravite ovu vrijednost.',
+			equalto:    'Unesite ponovno istu vrijednost.',
+			differs:    'Unesite razlièitu vrijednost.',
+			minlength:  'Duljina mora biti najmanje {0} znakova.',
+			maxlength:  'Duljina mora biti najviše {0} znakova.',
+			rangelength:'Duljina mora biti izmeðu {0} i {1} znakova.',
+			min:        'Unesite vrijednost veæu ili jednaku {0}.',
+			max:        'Unesite vrijednost manju ili jednaku {0}.',
+			between:    'Unesite vrijednost izmeðu {0} i {1}.',
+			required:   'Ovo polje je obavezno.',
+			alpha:      'Unesite samo slova.',
+			alphanum:   'Unesite samo slova i brojeve.',
+			digit:      'Unesite samo brojeve.',
+			number:     'Unesite ispravan broj.',
+			email:      'Unesite ispravanu Email adresu.',
+			image:      'Odaberite samo slikovne datoteke.',
+			url:        'Unesite ispravan URL.',
+			ip4:        'Unesite ispravanu IP adresu.',
+			date:       'Unesite ispravan datum u formatu {0}.',
+		}
+	}
+};
+*/
+
+var optionsLocal = {
+	
+	// callback functions
+	onAfterValidate:    function(){console.log('onAfterValidate');}
+};
+
+/*
  * jQuery bValidator plugin
  *
  * http://code.google.com/p/bvalidator/
@@ -17,14 +56,14 @@
 	var options = {
 		
 		singleError:         false,		// validate all inputs at once
-		offset:              {x:-20, y:-3},	// offset position for error messages
+		offset:              {x:-20, y:-3},	// offset position for error message tooltip
 		position:            {x:'right', y:'top'}, // error message placement x:left|center|right  y:top|center|bottom
-		template:            '<div class="{tooltipClass}"><em/>{message}</div>', // template for error message
+		template:            '<div class="{errMsgClass}"><em/>{message}</div>', // template for error message
 		showCloseIcon:       true,	// put close icon on error message
-		showTooltipSpeed:    'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of miliseconds
+		showErrMsgSpeed:    'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of miliseconds
 		// css class names
-		closeIconClass:      'bvalidator_close_icon',	// close tooltip icon class
-		tooltipClass:        'bvalidator_tooltip',	// tooltip class
+		closeIconClass:      'bvalidator_close_icon',	// close error message icon class
+		errMsgClass:         'bvalidator_errmsg',	// error message class
 		errorClass:          'bvalidator_invalid',	// input field class name in case of validation error
 		validClass:          '',			// input field class name in case of valid value
 		
@@ -35,7 +74,7 @@
 		validatorsDelimiter: ';',		// delimiter for validators
 		
 		// when to validate
-		validateOn:          'keyup',		// null, 'change', 'blur', 'keyup'
+		validateOn:          null,		// null, 'change', 'blur', 'keyup'
 		errorValidateOn:     'keyup',		// null, 'change', 'blur', 'keyup'
 		
 		// callback functions
@@ -43,17 +82,6 @@
 		onAfterValidate:     null,
 		onValidateFail:      null,
 		onValidateSuccess:   null,
-		
-		// regular expressions used by validator methods
-		regex: {
-			alpha:    /^[a-z ._-]+$/i,
-			alphanum: /^[a-z0-9 ._-]+$/i,
-			digit:    /^\d+$/,
-			number:   /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,
-			email:    /^([a-zA-Z0-9_\.\-\+%])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
-			image:    /.(jpg|jpeg|png|gif|bmp)$/i,
-			url:      /^(http|https|ftp)\:\/\/[a-z0-9\-\.]+\.[a-z]{2,3}(:[a-z0-9]*)?\/?([a-z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*$/i
-		},
 		
 		// default error messages
 		errorMessages: {
@@ -78,15 +106,32 @@
 				ip4:        'Please enter a valid IP address.',
 				date:       'Please enter a valid date in format {0}.',
 			}
+		},
+		
+		// regular expressions used by validator methods
+		regex: {
+			alpha:    /^[a-z ._-]+$/i,
+			alphanum: /^[a-z0-9 ._-]+$/i,
+			digit:    /^\d+$/,
+			number:   /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,
+			email:    /^([a-zA-Z0-9_\.\-\+%])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
+			image:    /.(jpg|jpeg|png|gif|bmp)$/i,
+			url:      /^(http|https|ftp)\:\/\/[a-z0-9\-\.]+\.[a-z]{2,3}(:[a-z0-9]*)?\/?([a-z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*$/i
 		}
 	};
 	
 	// validator instance
 	var instance;
 	
+	// element passed to constructor
 	var mainElement;
 	
 	$.fn.bValidator = function(overrideOptions) {
+
+		// global options
+		if(window['bValidatorOptions']){
+			$.extend(true, options, window['bValidatorOptions']);
+		}
 
 		$.extend(true, options, overrideOptions);
 		
@@ -103,7 +148,7 @@
 		if (this.is('form')) {
 			// bind validation on form submit
 			this.bind('submit.bV', function(event){
-				return instance.validate(true);
+				return instance.validate();
 			});
 			
 			// bind reset on form reset
@@ -135,14 +180,14 @@
 	bindValidateOn = function(elements){
 		elements.bind(options.validateOn + '.bV', {'bValidatorInstance': instance}, function(event) {
 			console.log('validateOn');
-			event.data.bValidatorInstance.validate(true, $(this));
+			event.data.bValidatorInstance.validate(false, $(this));
 		});
 	}
 	
 	
 	bValidator = function(elements){
 		
-		this.validate = function(showMessages, elementsOverride) {
+		this.validate = function(doNotshowMessages, elementsOverride) {
 			
 			if(elementsOverride)
 				var elementsl = elementsOverride;
@@ -177,7 +222,7 @@
 					if(!actions[i])
 						continue;
 					
-					if(callBack('onBeforeValidate', actions[i], $(this)) === false)
+					if(callBack('onBeforeValidate', $(this), actions[i]) === false)
 						continue;
 					
 					// check if we have some parameters for validator
@@ -202,12 +247,12 @@
 						var validationResult = window[validatorName](inputValue.value, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
 					}
 					
-					if(callBack('onAfterValidate', actions[i], $(this), validationResult) === false)
+					if(callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
 						continue;
 					
 					if(!validationResult){
 						
-						if(showMessages){
+						if(!doNotshowMessages){
 							// get error messsage
 							var errMsg = $(this).attr(options.errorMessageAttr)
 							
@@ -228,50 +273,51 @@
 						
 						ret = false;
 						
-						if(callBack('onValidateFail', actions[i], $(this), errorMessages) === false)
+						if(callBack('onValidateFail', $(this), actions[i], errorMessages) === false)
 							continue;
 					}
 					else{
-						if(callBack('onValidateSuccess', actions[i], $(this)) === false)
+						if(callBack('onValidateSuccess', $(this), actions[i]) === false)
 							continue;
 					}
 				}
 				
-				// if validation failed
-				if(errorMessages.length){
-					if(showMessages)
-						showTooltip($(this), errorMessages)
-					
-					$(this).removeClass(options.validClass);
-					if(options.errorClass)
-						$(this).addClass(options.errorClass);
-					
-					// input validation event             
-					if (options.errorValidateOn){
-						if(options.validateOn)
-							$(this).unbind(options.validateOn + '.bV');
-						$(this).unbind(options.errorValidateOn + '.bVerror');
-						$(this).bind(options.errorValidateOn + '.bVerror', {'bValidatorInstance': instance}, function(event) {
-							console.log('errorValidateOn');
-							event.data.bValidatorInstance.validate(true, $(this));
-						});
+				if(!doNotshowMessages){
+					// if validation failed
+					if(errorMessages.length){
+						
+						showErrMsg($(this), errorMessages)
+						$(this).removeClass(options.validClass);
+						if(options.errorClass)
+							$(this).addClass(options.errorClass);
+						
+						// input validation event             
+						if (options.errorValidateOn){
+							if(options.validateOn)
+								$(this).unbind(options.validateOn + '.bV');
+							$(this).unbind(options.errorValidateOn + '.bVerror');
+							$(this).bind(options.errorValidateOn + '.bVerror', {'bValidatorInstance': instance}, function(event) {
+								console.log('errorValidateOn');
+								event.data.bValidatorInstance.validate(false, $(this));
+							});
+						}
+						
+						if (options.singleError)
+							return false;
 					}
-					
-					if (options.singleError)
-						return false;
-				}
-				else{
-					removeTooltip($(this));
-					$(this).removeClass(options.errorClass);
-					
-					if(options.validClass)
-						$(this).addClass(options.validClass);
-					
-					if (options.errorValidateOn)
-						$(this).unbind(options.errorValidateOn + '.bVerror');
-					if (options.validateOn){
-						$(this).unbind(options.validateOn + '.bV');
-						bindValidateOn($(this));
+					else{
+						removeErrMsg($(this));
+						$(this).removeClass(options.errorClass);
+						
+						if(options.validClass)
+							$(this).addClass(options.validClass);
+						
+						if (options.errorValidateOn)
+							$(this).unbind(options.errorValidateOn + '.bVerror');
+						if (options.validateOn){
+							$(this).unbind(options.validateOn + '.bV');
+							bindValidateOn($(this));
+						}
 					}
 				}
 			});
@@ -284,14 +330,14 @@
 		}
 		
 		this.isValid = function() {
-			return this.validate(false);
+			return this.validate(true);
 		}
 		
-		this.removeTooltip = function(element){
-			removeTooltip(element);
+		this.removeErrMsg = function(element){
+			removeErrMsg(element);
 		}
 		
-		this.getElements = function(){
+		this.getInputs = function(){
 			return getElementsForValidation(mainElement);
 		}
 		
@@ -304,7 +350,7 @@
 			if (options.validateOn)
 				bindValidateOn(elements);
 			elements.each(function(){
-				removeTooltip($(this));
+				removeErrMsg($(this));
 				$(this).unbind('.bVerror');
 				$(this).removeClass(options.errorClass);
 				$(this).removeClass(options.validClass);
@@ -319,13 +365,13 @@
 		}
 	}
 	
-	showTooltip = function(element, messages){
+	showErrMsg = function(element, messages){
 		
-		// if tooltip already exists remove it from DOM
-		removeTooltip(element);
+		// if error msg already exists remove it from DOM
+		removeErrMsg(element);
 		
-		msg_container = $('<div class="bVtooltipContainer"></div>').css('position','absolute');
-		element.data("tooltip.bV", msg_container);
+		msg_container = $('<div class="bVErrMsgContainer"></div>').css('position','absolute');
+		element.data("errMsg.bV", msg_container);
 		msg_container.insertAfter(element);
 		
 		var messagesHtml = '';
@@ -335,32 +381,32 @@
 		}
 		
 		if(options.showCloseIcon){
-			var closeiconTpl = '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="'+options.closeIconClass+'" onclick="$(this).closest(\'.'+ options.tooltipClass +'\').css(\'visibility\', \'hidden\');">x</div></div></div>';
+			var closeiconTpl = '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="'+options.closeIconClass+'" onclick="$(this).closest(\'.'+ options.errMsgClass +'\').css(\'visibility\', \'hidden\');">x</div></div></div>';
 			messagesHtml = closeiconTpl.replace('{message}', messagesHtml);
 		}
 		
-		var template = options.template.replace('{tooltipClass}', options.tooltipClass).replace('{message}', messagesHtml);
+		var template = options.template.replace('{errMsgClass}', options.errMsgClass).replace('{message}', messagesHtml);
 		
-		var tooltip = $(template);
-		tooltip.appendTo(msg_container);
+		var errmsg = $(template);
+		errmsg.appendTo(msg_container);
 		
-		var pos = getTooltipPosition(element, tooltip); 
+		var pos = getErrMsgPosition(element, errmsg); 
 		
-		tooltip.css({ visibility: 'visible', position: 'absolute', top: pos.top, left: pos.left }).fadeIn(options.showTooltipSpeed);
+		errmsg.css({ visibility: 'visible', position: 'absolute', top: pos.top, left: pos.left }).fadeIn(options.showErrMsgSpeed);
 	}
 	
-	// removes tooltip from DOM
-	removeTooltip = function(element){
-		var existingTooltip = element.data("tooltip.bV")
-		if(existingTooltip){
-			existingTooltip.remove();
+	// removes error message from DOM
+	removeErrMsg = function(element){
+		var existingMsg = element.data("errMsg.bV")
+		if(existingMsg){
+			existingMsg.remove();
 		}
 	}
 	
 	// calculates error message position relative to the input	
-	getTooltipPosition = function(input, tooltip) {
+	getErrMsgPosition = function(input, tooltip) {
 	        
-	        var tooltipContainer = input.data("tooltip.bV");
+	        var tooltipContainer = input.data("errMsg.bV");
 	        var top  = - ((tooltipContainer.offset().top - input.offset().top) + tooltip.outerHeight() - options.offset.y);
 	        var left = (input.offset().left + input.outerWidth()) - tooltipContainer.offset().left + options.offset.x;
 		
@@ -523,10 +569,8 @@
 				}
 			}
 			return false;
-		}
+		},
 
-		
-		
 	};
 	
 })(jQuery);
