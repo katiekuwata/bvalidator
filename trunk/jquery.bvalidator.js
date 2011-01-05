@@ -70,8 +70,8 @@ var optionsLocal = {
 		lang: 'en', 				// default language for error messages 
 		errorMessageAttr:    'data-bvalidator-msg',// name of the attribute for overridden error message
 		validateActionsAttr: 'data-bvalidator', // name of the attribute which stores info what validation actions to do
-		paramsDelimiter:     ',',		// delimiter for validator options inside []
-		validatorsDelimiter: ';',		// delimiter for validators
+		paramsDelimiter:     ':',		// delimiter for validator options inside []
+		validatorsDelimiter: ',',		// delimiter for validators
 		
 		// when to validate
 		validateOn:          null,		// null, 'change', 'blur', 'keyup'
@@ -95,7 +95,7 @@ var optionsLocal = {
 				min:        'Please enter a value greater than or equal to {0}.',
 				max:        'Please enter a value less than or equal to {0}.',
 				between:    'Please enter a value between {0} and {1}.',
-				required:   'Please complete this mandatory field.',
+				required:   'This field is required.',
 				alpha:      'Please enter alphabetic characters only.',
 				alphanum:   'Please enter alphanumeric characters only.',
 				digit:      'Please enter only digits.',
@@ -211,6 +211,11 @@ var optionsLocal = {
 				
 				// value of input field for validation
 				var inputValue = getValue($(this));
+				
+				// if value is not required and is empty skip this element
+				if(actions.indexOf('required') == -1 && !inputValue){
+					return true;
+				}
 				
 				var errorMessages = [];
 				
