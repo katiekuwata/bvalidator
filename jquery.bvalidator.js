@@ -16,37 +16,33 @@
 	
 	var options = {
 		
+		singleError:         false,		// validate all inputs at once
+		offset:              {x:-20, y:-3},	// offset position for error messages
+		position:            {x:'right', y:'top'}, // error message placement x:left|center|right  y:top|center|bottom
+		template:            '<div class="{tooltipClass}"><em/>{message}</div>', // template for error message
+		showCloseIcon:       true,	// put close icon on error message
+		showTooltipSpeed:    'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of miliseconds
+		// css class names
+		closeIconClass:      'bvalidator_close_icon',	// close tooltip icon class
+		tooltipClass:        'bvalidator_tooltip',	// tooltip class
+		errorClass:          'bvalidator_invalid',	// input field class name in case of validation error
+		validClass:          '',			// input field class name in case of valid value
+		
 		lang: 'en', 				// default language for error messages 
-		errorMessageAttr: 'data-bvalidator-msg',// name of the attribute for overridden error message
+		errorMessageAttr:    'data-bvalidator-msg',// name of the attribute for overridden error message
 		validateActionsAttr: 'data-bvalidator', // name of the attribute which stores info what validation actions to do
-		paramsDelimiter: ',',			// delimiter for validator options inside []
+		paramsDelimiter:     ',',		// delimiter for validator options inside []
 		validatorsDelimiter: ';',		// delimiter for validators
 		
-		// callback functions
-		callback: {
-			onBeforeValidate: null,
-			onAfterValidate: null,
-			onValidateFail: null,
-			onValidateSuccess: null,
-		},
-		
 		// when to validate
-		validateOn: 'keyup',			// null, 'change', 'blur', 'keyup'
-		errorValidateOn: 'keyup',		// null, 'change', 'blur', 'keyup'
+		validateOn:          'keyup',		// null, 'change', 'blur', 'keyup'
+		errorValidateOn:     'keyup',		// null, 'change', 'blur', 'keyup'
 		
-		display : {
-			singleError: false,		// validate all inputs at once
-			offset: {x:-20, y:-3},		// offset position for error messages
-			position: {x:'right', y:'top'}, // error message placement x:left|center|right  y:top|center|bottom
-			template: '<div class="{tooltipClass}"><em/>{message}</div>', // template for error message
-			showCloseIcon: true,		// put close icon on error message
-			showTooltipSpeed: 'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of miliseconds
-			// css class names
-			closeIconClass: 'bvalidator_close_icon',// close tooltip icon class
-			tooltipClass: 'bvalidator_tooltip',	// tooltip class
-			errorClass: 'bvalidator_invalid',	// input field class name in case of validation error
-			validClass: '',				// input field class name in case of valid value
-		},
+		// callback functions
+		onBeforeValidate:    null,
+		onAfterValidate:     null,
+		onValidateFail:      null,
+		onValidateSuccess:   null,
 		
 		// regular expressions used by validator methods
 		regex: {
@@ -246,9 +242,9 @@
 					if(showMessages)
 						showTooltip($(this), errorMessages)
 					
-					$(this).removeClass(options.display.validClass);
-					if(options.display.errorClass)
-						$(this).addClass(options.display.errorClass);
+					$(this).removeClass(options.validClass);
+					if(options.errorClass)
+						$(this).addClass(options.errorClass);
 					
 					// input validation event             
 					if (options.errorValidateOn){
@@ -261,15 +257,15 @@
 						});
 					}
 					
-					if (options.display.singleError)
+					if (options.singleError)
 						return false;
 				}
 				else{
 					removeTooltip($(this));
-					$(this).removeClass(options.display.errorClass);
+					$(this).removeClass(options.errorClass);
 					
-					if(options.display.validClass)
-						$(this).addClass(options.display.validClass);
+					if(options.validClass)
+						$(this).addClass(options.validClass);
 					
 					if (options.errorValidateOn)
 						$(this).unbind(options.errorValidateOn + '.bVerror');
@@ -310,8 +306,8 @@
 			elements.each(function(){
 				removeTooltip($(this));
 				$(this).unbind('.bVerror');
-				$(this).removeClass(options.display.errorClass);
-				$(this).removeClass(options.display.validClass);
+				$(this).removeClass(options.errorClass);
+				$(this).removeClass(options.validClass);
 			});
 		}
 		
@@ -338,19 +334,19 @@
 			messagesHtml += '<div>' + messages[i] + '</div>\n';
 		}
 		
-		if(options.display.showCloseIcon){
-			var closeiconTpl = '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="'+options.display.closeIconClass+'" onclick="$(this).closest(\'.'+ options.display.tooltipClass +'\').css(\'visibility\', \'hidden\');">x</div></div></div>';
+		if(options.showCloseIcon){
+			var closeiconTpl = '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="'+options.closeIconClass+'" onclick="$(this).closest(\'.'+ options.tooltipClass +'\').css(\'visibility\', \'hidden\');">x</div></div></div>';
 			messagesHtml = closeiconTpl.replace('{message}', messagesHtml);
 		}
 		
-		var template = options.display.template.replace('{tooltipClass}', options.display.tooltipClass).replace('{message}', messagesHtml);
+		var template = options.template.replace('{tooltipClass}', options.tooltipClass).replace('{message}', messagesHtml);
 		
 		var tooltip = $(template);
 		tooltip.appendTo(msg_container);
 		
 		var pos = getTooltipPosition(element, tooltip); 
 		
-		tooltip.css({ visibility: 'visible', position: 'absolute', top: pos.top, left: pos.left }).fadeIn(options.display.showTooltipSpeed);
+		tooltip.css({ visibility: 'visible', position: 'absolute', top: pos.top, left: pos.left }).fadeIn(options.showTooltipSpeed);
 	}
 	
 	// removes tooltip from DOM
@@ -365,11 +361,11 @@
 	getTooltipPosition = function(input, tooltip) {
 	        
 	        var tooltipContainer = input.data("tooltip.bV");
-	        var top  = - ((tooltipContainer.offset().top - input.offset().top) + tooltip.outerHeight() - options.display.offset.y);
-	        var left = (input.offset().left + input.outerWidth()) - tooltipContainer.offset().left + options.display.offset.x;
+	        var top  = - ((tooltipContainer.offset().top - input.offset().top) + tooltip.outerHeight() - options.offset.y);
+	        var left = (input.offset().left + input.outerWidth()) - tooltipContainer.offset().left + options.offset.x;
 		
-		var x = options.display.position.x;
-		var y = options.display.position.y;
+		var x = options.position.x;
+		var y = options.position.y;
 		
 		// adjust Y
 		if(y == 'center' || y == 'bottom'){
@@ -390,8 +386,8 @@
 	
 	// calls callback functions
 	callBack = function(type, param1, param2, param3) {
-	        if($.isFunction(options.callback[type])){
-	        	return options.callback[type](param1, param2, param3);
+	        if($.isFunction(options[type])){
+	        	return options[type](param1, param2, param3);
 	        }
 	}
 	

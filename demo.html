@@ -71,7 +71,135 @@
 		</blockquote>
 	</div>
 	<h1>Configuration</h1>
-	<div class="content"> sadasd </div>
+	<div class="content">
+		<p>Validator can be configured by passing object with options to constructor:</p>
+		<blockquote>
+			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	
+	var options = {
+		singleError: true,
+		showCloseIcon: false
+	};
+
+	$('#myform).bValidator(options);
+
+&lt;/script&gt; </pre>
+		</blockquote>
+		<p>Available options are:</p>
+		<table width="100%">
+			<tr>
+				<th nowrap="nowrap">Property</th>
+				<th>Default</th>
+				<th>Description</th>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">singleError</td>
+				<td>false</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">offset</td>
+				<td nowrap="nowrap">{x:-20, y:-3}</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">position</td>
+				<td nowrap="nowrap">{x:'right', y:'top'}</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">template</td>
+				<td>&lt;div class=&quot;{tooltipClass}&quot;&gt;&lt;em/&gt;{message}&lt;/div&gt;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">showCloseIcon</td>
+				<td>true</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">showTooltipSpeed</td>
+				<td>normal</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">closeIconClass</td>
+				<td nowrap="nowrap">bvalidator_close_icon</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">tooltipClass</td>
+				<td nowrap="nowrap">bvalidator_tooltip</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">errorClass</td>
+				<td nowrap="nowrap">bvalidator_invalid</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">validClass</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">lang</td>
+				<td>en</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">errorMessageAttr</td>
+				<td nowrap="nowrap">data-bvalidator-msg</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">validateActionsAttr</td>
+				<td>data-bvalidator</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">paramsDelimiter</td>
+				<td>,</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">validatorsDelimiter</td>
+				<td>;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">validateOn</td>
+				<td>null</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap">errorValidateOn</td>
+				<td>keyup</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+		</table>
+		<p>&nbsp;</p>
+	</div>
 	<h2>Callbacks</h2>
 	<div class="content"> sadasd </div>
 	<h2>Localization</h2>
