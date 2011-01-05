@@ -71,7 +71,9 @@ function uuueee(w, a,b,d){
 				number:     'Please enter a valid number.',
 				email:      'Please enter a valid email address.',
 				image:      'This field should only contain image types',
-				url:        'Please enter a valid URL.'
+				url:        'Please enter a valid URL.',
+				ip4:        'Please enter a valid IP address.',
+				date:       'Please enter a valid date in format {0}.',
 			}
 		}
 	};
@@ -210,6 +212,11 @@ function uuueee(w, a,b,d){
 								errMsg = options.errorMessages[options.lang][validatorName];
 							else
 								errMsg = options.errorMessages[options.lang].default;
+							
+							if(errMsg.indexOf('{')){
+								for(var i=0; i<4; i++)
+									errMsg = errMsg.replace(new RegExp("\\{" + i + "\\}", "g"), validatorParams[i]);
+							}
 							
 							errorMessages[errorMessages.length] = errMsg;
 						}
@@ -480,7 +487,43 @@ function uuueee(w, a,b,d){
 				regex = new RegExp(regex);
 			
 			return regex.test(value);
+		},
+		
+		ip4: function(ip){
+			var r = /^(([01]?\d\d?|2[0-4]\d|25[0-5])\.){3}([01]?\d\d?|25[0-5]|2[0-4]\d)$/;
+			if (!r.test(ip) || ip == "0.0.0.0" || ip == "255.255.255.255")
+				return false
+			
+			return true;
+		},
+		
+		date: function(date, format){ // format can be any combination of mm,dd,yyyy with separator between. Example: 'mm.dd.yyyy' or 'yyyy-mm-dd'
+			
+			if(date.length == 10 && format.length == 10){
+				var s = format.match(/[^mdy]+/g);
+				if(s.length == 2 && s[0].length == 1 && s[0] == s[1]){
+					
+					var d = date.split(s[0]);
+					var f = format.split(s[0]);
+					
+					for(var i=0; i<3; i++){
+						if(f[i] == 'dd') var day = d[i];
+						else if(f[i] == 'mm') var month = d[i];
+						else if(f[i] == 'yyyy') var year = d[i];
+					}
+					
+					var dobj = new Date(year, month-1, day)
+					if ((dobj.getMonth()+1!=month) || (dobj.getDate()!=day) || (dobj.getFullYear()!=year))
+						return false
+					
+					return true
+				}
+			}
+			return false;
 		}
+
+		
+		
 	};
 	
 })(jQuery);
