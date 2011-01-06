@@ -53,7 +53,7 @@
 			<p><strong>include css:</strong></p>
 			<pre>&lt;link href=&quot;bvalidator.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</pre>
 		</blockquote>
-		<p>The web page should include elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form. Note the <span class="insource">data-bvalidator</span>  input field attribute which tells validator which validation actions to do for the field. The name of that attribute can be changed and this can be for example <span class="insource">class</span> or <span class="insource">rel</span>, see options for details.</p>
+		<p>The web page should include elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form. Note the <span class="insource">data-bvalidator</span> input field attribute which tells validator which validation actions to do for the field. The name of that attribute can be changed and this can be for example <span class="insource">class</span> or <span class="insource">rel</span>, see options for details.</p>
 		<blockquote>
 			<p><strong>HTML:</strong></p>
 			<pre>&lt;form id=&quot;myform&quot;&gt;
@@ -86,7 +86,8 @@
 
 	$('#myform).bValidator(options);
 
-&lt;/script&gt;</pre></blockquote>
+&lt;/script&gt;</pre>
+		</blockquote>
 		<p><strong>OR</strong> by defining <strong>global object with options</strong> called <strong>bValidatorOptions</strong>. Validatior will check if this object exists and if does will load options from it and override default options.</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
@@ -100,8 +101,8 @@
 
 &lt;/script&gt;</pre>
 		</blockquote>
-<p><strong>OR BOTH</strong>, you can define global <strong>bValidatorOptions</strong> object and also pass opitions to<strong> validator constructor</strong>. In that case options from <span class="insource">bValidatorOptions</span> object override default options and options passed as argument to constructor will override options from <span class="insource">bValidatorOptions</span>.</p>
-<p><strong>Available options:</strong></p>
+		<p><strong>OR BOTH</strong>, you can define global <strong>bValidatorOptions</strong> object and also pass opitions to<strong> validator constructor</strong>. In that case options from <span class="insource">bValidatorOptions</span> object override default options and options passed as argument to constructor will override options from <span class="insource">bValidatorOptions</span>.</p>
+		<p><strong>Available options:</strong></p>
 		<table width="100%">
 			<tr>
 				<th nowrap="nowrap">Property</th>
@@ -126,7 +127,7 @@
 			<tr>
 				<td nowrap="nowrap">template</td>
 				<td>&lt;div class=&quot;{errMsgClass}&quot;&gt;&lt;em/&gt;{message}&lt;/div&gt;</td>
-				<td> <p>HTML template for the error message tooltip. This HTML code will be put inside container div element and appended after the input field. <span class="insource">{errMsgClass}</span> will be replaced with value of the <span class="insource">errMsgClass</span> propery and <span class="insource">{message}</span> will be replaced with error messages text.</p></td>
+				<td><p>HTML template for the error message tooltip. This HTML code will be put inside container div element and appended after the input field. <span class="insource">{errMsgClass}</span> will be replaced with value of the <span class="insource">errMsgClass</span> propery and <span class="insource">{message}</span> will be replaced with error messages text.</p></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">showCloseIcon</td>
@@ -197,7 +198,7 @@
 		<p>&nbsp;</p>
 	</div>
 	<h2>Callbacks</h2>
-	<div class="content"> 
+	<div class="content">
 		<p>Callbacks are user defined functions that are called by validator in certain moment. Callbacks are defined the same way as configuration options. Callback functions are called for each validator action.	Example	of defineing callback is:</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
@@ -211,7 +212,8 @@
 	$('#myform).bValidator(options);
 
 &lt;/script&gt;
-</pre></blockquote>
+</pre>
+		</blockquote>
 		<p><strong>Available callbacks:</strong></p>
 		<table width="100%">
 			<tr>
@@ -222,35 +224,35 @@
 			<tr>
 				<td nowrap="nowrap">onBeforeValidate</td>
 				<td><ol>
-					<li>jQuery object containing input field</li>
-					<li>string validator action (example: min[5])</li>
-				</ol></td>
+						<li>jQuery object containing input field</li>
+						<li>string validator action (example: min[5])</li>
+					</ol></td>
 				<td>Called before the validation routine starts. Returning false will cause the validation to be skipped for that validator action.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">onAfterValidate</td>
 				<td><ol>
-					<li>jQuery object containing input field</li>
-					<li>string validator action (example: max[10])</li>
-					<li>validation result (true or false)</li>
-				</ol></td>
+						<li>jQuery object containing input field</li>
+						<li>string validator action (example: max[10])</li>
+						<li>validation result (true or false)</li>
+					</ol></td>
 				<td>Called after the validation routine ends. Returning false will stop executing that validator action,  displaying error messages and binding events to input fields will be skipped.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">onValidateFail</td>
 				<td><ol>
-					<li>jQuery object containing input field</li>
-					<li>string validator action (example: max[10])</li>
-					<li>array of all error messages for this input element</li>
-				</ol></td>
+						<li>jQuery object containing input field</li>
+						<li>string validator action (example: max[10])</li>
+						<li>array of all error messages for this input element</li>
+					</ol></td>
 				<td>Called after validation action fails,  but before error messages are displayed to the user. Returning false will stop executing that validator action,  displaying error messages and binding events to input fields will be skipped.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">onValidateSuccess</td>
 				<td><ol>
-					<li>jQuery object containing input field</li>
-					<li>string validator action (example: max[10])</li>
-				</ol></td>
+						<li>jQuery object containing input field</li>
+						<li>string validator action (example: max[10])</li>
+					</ol></td>
 				<td>Called after validation is sucessfull. Returning false will stop executing that validator action,  hiding error messages (if any) and binding events to input fields will be skipped.</td>
 			</tr>
 		</table>
@@ -270,10 +272,11 @@
 
 	$('#myform).bValidator(options);
 
-&lt;/script&gt;</pre></blockquote>
-<p> <strong>OR</strong> define <strong>global <span class="insource">bValidatorOptions</span> object with translated error messages</strong> that will be used in all validator instances:</p>
-<blockquote>
-	<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+&lt;/script&gt;</pre>
+		</blockquote>
+		<p> <strong>OR</strong> define <strong>global <span class="insource">bValidatorOptions</span> object with translated error messages</strong> that will be used in all validator instances:</p>
+		<blockquote>
+			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
 	var bValidatorOptions = {
 		lang: 'hr',
@@ -284,11 +287,11 @@
 	$('#myform).bValidator();
 
 &lt;/script&gt;</pre>
-</blockquote>
+		</blockquote>
 	</div>
 	<h2>API functions</h2>
-	<div class="content"> 
-		<p>When you make instance of validator you can call some functions on that instance:		</p>
+	<div class="content">
+		<p>When you make instance of validator you can call some functions on that instance: </p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -301,7 +304,7 @@
 
 &lt;/script&gt;</pre>
 		</blockquote>
-		<p>or you can access validator instance through jQuery data function:		</p>
+		<p>or you can access validator instance through jQuery data function: </p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -333,8 +336,8 @@
 			<tr>
 				<td nowrap="nowrap">removeErrMsg</td>
 				<td><ol>
-					<li>jQuery object containing inputs</li>
-				</ol></td>
+						<li>jQuery object containing inputs</li>
+					</ol></td>
 				<td>Deletes error message </td>
 			</tr>
 			<tr>
@@ -345,9 +348,9 @@
 			<tr>
 				<td nowrap="nowrap">bindValidateOn</td>
 				<td><ol>
-					<li>jQuery object containing inputs </li>
-				</ol></td>
-				<td>This function is helpful when using <span class="insource">validateOn</span> option and dinamic forms. If you add some new input elements to form after validator is already initialized and you want to validate them on event specified with  <span class="insource">validateOn</span> option you need to call this method. If you are not using <span class="insource">validateOn</span> option or you do not have dinamic forms you can forget about this function.</td>
+						<li>jQuery object containing inputs </li>
+					</ol></td>
+				<td>This function is helpful when using <span class="insource">validateOn</span> option and dinamic forms. If you add some new input elements to form after validator is already initialized and you want to validate them on event specified with <span class="insource">validateOn</span> option you need to call this method. If you are not using <span class="insource">validateOn</span> option or you do not have dinamic forms you can forget about this function.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">reset</td>
@@ -362,9 +365,9 @@
 			<tr>
 				<td nowrap="nowrap">validate</td>
 				<td><ol>
-					<li>if true error messages are not displayed (optional)</li>
-					<li>jQuery object containing inputs to validate only (optional)</li>
-				</ol></td>
+						<li>if true error messages are not displayed (optional)</li>
+						<li>jQuery object containing inputs to validate only (optional)</li>
+					</ol></td>
 				<td>Does validation.</td>
 			</tr>
 		</table>
@@ -429,8 +432,8 @@
 			<tr>
 				<td nowrap="nowrap">date</td>
 				<td><ol>
-					<li>date format</li>
-				</ol></td>
+						<li>date format</li>
+					</ol></td>
 				<td>Checks if value is a valid date in format specified by action parameter. Format can be any combination of mm,dd,yyyy with one character separator between. Example: 'mm.dd.yyyy' or 'yyyy-mm-dd'.</td>
 			</tr>
 			<tr>
@@ -441,59 +444,65 @@
 			<tr>
 				<td nowrap="nowrap">between</td>
 				<td><ol>
-					<li>minimum value</li>
-					<li>maximum value</li>
-				</ol></td>
+						<li>minimum value</li>
+						<li>maximum value</li>
+					</ol></td>
 				<td>Checks is value between values in  action parameters. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">max</td>
 				<td><ol>
-					<li>maximum value</li>
-				</ol></td>
-				<td>Checks is value less or equel than action parameter value.</td>
+						<li>maximum value</li>
+					</ol></td>
+				<td><p>Checks is value less or equel than action parameter value.</p>
+					<p>						If the input is a checkbox and it is in group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>) then <span class="insource">max</span> means &quot;select no more then max checkboxes&quot;.</p>
+					<p>				If the input is a select  then <span class="insource">max</span> means &quot;select no more then max options&quot;.</p>
+					<p>If you use <span class="insource">max</span> with checkbox or select you should use custom error messages. See errorMessageAttr option.</p></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">min</td>
 				<td><ol>
-					<li>minimum value</li>
-				</ol></td>
-				<td>Checks is value greater or equel than action parameter value.</td>
+						<li>minimum value</li>
+					</ol></td>
+				<td><p>Checks is value greater or equel than action parameter value.</p>
+				<p>If the input is a checkbox and it is in group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>) then <span class="insource">min</span> means &quot;select at least min checkboxes&quot;.</p>
+				<p> If the input is a select  then <span class="insource">min</span> means &quot;select at least min options&quot;.</p>
+				<p>If you use <span class="insource">min</span> with checkbox or select you should use custom error messages. See errorMessageAttr option.</p></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">rangelength</td>
 				<td><ol>
-					<li>minimum length</li>
-					<li>maximum length</li>
-				</ol></td>
+						<li>minimum length</li>
+						<li>maximum length</li>
+					</ol></td>
 				<td>Checks if length of the value is between action parameters values. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">maxlength</td>
 				<td><ol>
-					<li>maximum length</li>
-				</ol></td>
+						<li>maximum length</li>
+					</ol></td>
 				<td>Checks if length of the value is smaller than action parameter value. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">minlength</td>
 				<td><ol>
-					<li>minimum length</li>
-				</ol></td>
+						<li>minimum length</li>
+					</ol></td>
 				<td>Checks if length of the value is greater than action parameter value. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">differs</td>
 				<td><ol>
-					<li>element id</li>
-				</ol></td>
+						<li>element id</li>
+					</ol></td>
 				<td>The value has to be diferent from the value of field which ID is passed as parameter.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">equalto</td>
 				<td><ol>
-					<li>element id</li>
-				</ol></td>
+						<li>element id</li>
+					</ol></td>
 				<td>The value has to be equel to the value of field which ID is passed as parameter.</td>
 			</tr>
 		</table>
@@ -502,7 +511,80 @@
 	<h1>Demos</h1>
 	<div class="content"> sadasd </div>
 	<h2>All validators in action</h2>
-	<div class="content"> sadasd </div>
+	<div class="content">
+		<form id="form1">
+		<div style="display:table">
+			<div style="display:table-cell;width:50%">
+				<p>Alphabetic characters only:<br />
+					<input type="text" data-bvalidator="alpha,required,minlength[10]"/>
+				</p>
+				<p>Alphanumeric characters only:<br />
+					<input type="text" data-bvalidator="alphanum"/>
+				</p>
+				<p>Only digits:<br />
+					<input type="text" data-bvalidator="digit"/>
+				</p>
+				<p>Number:<br />
+					<input type="text" data-bvalidator="number"/>
+				</p>
+				<p>Email:<br />
+					<input type="text" data-bvalidator="email"/>
+				</p>
+				<p>Url:<br />
+					<input type="text" data-bvalidator="url"/>
+				</p>
+				<p>IP address:<br />
+					<input type="text" data-bvalidator="ip4"/>
+				</p>
+				<p>Date in format dd.mm.yyyy:<br />
+					<input type="text" data-bvalidator="date[dd.mm.yyyy]"/>
+				</p>
+				<p>Mimimum value 10:<br />
+					<input type="text" data-bvalidator="min[10]"/>
+				</p>
+			</div>
+			<div style="display:table-cell">
+				<p>Value between 100 and 200:<br />
+					<input type="text" data-bvalidator="between[100,200]"/>
+				</p>
+				<p>Mimimum length is 10 characters:<br />
+					<input type="text" data-bvalidator="minlength[10]"/>
+				</p>
+				<p>Maximum length is 10 characters:<br />
+					<input type="text" data-bvalidator="maxlength[10]"/>
+				</p>
+				<p>Valid length is between 10 and 20 characters:<br />
+					<input type="text" data-bvalidator="rangelength[10,20]"/>
+				</p>
+				<p>Value of the inputs must be equal:<br />
+					<input type="text" id="equalto1"/>
+					<input type="text" data-bvalidator="equalto[equalto1]"/>
+				</p>
+				<p>Value of the inputs must not be equal:<br />
+					<input type="text" id="differs1"/>
+					<input type="text" data-bvalidator="differs[differs1]"/>
+				</p>
+				<p>asdfasdf:<br />
+					<input name="a[]" type="checkbox" value="1" data-bvalidator="required"/>
+					<input name="a[]" type="checkbox" value="2" />
+					<input name="a[]" type="checkbox" value="3" />
+				</p>
+				<p>asdfasdf:<br />
+					<select size="5" multiple="multiple" data-bvalidator="required,min[2]" data-bvalidator-msg="sdfsdfsdf" >
+						<option value="">Choose</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+					</select>
+				</p>
+			</div>
+		</div>
+		<p>
+			<input type="submit" name="button" id="button" value="Submit" />
+			<input type="reset" name="button2" id="button2" value="Reset" />
+		</p>
+	</form>
+
+	</div>
 	<h2>Input specific error message</h2>
 	<div class="content"> sadasd </div>
 	<h2>custom validators</h2>
@@ -513,73 +595,6 @@
 	<div class="content"> sadasd </div>
 	<h2>Error message positionin and style</h2>
 	<div class="content"> sadasd </div>
-	<form id="form1">
-		<p>Alphabetic characters only:<br />
-			<input type="text" data-bvalidator="alpha,required"/>
-		</p>
-		<p>Alphanumeric characters only:<br />
-			<input type="text" data-bvalidator="alphanum"/>
-		</p>
-		<p>Only digits:<br />
-			<input type="text" data-bvalidator="digit"/>
-		</p>
-		<p>Number:<br />
-			<input type="text" data-bvalidator="number"/>
-		</p>
-		<p>Email:<br />
-			<input type="text" data-bvalidator="email"/>
-		</p>
-		<p>Url:<br />
-			<input type="text" data-bvalidator="url"/>
-		</p>
-		<p>IP address:<br />
-			<input type="text" data-bvalidator="ip4"/>
-		</p>
-		<p>Date in format dd.mm.yyyy:<br />
-			<input type="text" data-bvalidator="date[dd.mm.yyyy]"/>
-		</p>
-		<p>Mimimum value 10:<br />
-			<input type="text" data-bvalidator="min[10]"/>
-		</p>
-		<p>Value between 100 and 200:<br />
-			<input type="text" data-bvalidator="between[100,200]"/>
-		</p>
-		<p>Mimimum length is 10 characters:<br />
-			<input type="text" data-bvalidator="minlength[10]"/>
-		</p>
-		<p>Maximum length is 10 characters:<br />
-			<input type="text" data-bvalidator="maxlength[10]"/>
-		</p>
-		<p>Valid length is between 10 and 20 characters:<br />
-			<input type="text" data-bvalidator="rangelength[10,20]"/>
-		</p>
-		<p>Value of the inputs must be equal:<br />
-			<input type="text" id="equalto1"/>
-			<input type="text" data-bvalidator="equalto[equalto1]"/>
-		</p>
-		<p>Value of the inputs must not be equal:<br />
-			<input type="text" id="differs1"/>
-			<input type="text" data-bvalidator="differs[differs1]"/>
-		</p>
-		<input type="text" name="textfield3" id="textfield3" data-bvalidator="  "/>
-		<input type="text" name="textfield1" id="textfield1" data-bvalidator="aaa[3,5];uuueee[777,t];assdaa[3,5];"  value="vrijednost2"/>
-		<input type="text" name="textfield2" id="textfield2"/>
-		<input name="a[]" type="checkbox" value="chekirano3" checked="checked" data-bvalidator="rrrrree"/>
-		<input name="a[]" type="checkbox" value="chekirano3" checked="checked" />
-		<input name="a[]" type="checkbox" value="chekirano3" />
-		<select name="" data-bvalidator="rrrrree">
-			<option selected="selected" value="select_val1">asdasd</option>
-			<option value="select_val2">ereerer</option>
-		</select>
-		<input name="redio1" type="radio" value="1" data-bvalidator="rrrrree"/>
-		<input name="redio1" type="radio" value="2" checked="checked"/>
-		<p>&nbsp;</p>
-		<p>&nbsp;</p>
-		<p>
-			<input type="submit" name="button" id="button" value="Submit" />
-			<input type="reset" name="button2" id="button2" value="Reset" />
-		</p>
-	</form>
 </div>
 <script type="text/javascript" defer="defer">   
 	

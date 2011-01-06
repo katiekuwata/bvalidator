@@ -202,6 +202,7 @@ var optionsLocal = {
 				
 				// value of validateActionsAttr input attribute
 				var actionsStr = $.trim($(this).attr(options.validateActionsAttr));
+				var is_valid = 0;
 				
 				if(!actionsStr)
 					return true;
@@ -212,78 +213,83 @@ var optionsLocal = {
 				// value of input field for validation
 				var inputValue = getValue($(this));
 				
-				// if value is not required and is empty skip this element
-				if(actions.indexOf('required') == -1 && !inputValue){
-					return true;
+				// if value is not required and is empty
+				if(actions.indexOf('required') == -1 && !validator.required(inputValue)){
+					is_valid = 1;
 				}
 				
 				var errorMessages = [];
 				
-				// for each validation action
-				for(var i in actions){
-					
-					actions[i] = $.trim(actions[i]);
-					
-					if(!actions[i])
-						continue;
-					
-					if(callBack('onBeforeValidate', $(this), actions[i]) === false)
-						continue;
-					
-					// check if we have some parameters for validator
-					var validatorParams = actions[i].match(/^(.*?)\[(.*?)\]/);
-					
-					if(validatorParams && validatorParams.length == 3){
-						var validatorName = $.trim(validatorParams[1]);
-						validatorParams = validatorParams[2].split(options.paramsDelimiter);
-					}
-					else{
-						validatorParams = [];
-						var validatorName = actions[i];
-					}
-					
-					// if validator exists
-					if(typeof validator[validatorName] == 'function'){
-						// call validator function
-						var validationResult = validator[validatorName](inputValue.value, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
-					}
-					// call custom user dafined function
-					else if(typeof window[validatorName] == 'function'){
-						var validationResult = window[validatorName](inputValue.value, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
-					}
-					
-					if(callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
-						continue;
-					
-					if(!validationResult){
+				if(!is_valid){
+					// for each validation action
+					for(var i in actions){
 						
-						if(!doNotshowMessages){
-							// get error messsage
-							var errMsg = $(this).attr(options.errorMessageAttr)
-							
-							if(!errMsg && options.errorMessages[options.lang][validatorName])
-								errMsg = options.errorMessages[options.lang][validatorName];
-							else
-								errMsg = options.errorMessages[options.lang].default;
-							
-							if(errMsg.indexOf('{')){
-								for(var i=0; i<4; i++)
-									errMsg = errMsg.replace(new RegExp("\\{" + i + "\\}", "g"), validatorParams[i]);
-							}
-							
-							errorMessages[errorMessages.length] = errMsg;
+						actions[i] = $.trim(actions[i]);
+						
+						if(!actions[i])
+							continue;
+						
+						if(callBack('onBeforeValidate', $(this), actions[i]) === false)
+							continue;
+						
+						// check if we have some parameters for validator
+						var validatorParams = actions[i].match(/^(.*?)\[(.*?)\]/);
+						
+						if(validatorParams && validatorParams.length == 3){
+							var validatorName = $.trim(validatorParams[1]);
+							validatorParams = validatorParams[2].split(options.paramsDelimiter);
 						}
-						else
-							errorMessages[errorMessages.length] = '';
+						else{
+							validatorParams = [];
+							var validatorName = actions[i];
+						}
 						
-						ret = false;
+						// if validator exists
+						if(typeof validator[validatorName] == 'function'){
+							// call validator function
+							var validationResult = validator[validatorName](inputValue, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
+						}
+						// call custom user dafined function
+						else if(typeof window[validatorName] == 'function'){
+							var validationResult = window[validatorName](inputValue, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
+						}
 						
-						if(callBack('onValidateFail', $(this), actions[i], errorMessages) === false)
+						if(callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
 							continue;
-					}
-					else{
-						if(callBack('onValidateSuccess', $(this), actions[i]) === false)
-							continue;
+						
+						if(!validationResult){
+							
+							if(!doNotshowMessages){
+								// get error messsage
+								var errMsg = $(this).attr(options.errorMessageAttr)
+								
+								if(!errMsg){
+									if(options.errorMessages[options.lang][validatorName])
+										errMsg = options.errorMessages[options.lang][validatorName];
+									else
+										errMsg = options.errorMessages[options.lang].default;
+								}
+								
+								// replace values in braces
+								if(errMsg.indexOf('{')){
+									for(var i=0; i<4; i++)
+										errMsg = errMsg.replace(new RegExp("\\{" + i + "\\}", "g"), validatorParams[i]);
+								}
+								
+								errorMessages[errorMessages.length] = errMsg;
+							}
+							else
+								errorMessages[errorMessages.length] = '';
+							
+							ret = false;
+							
+							if(callBack('onValidateFail', $(this), actions[i], errorMessages) === false)
+								continue;
+						}
+						else{
+							if(callBack('onValidateSuccess', $(this), actions[i]) === false)
+								continue;
+						}
 					}
 				}
 				
@@ -300,8 +306,13 @@ var optionsLocal = {
 						if (options.errorValidateOn){
 							if(options.validateOn)
 								$(this).unbind(options.validateOn + '.bV');
-							$(this).unbind(options.errorValidateOn + '.bVerror');
-							$(this).bind(options.errorValidateOn + '.bVerror', {'bValidatorInstance': instance}, function(event) {
+							
+							var evt = options.errorValidateOn;
+							if($(this).is('input:checkbox,input:radio,select'))
+								evt = 'change';
+							
+							$(this).unbind(evt + '.bVerror');
+							$(this).bind(evt + '.bVerror', {'bValidatorInstance': instance}, function(event) {
 								console.log('errorValidateOn');
 								event.data.bValidatorInstance.validate(false, $(this));
 							});
@@ -459,6 +470,10 @@ var optionsLocal = {
 			else
 				ret['value'] = element.val();
 		}
+		else if(element.is('select')){
+			ret['selectedInGroup'] =  $("option:selected", element).length;
+			ret['value'] = element.val();
+		}
 		else if(element.is(':input')){
 			ret['value'] = element.val();
 		}
@@ -469,95 +484,101 @@ var optionsLocal = {
 	// object with validator functions
 	var validator = {
 	
-		equalto: function(value, elementId){
-			return value == $('#' + elementId).val();
+		equalto: function(v, elementId){
+			return v.value == $('#' + elementId).val();
 		},
 		
-		differs: function(value, elementId){
-			return value != $('#' + elementId).val();
+		differs: function(v, elementId){
+			return v.value != $('#' + elementId).val();
 		},
 		
-		minlength: function(value, minlength){
-			return (value.length >= minlength)
+		minlength: function(v, minlength){
+			return (v.value.length >= minlength)
 		},
 		
-		maxlength: function(value, maxlength){
-			return (value.length <= maxlength)
+		maxlength: function(v, maxlength){
+			return (v.value.length <= maxlength)
 		},
 		
-		rangelength: function(value, minlength, maxlength){		
-			return (value.length >= minlength && value.length <= maxlength)
+		rangelength: function(v, minlength, maxlength){		
+			return (v.value.length >= minlength && v.value.length <= maxlength)
 		},
 		
-		min: function(value, min){		
-			return (value >= min)
+		min: function(v, min){		
+			if(v.selectedInGroup)
+				return v.selectedInGroup >= min
+			return (v.value >= min)
 		},
 		
-		max: function(value, max){		
-			return (value <= max)
+		max: function(v, max){		
+			if(v.selectedInGroup)
+				return v.selectedInGroup <= max
+			return (v.value <= max)
 		},
 		
-		between: function(value, min, max){		
-			return (value >= min && value <= max)
+		between: function(v, min, max){		
+			return (v.value >= min && v.value <= max)
 		},
 		
-		required: function(value){
-			if(value + '')
-				return true;
-			return false
+		required: function(v){
+			
+			if(!v.value || !$.trim(v.value))
+				return false
+				
+			return true
 		},
 		
-		alpha: function(value){
-			return this.regex(value, options.regex.alpha);
+		alpha: function(v){
+			return this.regex(v, options.regex.alpha);
 		},
 		
-		alphanum: function(value){
-			return this.regex(value, options.regex.alphanum);
+		alphanum: function(v){
+			return this.regex(v, options.regex.alphanum);
 		},
 		
-		digit: function(value){
-			return this.regex(value, options.regex.digit);
+		digit: function(v){
+			return this.regex(v, options.regex.digit);
 		},
 		
-		number: function(value){
-			return this.regex(value, options.regex.number);
+		number: function(v){
+			return this.regex(v, options.regex.number);
 		},
 		
-		email: function(value){
-			return this.regex(value, options.regex.email);
+		email: function(v){
+			return this.regex(v, options.regex.email);
 		},
 		
-		image: function(value){
-			return this.regex(value, options.regex.image);
+		image: function(v){
+			return this.regex(v, options.regex.image);
 		},
 		
-		url: function(value){
-			return this.regex(value, options.regex.url);
+		url: function(v){
+			return this.regex(v, options.regex.url);
 		},
 		
-		regex: function(value, regex){
+		regex: function(v, regex){
 			
 			if(typeof regex === "string")
 				regex = new RegExp(regex);
 			
-			return regex.test(value);
+			return regex.test(v.value);
 		},
 		
-		ip4: function(ip){
+		ip4: function(v){
 			var r = /^(([01]?\d\d?|2[0-4]\d|25[0-5])\.){3}([01]?\d\d?|25[0-5]|2[0-4]\d)$/;
-			if (!r.test(ip) || ip == "0.0.0.0" || ip == "255.255.255.255")
+			if (!r.test(v.value) || v.value == "0.0.0.0" || v.value == "255.255.255.255")
 				return false
 			
 			return true;
 		},
 		
-		date: function(date, format){ // format can be any combination of mm,dd,yyyy with separator between. Example: 'mm.dd.yyyy' or 'yyyy-mm-dd'
+		date: function(v, format){ // format can be any combination of mm,dd,yyyy with separator between. Example: 'mm.dd.yyyy' or 'yyyy-mm-dd'
 			
-			if(date.length == 10 && format.length == 10){
+			if(v.value.length == 10 && format.length == 10){
 				var s = format.match(/[^mdy]+/g);
 				if(s.length == 2 && s[0].length == 1 && s[0] == s[1]){
 					
-					var d = date.split(s[0]);
+					var d = v.value.split(s[0]);
 					var f = format.split(s[0]);
 					
 					for(var i=0; i<3; i++){
@@ -575,7 +596,6 @@ var optionsLocal = {
 			}
 			return false;
 		},
-
 	};
 	
 })(jQuery);

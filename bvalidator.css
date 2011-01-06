@@ -1,14 +1,14 @@
-.bVtooltipContainer{
+.bVErrMsgContainer{
 	border: 1px solid #00F;
 }
 
 /* validaton errors */
 .bvalidator_invalid{
-	border: 1px solid #F00;	
+	background-color: #F96;	
 }
 
 .bvalidator_valid{
-	border: 1px solid #0C0;
+	background-color: #6F9;
 }
 
 /* error message */
