@@ -439,7 +439,9 @@
 			<tr>
 				<td nowrap="nowrap">required</td>
 				<td>&nbsp;</td>
-				<td>Is a value required</td>
+				<td><p>Is a value required.</p>
+				<p>If you put <span class="insource">required</span> in front of other actions like <span class="insource">data-bvalidator=&quot;required,max[10],email&quot;</span> then error message that field is required will be shown in error messages tooltip with other error messages.</p>
+				<p>If you put <span class="insource">required</span> after  other actions like <span class="insource">data-bvalidator=&quot;max[10],email,required&quot;</span> then error message that field is required will not be shown in error messages tooltip if there are also some more error messages.</p></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap">between</td>
@@ -512,7 +514,7 @@
 	<div class="content"> sadasd </div>
 	<h2>All validators in action</h2>
 	<div class="content">
-		<form id="form1">
+		<form id="form1" method="post">
 		<div style="display:table">
 			<div style="display:table-cell;width:50%">
 				<p>Alphabetic characters only:<br />
@@ -545,7 +547,7 @@
 			</div>
 			<div style="display:table-cell">
 				<p>Value between 100 and 200:<br />
-					<input type="text" data-bvalidator="between[100,200]"/>
+					<input type="text" data-bvalidator="between[100:200]"/>
 				</p>
 				<p>Mimimum length is 10 characters:<br />
 					<input type="text" data-bvalidator="minlength[10]"/>
@@ -554,7 +556,7 @@
 					<input type="text" data-bvalidator="maxlength[10]"/>
 				</p>
 				<p>Valid length is between 10 and 20 characters:<br />
-					<input type="text" data-bvalidator="rangelength[10,20]"/>
+					<input type="text" data-bvalidator="rangelength[10:20]"/>
 				</p>
 				<p>Value of the inputs must be equal:<br />
 					<input type="text" id="equalto1"/>
@@ -579,29 +581,99 @@
 			</div>
 		</div>
 		<p>
-			<input type="submit" name="button" id="button" value="Submit" />
-			<input type="reset" name="button2" id="button2" value="Reset" />
+			<input type="submit" value="Submit" />
+			<input type="reset" value="Reset" />
 		</p>
 	</form>
+	<script type="text/javascript">   
+		$(document).ready(function () {
+			$('#form1').bValidator();
+		});
+	</script>
 
 	</div>
 	<h2>Input specific error message</h2>
-	<div class="content"> sadasd </div>
+	<div class="content">
+		<form id="form2" method="post">
+			<p>
+				Enter string containing 'a' character:
+				<input type="text" data-bvalidator="regex[a+],required" data-bvalidator-msg="Plese enter at least one 'a' character."/>
+			</p>
+			<p>
+				<input type="submit" value="Submit" />
+				<input type="reset" value="Reset" />
+			</p>
+		</form>
+		<script type="text/javascript">   
+			$(document).ready(function () {
+				$('#form2').bValidator();
+			});
+		</script>
+	In this example <span class="insource">regex</span> validator action is used (<span class="insource">regex[a+]</span>) and error message which is defined in <span class="insource">data-bvalidator-msg</span> attribute.</div>
 	<h2>custom validators</h2>
-	<div class="content"> sadasd </div>
+	<div class="content">
+		<script type="text/javascript">   
+			$(document).ready(function () {
+				$('#form3').bValidator();
+			});
+			
+			function myvalidator(number, devideBy){
+				number = parseFloat(number);
+				if(number % parseInt(devideBy) == 0)
+					return true;
+				return false;
+			}
+			
+		</script>
+		<form id="form3" method="post">
+			<p> Enter a number which is divisible by 3:
+				<input type="text" data-bvalidator="myvalidator[3],required" data-bvalidator-msg="Enter a number which is divisible by 3."/>
+			</p>
+			<p> Enter a number which is divisible by 4:
+				<input type="text" data-bvalidator="myvalidator[4],required" data-bvalidator-msg="Enter a number which is divisible by 4."/>
+			</p>
+			<p>
+				<input type="submit" value="Submit" />
+				<input type="reset" value="Reset" />
+			</p>
+		</form>
+		<p>This example shows how you can  crete your own validation action. Just make function that returns true for successful validation and false for error and put function name in <span class="insource">data-bvalidator</span> attribute. <br />
+		You can see also in this example how to use parameters with  your own validation action.</p>
+</div>
 	<h2>Dinamic forms</h2>
-	<div class="content"> sadasd </div>
+	<div class="content">
+		<script type="text/javascript">   
+			$(document).ready(function () {
+				$('#form4').bValidator();
+			});
+		</script>
+		<form id="form4" method="post">
+			<div id="form4more">
+				
+			</div>
+			<input type="button" value="Add more elements" onclick="$('#form4more').append('Enter a number: &lt;input type=\'text\' data-bvalidator=\'number,required\' /&gt;&lt;br /&gt;');"/>
+			<input type="button" value="Show / Hide" onclick="$('#form4sh').toggle(400);"/>
+			<div id="form4sh">
+				Enter alphanumeric string:
+				<input type="text" data-bvalidator="alphanum,required" />
+			</div>
+			<p> Enter a number:
+				<input type="text" data-bvalidator="number,required" />
+			</p>
+			<p> Enter Email:
+				<input type="text" data-bvalidator="required,email" />
+			</p>
+			<p>
+				<input type="submit" value="Submit" />
+				<input type="reset" value="Reset" />
+			</p>
+		</form>
+		<p>You can dinamicaly add inputs to form after the validator is initialized. Note that  if some form elements are hidden they will be not validated.</p>
+	</div>
 	<h2>Server side validation</h2>
 	<div class="content"> sadasd </div>
 	<h2>Error message positionin and style</h2>
 	<div class="content"> sadasd </div>
 </div>
-<script type="text/javascript" defer="defer">   
-	
-	$('#form1').bValidator(optionsLocal);
-	
-	//alert('aaaa:' + currentOptions.actionsAttr);
-	
-</script>
 </body>
 </html>
