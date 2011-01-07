@@ -95,25 +95,25 @@ var optionsLocal = {
 			// default error messages
 			errorMessages: {
 				en: {
-					default:    'Please correct this value.',
-					equalto:    'Please enter the same value again.',
-					differs:    'Please enter a different value.',
-					minlength:  'The length must be at least {0} characters',
-					maxlength:  'The length must be at max {0} characters',
-					rangelength:'The length must be between {0} and {1}',
-					min:        'Please enter a value greater than or equal to {0}.',
-					max:        'Please enter a value less than or equal to {0}.',
-					between:    'Please enter a value between {0} and {1}.',
-					required:   'This field is required.',
-					alpha:      'Please enter alphabetic characters only.',
-					alphanum:   'Please enter alphanumeric characters only.',
-					digit:      'Please enter only digits.',
-					number:     'Please enter a valid number.',
-					email:      'Please enter a valid email address.',
-					image:      'This field should only contain image types',
-					url:        'Please enter a valid URL.',
-					ip4:        'Please enter a valid IP address.',
-					date:       'Please enter a valid date in format {0}.',
+					'default':    'Please correct this value.',
+					'equalto':    'Please enter the same value again.',
+					'differs':    'Please enter a different value.',
+					'minlength':  'The length must be at least {0} characters',
+					'maxlength':  'The length must be at max {0} characters',
+					'rangelength':'The length must be between {0} and {1}',
+					'min':        'Please enter a value greater than or equal to {0}.',
+					'max':        'Please enter a value less than or equal to {0}.',
+					'between':    'Please enter a value between {0} and {1}.',
+					'required':   'This field is required.',
+					'alpha':      'Please enter alphabetic characters only.',
+					'alphanum':   'Please enter alphanumeric characters only.',
+					'digit':      'Please enter only digits.',
+					'number':     'Please enter a valid number.',
+					'email':      'Please enter a valid email address.',
+					'image':      'This field should only contain image types',
+					'url':        'Please enter a valid URL.',
+					'ip4':        'Please enter a valid IP address.',
+					'date':       'Please enter a valid date in format {0}.',
 				}
 			},
 			
@@ -433,7 +433,7 @@ var optionsLocal = {
 				var inputValue = _getValue($(this));
 				
 				// if value is not required and is empty
-				if(actions.indexOf('required') == -1 && !validator.required(inputValue)){
+				if(jQuery.inArray('required',actions) == -1 && !validator.required(inputValue)){
 					is_valid = 1;
 				}
 				
@@ -491,7 +491,7 @@ var optionsLocal = {
 										if(options.errorMessages[options.lang][validatorName])
 											errMsg = options.errorMessages[options.lang][validatorName];
 										else
-											errMsg = options.errorMessages[options.lang].default;
+											errMsg = options.errorMessages[options.lang]['default'];
 									}
 									else{
 										skip_messages = 1;
