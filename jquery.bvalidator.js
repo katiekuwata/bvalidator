@@ -65,7 +65,7 @@ var optionsLocal = {
 		var options = {
 			
 			singleError:         false,		// validate all inputs at once
-			offset:              {x:-20, y:-3},	// offset position for error message tooltip
+			offset:              {x:-25, y:-3},	// offset position for error message tooltip
 			position:            {x:'right', y:'top'}, // error message placement x:left|center|right  y:top|center|bottom
 			template:            '<div class="{errMsgClass}"><em/>{message}</div>', // template for error message
 			showCloseIcon:       true,	// put close icon on error message

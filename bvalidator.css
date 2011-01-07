@@ -1,14 +1,7 @@
-.bVErrMsgContainer{
-	border: 1px solid #00F;
-}
 
-/* validaton errors */
+/* invalid input */
 .bvalidator_invalid{
-	background-color: #F96;	
-}
-
-.bvalidator_valid{
-	background-color: #6F9;
+	background-color: #FFFFAE;
 }
 
 /* error message */
@@ -37,6 +30,7 @@
 	opacity:.90; 
 }
 
+/* close icon */
 .bvalidator_errmsg .bvalidator_close_icon {
 	margin-left: 5px;
 	margin-top: -2px;
