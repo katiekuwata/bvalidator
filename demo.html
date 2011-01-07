@@ -28,6 +28,36 @@
 .insource {
 	font-family: "Courier New", Courier, monospace;
 }
+
+.ex6_errmsg {
+	background-color:#333;
+	font-size:10px;
+	border:1px solid #999;
+	color:#F90;
+	display:none;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	-moz-border-radius-bottomleft:0;
+	-moz-border-radius-topleft:0;
+	-webkit-border-bottom-left-radius:0;
+	-webkit-border-top-left-radius:0;
+	-moz-box-shadow:0 0 6px #ddd;
+	-webkit-box-shadow:0 0 6px #ddd;
+	white-space:nowrap;
+	padding-top: 2px;
+	padding-right: 10px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	font-family: Verdana, Geneva, sans-serif;
+	-moz-opacity:.90;
+	filter:alpha(opacity=90);
+	opacity:.90;
+}
+
+.ex6_invalid{
+	background-color: #F96;	
+}
+
 </style>
 </head>
 
@@ -671,9 +701,77 @@
 		<p>You can dinamicaly add inputs to form after the validator is initialized. Note that  if some form elements are hidden they will be not validated.</p>
 	</div>
 	<h2>Server side validation</h2>
-	<div class="content"> sadasd </div>
-	<h2>Error message positionin and style</h2>
-	<div class="content"> sadasd </div>
+	<div class="content">
+		<script type="text/javascript">   
+			$(document).ready(function () {
+				$('#form5').bValidator();
+			});
+			
+			function checkUsername(username){
+				
+				var ret = false;
+				
+				$.ajax({
+					type: 'POST',
+					url: 'demo.html',
+					async: false,
+					data: {'username':username},
+					success: function(data){
+						if(data == 'ok')
+							ret = true
+					}
+				});
+
+				return ret;
+			}
+		</script>
+		<form id="form5" method="post">
+			<p> Choose username:
+				<input type="text" data-bvalidator="checkUsername,required" data-bvalidator-msg="This username is already taken. Please choose another one."/>
+			</p>
+			<p>
+				<input type="submit" value="Submit" />
+				<input type="reset" value="Reset" />
+			</p>
+		</form>
+		This example is similar to custom validators example
+	above. Just make your own validator action function which will do synchronus AJAX request that will check if value is valid.</div>
+	<h2>Error message position and style</h2>
+	<div class="content"> 
+		<script type="text/javascript">			
+			
+			var options = {
+				offset:              {x:5, y:-2},
+				position:            {x:'right', y:'center'},
+				template:            '<div class="{errMsgClass}">{message}</div>',
+				showCloseIcon:       false,
+				errMsgClass:         'ex6_errmsg',
+				errorClass:          'ex6_invalid'
+			};
+			
+			$(document).ready(function () {
+				$('#form6').bValidator(options);
+			});
+			
+			
+		</script>
+		<form id="form6" method="post">
+			<p> Username:
+				<input type="text" data-bvalidator="alphanum,required" />
+			</p>
+			<p> Password:
+				<input type="password" id="form6pass" data-bvalidator="required"/>
+			</p>
+			<p> Password again:
+				<input type="password" data-bvalidator="equalto[form6pass],required" />
+			</p>
+			<p>
+				<input type="submit" value="Submit" />
+				<input type="reset" value="Reset" />
+			</p>
+		</form>
+		<p>You can set	template, position and CSS styles for error messages.</p>
+	</div>
 </div>
 </body>
 </html>
