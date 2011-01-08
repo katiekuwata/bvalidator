@@ -529,10 +529,13 @@ var optionsLocal = {
 					if(errorMessages.length){
 						
 						_showErrMsg($(this), errorMessages)
-						$(this).removeClass(options.validClass);
-						if(options.errorClass)
-							$(this).addClass(options.errorClass);
 						
+						if(!$(this).is('input:checkbox,input:radio')){
+							$(this).removeClass(options.validClass);
+							if(options.errorClass)
+								$(this).addClass(options.errorClass);
+						}
+								
 						// input validation event             
 						if (options.errorValidateOn){
 							if(options.validateOn)
@@ -553,10 +556,12 @@ var optionsLocal = {
 					}
 					else{
 						_removeErrMsg($(this));
-						$(this).removeClass(options.errorClass);
 						
-						if(options.validClass)
-							$(this).addClass(options.validClass);
+						if(!$(this).is('input:checkbox,input:radio')){
+							$(this).removeClass(options.errorClass);
+							if(options.validClass)
+								$(this).addClass(options.validClass);
+						}
 						
 						//if (options.errorValidateOn)
 						//	$(this).unbind('.bVerror');

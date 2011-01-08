@@ -26,7 +26,7 @@ function showsource(ex){
 .main_content {
 	font-family: Verdana, Geneva, sans-serif;
 	font-size: 9pt;
-	background-color: #CCC;
+	background-color: #333;
 	width: 800px;
 	margin-right: auto;
 	margin-left: auto;
@@ -88,12 +88,14 @@ h1 {
 	font-size: 16pt;
 	font-weight: bold;
 	margin-top: 20px;
+	color: #FFF;
 }
 h2 {
 	font-size: 14pt;
 	font-weight: bold;
 	margin-top: 20px;
 	padding-left: 15px;
+	color: #FFF;
 }
 body {
 }
@@ -121,6 +123,10 @@ body {
 	white-space: pre;
 	background-color: #F0F0F0;
 	margin-bottom: 10px;
+}
+.fp {
+	font-weight: bold;
+	color: #06F;
 }
 </style>
 </head>
@@ -204,87 +210,87 @@ body {
 				<th>Description</th>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">singleError</td>
+				<td nowrap="nowrap" class="fp">singleError</td>
 				<td>false</td>
 				<td>Enabling this shows only first validation error at a time. </td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">offset</td>
+				<td nowrap="nowrap" class="fp">offset</td>
 				<td nowrap="nowrap">{x:-25, y:-3}</td>
 				<td>Fine tunes the error message tooltip position specified with the <span class="insource">position</span> property.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">position</td>
+				<td nowrap="nowrap" class="fp">position</td>
 				<td nowrap="nowrap">{x:'right', y:'top'}</td>
 				<td>Specifies the position of the error message tooltip. Valid values for <strong>x</strong> are: <span class="insource">left</span>, <span class="insource">center</span>,<span class="insource"> right</span> and for <strong>y</strong> are <span class="insource">top</span>,<span class="insource"> center</span>,<span class="insource"> bottom</span></td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">template</td>
+				<td nowrap="nowrap" class="fp">template</td>
 				<td>&lt;div class=&quot;{errMsgClass}&quot;&gt;&lt;em/&gt;{message}&lt;/div&gt;</td>
 				<td><p>HTML template for the error message tooltip. This HTML code will be put inside container div element and appended after the input field. <span class="insource">{errMsgClass}</span> will be replaced with value of the <span class="insource">errMsgClass</span> propery and <span class="insource">{message}</span> will be replaced with error messages text.</p></td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">showCloseIcon</td>
+				<td nowrap="nowrap" class="fp">showCloseIcon</td>
 				<td>true</td>
 				<td>Controls if the error message tooltip has close icon. If <span class="insource">true</span> user can click on it and close error message tooltip.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">showErrMsgSpeed</td>
+				<td nowrap="nowrap" class="fp">showErrMsgSpeed</td>
 				<td>normal</td>
 				<td> Error message's fade-in speed. Values can be '<span class="insource">fast</span>', '<span class="insource">normal</span>', '<span class="insource">slow</span>' or number of miliseconds.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">closeIconClass</td>
+				<td nowrap="nowrap" class="fp">closeIconClass</td>
 				<td nowrap="nowrap">bvalidator_close_icon</td>
 				<td>CSS class for error message tooltip close icon.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">errMsgClass</td>
+				<td nowrap="nowrap" class="fp">errMsgClass</td>
 				<td nowrap="nowrap">bvalidator_errmsg</td>
 				<td>CSS class for error message tooltip (error messages container).</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">errorClass</td>
+				<td nowrap="nowrap" class="fp">errorClass</td>
 				<td nowrap="nowrap">bvalidator_invalid</td>
-				<td>CSS class for input field with invalid value.</td>
+				<td>CSS class for input field with invalid value. Will not be applied on checkboxes and radio buttons.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">validClass</td>
+				<td nowrap="nowrap" class="fp">validClass</td>
 				<td>&nbsp;</td>
-				<td>CSS class for input field with valid value.</td>
+				<td>CSS class for input field with valid value. Will not be applied on checkboxes and radio buttons.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">lang</td>
+				<td nowrap="nowrap" class="fp">lang</td>
 				<td>en</td>
 				<td>Language for localization.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">errorMessageAttr<a name="errorMessageAttr" id="errorMessageAttr"></a></td>
+				<td nowrap="nowrap" class="fp">errorMessageAttr<a name="errorMessageAttr" id="errorMessageAttr"></a></td>
 				<td nowrap="nowrap">data-bvalidator-msg</td>
 				<td>Input field attribute which holds error message text. Message from this attribute  will override default messages or localized error messages.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">validateActionsAttr<a name="validateActionsAttr" id="validateActionsAttr"></a></td>
+				<td nowrap="nowrap" class="fp">validateActionsAttr<a name="validateActionsAttr" id="validateActionsAttr"></a></td>
 				<td>data-bvalidator</td>
 				<td>Input field attribute which tells validator which validation actions to do for the field.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">paramsDelimiter</td>
+				<td nowrap="nowrap" class="fp">paramsDelimiter</td>
 				<td>:</td>
 				<td>Delimiter for validator action options inside square brackets []. </td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">validatorsDelimiter</td>
+				<td nowrap="nowrap" class="fp">validatorsDelimiter</td>
 				<td>,</td>
 				<td>Delimiter for validator actions (validation functions) in <span class="insource">validateActionsAttr</span> attribute.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">validateOn<a name="validateOn" id="validateActionsAttr2"></a></td>
+				<td nowrap="nowrap" class="fp">validateOn<a name="validateOn" id="validateActionsAttr2"></a></td>
 				<td>null</td>
 				<td>On which input field event to start validation. Values can be <span class="insource">null</span>, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'</span></td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">errorValidateOn</td>
+				<td nowrap="nowrap" class="fp">errorValidateOn</td>
 				<td>'keyup'</td>
 				<td>On which input field event to start validation if error message is already shown. Values can be null, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'</span></td>
 			</tr>
@@ -316,7 +322,7 @@ body {
 				<th>Description</th>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">onBeforeValidate</td>
+				<td nowrap="nowrap" class="fp">onBeforeValidate</td>
 				<td><ol>
 						<li>jQuery object containing input field</li>
 						<li>string validator action (example: min[5])</li>
@@ -324,7 +330,7 @@ body {
 				<td>Called before the validation routine starts. Returning false will cause the validation to be skipped for that validator action.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">onAfterValidate</td>
+				<td nowrap="nowrap" class="fp">onAfterValidate</td>
 				<td><ol>
 						<li>jQuery object containing input field</li>
 						<li>string validator action (example: max[10])</li>
@@ -333,7 +339,7 @@ body {
 				<td>Called after the validation routine ends. Returning false will stop executing that validator action,  displaying error messages and binding events to input fields will be skipped.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">onValidateFail</td>
+				<td nowrap="nowrap" class="fp">onValidateFail</td>
 				<td><ol>
 						<li>jQuery object containing input field</li>
 						<li>string validator action (example: max[10])</li>
@@ -342,7 +348,7 @@ body {
 				<td>Called after validation action fails,  but before error messages are displayed to the user. Returning false will stop executing that validator action,  displaying error messages and binding events to input fields will be skipped.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">onValidateSuccess</td>
+				<td nowrap="nowrap" class="fp">onValidateSuccess</td>
 				<td><ol>
 						<li>jQuery object containing input field</li>
 						<li>string validator action (example: max[10])</li>
@@ -352,7 +358,7 @@ body {
 		</table>
 		<p>&nbsp;</p>
 	</div>
-	<h2>Localization</h2>
+	<h2>Localization<a name="localization" id="localization"></a></h2>
 	<div class="content">
 		<p>Error messages can be localized (translated). To do that you need to <strong>pass translated messages as options</strong> to validator constructor: </p>
 		<blockquote>
@@ -418,46 +424,46 @@ body {
 				<th>Description</th>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">getOptions</td>
+				<td nowrap="nowrap" class="fp">getOptions</td>
 				<td>&nbsp;</td>
 				<td>Returns the options object of the current validator instance.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">isValid</td>
+				<td nowrap="nowrap" class="fp">isValid</td>
 				<td>&nbsp;</td>
 				<td>Just checks if inputs in current validator instance are valid. Doesn't show error messages. Calling this function is the same as calling <span class="insource">validate(true)</span> function.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">removeErrMsg</td>
+				<td nowrap="nowrap" class="fp">removeErrMsg</td>
 				<td><ol>
 						<li>jQuery object containing inputs</li>
 					</ol></td>
 				<td>Deletes error message </td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">getInputs</td>
+				<td nowrap="nowrap" class="fp">getInputs</td>
 				<td>&nbsp;</td>
 				<td>Returns all input fields associated with the validator.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">bindValidateOn<a name="bindValidateOn" id="bindValidateOn"></a></td>
+				<td nowrap="nowrap" class="fp">bindValidateOn<a name="bindValidateOn" id="bindValidateOn"></a></td>
 				<td><ol>
 						<li>jQuery object containing inputs </li>
 					</ol></td>
 				<td>This function is helpful when using <span class="insource">validateOn</span> option and dynamic   forms. If you add some new input elements to form after validator is already initialized and you want to validate them on event specified with <span class="insource">validateOn</span> option you need to call this method. If you are not using <span class="insource">validateOn</span> option with dinamic forms you can forget about this function.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">reset</td>
+				<td nowrap="nowrap" class="fp">reset</td>
 				<td>&nbsp;</td>
 				<td>Resets the validator. Hides all error messages like the validator is only initialized. If you have a reset button on your form this   reset function is automatically bind to it. </td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">destroy</td>
+				<td nowrap="nowrap" class="fp">destroy</td>
 				<td>&nbsp;</td>
 				<td>Removes existing validator instance.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">validate</td>
+				<td nowrap="nowrap" class="fp">validate</td>
 				<td><ol>
 						<li>if true error messages are not displayed (optional)</li>
 						<li>jQuery object containing inputs to validate only (optional)</li>
@@ -484,63 +490,63 @@ body {
 				<th>Description</th>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">alpha</td>
+				<td nowrap="nowrap" class="fp">alpha</td>
 				<td>&nbsp;</td>
 				<td>Checks if all characters are alphabetic.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">alphanum</td>
+				<td nowrap="nowrap" class="fp">alphanum</td>
 				<td>&nbsp;</td>
 				<td>Checks if all characters are alphanumeric.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">digit</td>
+				<td nowrap="nowrap" class="fp">digit</td>
 				<td>&nbsp;</td>
 				<td>Checks if all characters are digits.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">number</td>
+				<td nowrap="nowrap" class="fp">number</td>
 				<td>&nbsp;</td>
 				<td>Checks if value is a number.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">email</td>
+				<td nowrap="nowrap" class="fp">email</td>
 				<td>&nbsp;</td>
 				<td>Checks if value is a valid Email.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">image</td>
+				<td nowrap="nowrap" class="fp">image</td>
 				<td>&nbsp;</td>
 				<td>Checks if value ends with image file extension   like .jpg. Can be useful   for file fields.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">url</td>
+				<td nowrap="nowrap" class="fp">url</td>
 				<td>&nbsp;</td>
 				<td>Checks if value is a valid URL.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">regex</td>
+				<td nowrap="nowrap" class="fp">regex</td>
 				<td><ol>
 						<li>pattern</li>
 					</ol></td>
 				<td>Checks if value matches pattern given by parameter.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">date</td>
+				<td nowrap="nowrap" class="fp">date</td>
 				<td><ol>
 						<li>date format</li>
 					</ol></td>
 				<td>Checks if value is a valid date in format specified by action parameter. Format can be any combination of mm,dd,yyyy with one character separator between. Example: '<span class="insource">mm.dd.yyyy</span>' or '<span class="insource">yyyy-mm-dd</span>'.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">required</td>
+				<td nowrap="nowrap" class="fp">required</td>
 				<td>&nbsp;</td>
 				<td><p>Is a value required.</p>
 					<p>If you put <span class="insource">required</span> in front of other actions like <span class="insource">data-bvalidator=&quot;required,max[10],email&quot;</span> then error message that field is required will be shown in error messages tooltip with other error messages.</p>
 					<p>If you put <span class="insource">required</span> after  other actions like <span class="insource">data-bvalidator=&quot;max[10],email,required&quot;</span> then error message that field is required will not be shown in error messages tooltip if there are some   more error messages.</p></td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">between</td>
+				<td nowrap="nowrap" class="fp">between</td>
 				<td><ol>
 						<li>minimum value</li>
 						<li>maximum value</li>
@@ -548,7 +554,7 @@ body {
 				<td>Checks is value between values in  action parameters. </td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">max</td>
+				<td nowrap="nowrap" class="fp">max</td>
 				<td><ol>
 						<li>maximum value</li>
 					</ol></td>
@@ -558,7 +564,7 @@ body {
 					<p>If you use <span class="insource">max</span> with checkbox or select you should use custom error messages. See <a href="#errorMessageAttr">errorMessageAttr</a> option.</p></td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">min</td>
+				<td nowrap="nowrap" class="fp">min</td>
 				<td><ol>
 						<li>minimum value</li>
 					</ol></td>
@@ -568,7 +574,7 @@ body {
 					<p>If you use <span class="insource">min</span> with checkbox or select you should use custom error messages. See <a href="#errorMessageAttr">errorMessageAttr</a> option.</p></td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">rangelength</td>
+				<td nowrap="nowrap" class="fp">rangelength</td>
 				<td><ol>
 						<li>minimum length</li>
 						<li>maximum length</li>
@@ -576,28 +582,28 @@ body {
 				<td>Checks if length of the value is between action parameters values. </td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">maxlength</td>
+				<td nowrap="nowrap" class="fp">maxlength</td>
 				<td><ol>
 						<li>maximum length</li>
 					</ol></td>
 				<td>Checks if length of the value is smaller than action parameter value. </td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">minlength</td>
+				<td nowrap="nowrap" class="fp">minlength</td>
 				<td><ol>
 						<li>minimum length</li>
 					</ol></td>
 				<td>Checks if length of the value is greater than action parameter value. </td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">differs</td>
+				<td nowrap="nowrap" class="fp">differs</td>
 				<td><ol>
 						<li>element id</li>
 					</ol></td>
 				<td>The value has to be diferent from the value of field which ID is passed as parameter.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap">equalto</td>
+				<td nowrap="nowrap" class="fp">equalto</td>
 				<td><ol>
 						<li>element id</li>
 					</ol></td>
@@ -608,65 +614,65 @@ body {
 	</div>
 	<a name="examples" id="examples"></a>
 	<h1>Examples</h1>
-	<div class="content"> sadasd </div>
+	<div class="content">You can see source of each example by clicking on the 'Show example source' button. Source will not look nice in Internet Explorer so  I recommend using Firefox, Opera or Chrome for that, but validator should work nice in all browsers.</div>
 	<h2>All validators in action <input type="button" value="Show example source" onclick="showsource('ex1');"/></h2>
 	<div id="ex1s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex1sv">
 <form id="form1" method="post">
 	<div style="display:table">
-		<div style="display:table-cell;width:50%">
+		<div style="display:table-cell;width:55%">
 			<p>Alphabetic characters only:<br />
-				<input type="text" data-bvalidator="alpha,required,minlength[10]"/>
+				<input type="text" data-bvalidator="alpha,minlength[10],required"/>
 			</p>
 			<p>Alphanumeric characters only:<br />
-				<input type="text" data-bvalidator="alphanum"/>
+				<input type="text" data-bvalidator="alphanum,required"/>
 			</p>
 			<p>Only digits:<br />
-				<input type="text" data-bvalidator="digit"/>
+				<input type="text" data-bvalidator="digit,required"/>
 			</p>
 			<p>Number:<br />
-				<input type="text" data-bvalidator="number"/>
+				<input type="text" data-bvalidator="number,required"/>
 			</p>
 			<p>Email:<br />
-				<input type="text" data-bvalidator="email"/>
+				<input type="text" data-bvalidator="email,required"/>
 			</p>
 			<p>Url:<br />
-				<input type="text" data-bvalidator="url"/>
+				<input type="text" data-bvalidator="url,required"/>
 			</p>
 			<p>IP address:<br />
-				<input type="text" data-bvalidator="ip4"/>
+				<input type="text" data-bvalidator="ip4,required"/>
 			</p>
 			<p>Date in format dd.mm.yyyy:<br />
-				<input type="text" data-bvalidator="date[dd.mm.yyyy]"/>
+				<input type="text" data-bvalidator="date[dd.mm.yyyy],required"/>
 			</p>
 			<p>Minimum value 10:<br />
-				<input type="text" data-bvalidator="min[10]"/>
+				<input type="text" data-bvalidator="min[10],required"/>
+			</p>
+			<p>Value between 100 and 200:<br />
+				<input type="text" data-bvalidator="between[100:200],required"/>
 			</p>
 		</div>
 		<div style="display:table-cell">
-			<p>Value between 100 and 200:<br />
-				<input type="text" data-bvalidator="between[100:200]"/>
-			</p>
 			<p>Minimum length is 10 characters:<br />
-				<input type="text" data-bvalidator="minlength[10]"/>
+				<input type="text" data-bvalidator="minlength[10],required"/>
 			</p>
 			<p>Maximum length is 10 characters:<br />
-				<input type="text" data-bvalidator="maxlength[10]"/>
-			</p>
+				<input type="text" data-bvalidator="maxlength[10],required"/>
+		</p>
 			<p>Valid length is between 10 and 20 characters:<br />
-				<input type="text" data-bvalidator="rangelength[10:20]"/>
+				<input type="text" data-bvalidator="rangelength[10:20],required"/>
 			</p>
 			<p>Value of the inputs must be equal:<br />
 				<input type="text" id="equalto1"/>
-				<input type="text" data-bvalidator="equalto[equalto1]"/>
+				<input type="text" data-bvalidator="equalto[equalto1],required"/>
 			</p>
 			<p>Value of the inputs must not be equal:<br />
 				<input type="text" id="differs1"/>
-				<input type="text" data-bvalidator="differs[differs1]"/>
+				<input type="text" data-bvalidator="differs[differs1],required"/>
 			</p>
 			<p>This checkbox is required:<br />
-				<input name="a" type="checkbox" value="1" data-bvalidator="required"/>
+				<input name="a" type="checkbox" value="1" data-bvalidator="required,required"/>
 			</p>
 			<p>Select at least two checkboxes:<br />
 				<input name="b[]" type="checkbox" value="1" data-bvalidator="min[2]" data-bvalidator-msg="Select at least two checkboxes"/>
@@ -674,7 +680,7 @@ body {
 				<input name="b[]" type="checkbox" value="1" data-bvalidator="min[2]" data-bvalidator-msg="Select at least two checkboxes"/>
 			</p>
 			<p>Select no more than 2 options:<br />
-				<select size="5" multiple="multiple" data-bvalidator="required,max[2]" data-bvalidator-msg="Select no more than 2 options" >
+				<select size="5" multiple="multiple" data-bvalidator="required,max[2],required" data-bvalidator-msg="Select no more than 2 options" >
 					<option value="1">One</option>
 					<option value="2">Two</option>
 					<option value="3">Three</option>
@@ -719,7 +725,7 @@ body {
 	});
 </script> 
 </div>
-	In this example <span class="insource">regex</span> validator action is used (<span class="insource">regex[a+]</span>) and error message which is defined in <span class="insource">data-bvalidator-msg</span> attribute. You can use <span class="insource">{0}</span>, <span class="insource">{1}</span>, <span class="insource">{2}</span>, <span class="insource">{3}</span> tags in error messages and they will be replaced with validator action parameters in [].</div>
+	In this example <span class="insource">regex</span> validator action is used (<span class="insource">regex[a+]</span>) and error message which is defined in <span class="insource">data-bvalidator-msg</span> attribute. You can use <span class="insource">{0}</span>, <span class="insource">{1}</span>, <span class="insource">{2}</span>, <span class="insource">{3}</span> tags in error messages and they will be replaced with validator action parameters in []. </div>
 	<h2>custom validators<a name="customaction" id="customaction"></a> <input type="button" value="Show example source" onclick="showsource('ex3');"/></h2>
 	<div id="ex3s" class="showsource" style="display:none"> </div>
 	<div class="content"> 
@@ -751,7 +757,7 @@ body {
 </form>
 </div>
 		<p>This example shows how you can  create   your own validation action. Just make function that returns true for successful validation and false for error and put function name in <span class="insource">data-bvalidator</span> attribute. <br />
-			You can see also in this example how to use parameters with  your own validation action.</p>
+			You can see also in this example how to use parameters with  your own validation action. You can  put error message for your validation function in options object as described <a href="#localization">above</a> just call it the same as your validation function.</p>
 	</div>
 	<h2>Dynamic forms <input type="button" value="Show example source" onclick="showsource('ex4');"/></h2>
 	<div id="ex4s" class="showsource" style="display:none"> </div>
