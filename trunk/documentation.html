@@ -132,7 +132,9 @@ body {
 </head>
 
 <body>
-<div class="header"> <strong>bValidator</strong> <span style="font-size: 12pt;">documentation & <a href="#examples">examples</a></span> </div>
+<div class="header">
+	<strong>bValidator</strong> <span style="font-size: 12pt;">documentation & <a href="#examples">examples</a></span>
+</div>
 <div class="main_content">
 	<h1>What is bValidator?</h1>
 	<div class="content">
@@ -291,7 +293,7 @@ body {
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">errorValidateOn</td>
-				<td>'keyup'</td>
+				<td>keyup</td>
 				<td>On which input field event to start validation if error message is already shown. Values can be null, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'</span></td>
 			</tr>
 		</table>
@@ -805,7 +807,7 @@ body {
 		
 		$.ajax({
 			type: 'POST',
-			url: 'demo.html',
+			url: 'documentation.html',
 			async: false,
 			data: {'username':username},
 			success: function(data){
