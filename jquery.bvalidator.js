@@ -1,43 +1,4 @@
-/*
-var bValidatorOptions = {
-	
-	// callback functions
-	onBeforeValidate:    function(){console.log('onBeforeValidate');},
-	
-	// default error messages
-	errorMessages: {
-		hr: {
-			default:    'Ispravite ovu vrijednost.',
-			equalto:    'Unesite ponovno istu vrijednost.',
-			differs:    'Unesite razlièitu vrijednost.',
-			minlength:  'Duljina mora biti najmanje {0} znakova.',
-			maxlength:  'Duljina mora biti najviše {0} znakova.',
-			rangelength:'Duljina mora biti izmeðu {0} i {1} znakova.',
-			min:        'Unesite vrijednost veæu ili jednaku {0}.',
-			max:        'Unesite vrijednost manju ili jednaku {0}.',
-			between:    'Unesite vrijednost izmeðu {0} i {1}.',
-			required:   'Ovo polje je obavezno.',
-			alpha:      'Unesite samo slova.',
-			alphanum:   'Unesite samo slova i brojeve.',
-			digit:      'Unesite samo brojeve.',
-			number:     'Unesite ispravan broj.',
-			email:      'Unesite ispravanu Email adresu.',
-			image:      'Odaberite samo slikovne datoteke.',
-			url:        'Unesite ispravan URL.',
-			ip4:        'Unesite ispravanu IP adresu.',
-			date:       'Unesite ispravan datum u formatu {0}.',
-		}
-	}
-};
-*/
-
-var optionsLocal = {
-	
-	// callback functions
-	onAfterValidate:    function(){console.log('onAfterValidate');}
-};
-
-/*
+ï»¿/*
  * jQuery bValidator plugin
  *
  * http://code.google.com/p/bvalidator/
@@ -218,7 +179,7 @@ var optionsLocal = {
 			}
 		}
 		
-		// calculates error message position relative to the input	
+		// calculates error message position
 		var _getErrMsgPosition = function(input, tooltip) {
 		        
 		        var tooltipContainer = input.data("errMsg.bV");
@@ -488,10 +449,15 @@ var optionsLocal = {
 								if(!skip_messages){
 									
 									if(!errMsg){
-										if(options.errorMessages[options.lang][validatorName])
+										
+										if(options.errorMessages[options.lang] && options.errorMessages[options.lang][validatorName])
 											errMsg = options.errorMessages[options.lang][validatorName];
-										else
+										else if(options.errorMessages.en[validatorName])
+											errMsg = options.errorMessages.en[validatorName];
+										else if(options.errorMessages[options.lang] && options.errorMessages[options.lang]['default'])
 											errMsg = options.errorMessages[options.lang]['default'];
+										else
+											errMsg = options.errorMessages.en['default'];
 									}
 									else{
 										skip_messages = 1;
