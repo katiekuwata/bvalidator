@@ -139,7 +139,7 @@ body {
 	<h1>What is bValidator?</h1>
 	<div class="content">
 		<p>bValidator is a <a href="http://jquery.com/" target="_blank">jQuery</a> plug-in for client side form validation. 
-			It supports fully customized error messages defined with template and CSS, many validation methods (actions) like date, email, URL, IP address, validation of dynamic forms, customized validation functions and more. </p>
+			It supports fully customized error messages defined with template and CSS, many validation functions (<a href="#actions">actions</a>) like date, email, URL, IP address, validation of dynamic forms, customized validation functions and more. </p>
 		<p>Home page: <a href="http://code.google.com/p/bvalidator/" target="_blank">http://code.google.com/p/bvalidator/</a></p>
 	</div>
 	<h1>Setup</h1>
@@ -155,7 +155,7 @@ body {
 			<p><strong>include CSS:</strong></p>
 			<pre>&lt;link href=&quot;bvalidator.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</pre>
 		</blockquote>
-		<p>The web page should have elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form. Note the <span class="insource">data-bvalidator</span> input field attribute which tells validator which validation actions to do for the field. The name of that attribute can be changed and this can be for example <span class="insource">class</span> or <span class="insource">rel</span>, see <a href="#optionslist">options</a> for details.</p>
+		<p>The web page should have elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form. Note the <span class="insource">data-bvalidator</span> input field attribute which tells validator which validation function (action) to invoke for the field. The name of that attribute can be changed and this can be for example <span class="insource">class</span> or <span class="insource">rel</span>, see <a href="#optionslist">options</a> for details.</p>
 		<blockquote>
 			<p><strong>HTML:</strong></p>
 			<pre>&lt;form id=&quot;myform&quot;&gt;
@@ -274,17 +274,17 @@ body {
 			<tr>
 				<td nowrap="nowrap" class="fp">validateActionsAttr<a name="validateActionsAttr" id="validateActionsAttr"></a></td>
 				<td>data-bvalidator</td>
-				<td>Input field attribute which tells validator which validation actions to do for the field.</td>
+				<td>Input field attribute which tells validator which validation actions to invoke for the field.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">paramsDelimiter</td>
 				<td>:</td>
-				<td>Delimiter for validator action options inside square brackets []. </td>
+				<td>Options delimiter for validaton function parameters inside square brackets []. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">validatorsDelimiter</td>
 				<td>,</td>
-				<td>Delimiter for validator actions (validation functions) in <span class="insource">validateActionsAttr</span> attribute.</td>
+				<td>Validator functions (actions) delimiter in <span class="insource">validateActionsAttr</span> attribute.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">validateOn<a name="validateOn" id="validateActionsAttr2"></a></td>
@@ -347,7 +347,7 @@ body {
 						<li>string validator action (example: max[10])</li>
 						<li>array of all error messages for this input element</li>
 					</ol></td>
-				<td>Called after validation action fails,  but before error messages are displayed to the user. Returning false will stop executing that validator action,  displaying error messages and binding events to input fields will be skipped.</td>
+				<td>Called after validation  fails,  but before error messages are displayed to the user. Returning false will stop executing that validator action,  displaying error messages and binding events to input fields will be skipped.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">onValidateSuccess</td>
@@ -475,11 +475,11 @@ body {
 		</table>
 		<p>&nbsp;</p>
 	</div>
-	<h1>Validator actions</h1>
+	<h1>Validator actions<a name="actions" id="actions"></a></h1>
 	<div class="content">
 		<p>Validator actions are  functions that checks value of input field that is validated. Here are listed  built in actions but it is very simple to add custom validation functions (see <a href="#customaction">example</a>).</p>
 		<p>Validations which validator will perform on a single input field are stated in <span class="insource">data-bvalidator</span> attribute by default. You can use different attribute like <span class="insource">class</span> or <span class="insource">rel</span> if you need that your HTML is valid. Just set the name of the attribute  in <span class="insource"><a href="#validateActionsAttr">validateActionsAttr</a></span> option.</p>
-		<p>Some validator actions can have parameters and those are stated in square brackets [param1:param2:param3] after the action name. You can have up to four parameters per action.</p>
+		<p>Some validator actions can have parameters and those are stated in square brackets like [param1:param2:param3] after the action name. You can have up to four parameters per action.</p>
 		<p>For example:</p>
 		<blockquote>
 			<pre>&lt;input type=&quot;text&quot; data-bvalidator=&quot;maxlength[10]&quot;/&gt;<br />&lt;input type=&quot;text&quot; data-bvalidator=&quot;max[10],email,required&quot;/&gt;<br />&lt;input type=&quot;text&quot; data-bvalidator=&quot;differs[someElementID]&quot;/&gt;
