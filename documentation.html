@@ -155,7 +155,7 @@ body {
 			<p><strong>include CSS:</strong></p>
 			<pre>&lt;link href=&quot;bvalidator.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</pre>
 		</blockquote>
-		<p>The web page should have elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form. Note the <span class="insource">data-bvalidator</span> input field attribute which tells validator which validation function (action) to invoke for the field. The name of that attribute can be changed and this can be for example <span class="insource">class</span> or <span class="insource">rel</span>, see <a href="#optionslist">options</a> for details.</p>
+		<p>The web page should have elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form (see <a href="#divvalidation">example</a>). Note the <span class="insource">data-bvalidator</span> input field attribute which tells validator which validation function (action) to invoke for the field. The name of that attribute can be changed and this can be for example <span class="insource">class</span> or <span class="insource">rel</span>, see <a href="#optionslist">options</a> for details.</p>
 		<blockquote>
 			<p><strong>HTML:</strong></p>
 			<pre>&lt;form id=&quot;myform&quot;&gt;
@@ -531,7 +531,8 @@ body {
 				<td><ol>
 						<li>pattern</li>
 					</ol></td>
-				<td>Checks if value matches pattern given by parameter.</td>
+				<td>Checks if value matches pattern given by parameter.<br />
+				If you'll need to use characters like [],:   in pattern which are also used by validator to parse action arguments you'll have to write custom validator function like in this <a href="#customaction">example</a>.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">date</td>
@@ -616,8 +617,8 @@ body {
 	</div>
 	<a name="examples" id="examples"></a>
 	<h1>Examples</h1>
-	<div class="content">You can see source of each example by clicking on the 'Show example source' button. Source will not look nice in Internet Explorer so  I recommend using Firefox, Opera or Chrome for that, but validator should work nice in all browsers.</div>
-	<h2>All validators in action <input type="button" value="Show example source" onclick="showsource('ex1');"/></h2>
+	<div class="content">You can see source of each example by clicking on the 'Example source' button. Source will not look nice in Internet Explorer so  I recommend using Firefox, Opera or Chrome for that, but validator should work nice in all browsers.</div>
+	<h2>All validators in action <input type="button" value="Example source" onclick="showsource('ex1');"/></h2>
 	<div id="ex1s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex1sv">
@@ -708,13 +709,13 @@ body {
 </script> 
 </div>
 	</div>
-	<h2>Input specific error message <input type="button" value="Show example source" onclick="showsource('ex2');"/></h2>
+	<h2>Input specific error message <input type="button" value="Example source" onclick="showsource('ex2');"/></h2>
 	<div id="ex2s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex2sv">
 <form id="form2" method="post">
-	<p> Enter string containing 'a' character:
-		<input type="text" data-bvalidator="regex[a+],required" data-bvalidator-msg="Plese enter at least one 'a' character."/>
+	<p> Enter string containing 'aaa' substring:
+		<input type="text" data-bvalidator="regex[a{3}],required" data-bvalidator-msg="Plese enter string containing 'aaa' substring."/>
 	</p>
 	<p>
 		<input type="submit" value="Submit" />
@@ -727,8 +728,9 @@ body {
 	});
 </script> 
 </div>
-	In this example <span class="insource">regex</span> validator action is used (<span class="insource">regex[a+]</span>) and error message which is defined in <span class="insource">data-bvalidator-msg</span> attribute. You can use <span class="insource">{0}</span>, <span class="insource">{1}</span>, <span class="insource">{2}</span>, <span class="insource">{3}</span> tags in error messages and they will be replaced with validator action parameters in []. </div>
-	<h2>custom validators<a name="customaction" id="customaction"></a> <input type="button" value="Show example source" onclick="showsource('ex3');"/></h2>
+	In this example <span class="insource">regex</span> validator action is used (<span class="insource">regex[a{3}]</span>) and error message which is defined in <span class="insource">data-bvalidator-msg</span> attribute. You can use <span class="insource">{0}</span>, <span class="insource">{1}</span>, <span class="insource">{2}</span>, <span class="insource">{3}</span> tags in error messages and they will be replaced with validator action parameters in []. <br />
+	</div>
+	<h2>custom validators<a name="customaction" id="customaction"></a> <input type="button" value="Example source" onclick="showsource('ex3');"/></h2>
 	<div id="ex3s" class="showsource" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex3sv">
@@ -761,7 +763,7 @@ body {
 		<p>This example shows how you can  create   your own validation action. Just make function that returns true for successful validation and false for error and put function name in <span class="insource">data-bvalidator</span> attribute. <br />
 			You can see also in this example how to use parameters with  your own validation action. You can  put error message for your validation function in options object as described <a href="#localization">above</a> just call it the same as your validation function.</p>
 	</div>
-	<h2>Dynamic forms <input type="button" value="Show example source" onclick="showsource('ex4');"/></h2>
+	<h2>Dynamic forms <input type="button" value="Example source" onclick="showsource('ex4');"/></h2>
 	<div id="ex4s" class="showsource" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex4sv">
@@ -792,7 +794,7 @@ body {
 		<p>You can dynamically   add inputs to form after the validator is initialized. Note that if some form elements are hidden they will be not validated. <br />
 			If you use <a href="#validateOn"><span class="insource">validateOn</span></a> option, then after adding new input to form you can call <a href="#bindValidateOn">bindValidateOn</a> function for new added inputs to bind <span class="insource">validateOn</span> event on them also.</p>
 	</div>
-	<h2>Server side validation <input type="button" value="Show example source" onclick="showsource('ex5');"/></h2>
+	<h2>Server side validation <input type="button" value="Example source" onclick="showsource('ex5');"/></h2>
 	<div id="ex5s" class="showsource" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex5sv">
@@ -830,7 +832,7 @@ body {
 </form>
 </div>
 		This example is similar to custom validators example above. Just make your own validator action function which will do synchronus AJAX request that will check if value is valid.</div>
-	<h2>Error message position and style <input type="button" value="Show example source" onclick="showsource('ex6');"/></h2>
+	<h2>Error message position and style <input type="button" value="Example source" onclick="showsource('ex6');"/></h2>
 	<div id="ex6s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex6sv">
@@ -869,6 +871,50 @@ body {
 </div>
 		<p>You can set template, position and CSS styles for error messages.</p>
 	</div>
+	
+	
+	<h2>Instance on &lt;div&gt; element<a name="divvalidation" id="divvalidation"></a>
+<input type="button" value="Example source" onclick="showsource('ex7');"/></h2>
+	<div id="ex7s" class="showsource" style="display:none"> </div>
+	<div class="content">
+<div id="ex7sv">
+<script type="text/javascript">			
+	
+	$(document).ready(function () {
+		$('#div7').bValidator();
+	});
+	
+	function checkIfValid(){
+		if($('#div7').data('bValidator').validate())
+			alert ('Is valid!');
+	}
+	
+</script>
+
+<div id="div7">
+	<p>Only digits:
+		<input type="text" data-bvalidator="digit,required" />
+	</p>
+	<p>
+		<input name="Button" type="button" value="Validate &lt;div&gt;" onclick="checkIfValid();"/>
+	</p>
 </div>
+</div>
+		<p>bValidator doesn't care if  inputs are not inside <span class="insource">&lt;form&gt;</span> element. It will work on any container element that has some child inputs that can be validated. Of course, you won't have submit button in that case and validation will not be automatically bind to it, but you can call it manually like in this example.</p>
+	</div>
+	
+	
+	
+</div>
+<script type="text/javascript">
+
+$(document).ready(function () { 
+	$('form').submit(function() {
+		alert('Form is submitted.');
+		return false;
+	});
+}); 
+
+</script>
 </body>
 </html>
