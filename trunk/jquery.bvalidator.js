@@ -111,7 +111,12 @@
 		if (mainElement.is('form')) {
 			// bind validation on form submit
 			mainElement.bind('submit.bV', function(event){
-				return instance.validate();
+				if(instance.validate())
+					return true;
+				else{
+					event.stopImmediatePropagation();
+					return false;
+				}
 			});
 			
 			// bind reset on form reset
