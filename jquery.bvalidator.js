@@ -99,7 +99,8 @@
 		}
 		
 		// passed options
-		$.extend(true, options, overrideOptions);
+		if(overrideOptions)
+			$.extend(true, options, overrideOptions);
 		
 		// return existing instance
 		if(mainElement.data("bValidator"))
