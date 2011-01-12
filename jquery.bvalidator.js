@@ -85,7 +85,7 @@
 				digit:    /^\d+$/,
 				number:   /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,
 				email:    /^([a-zA-Z0-9_\.\-\+%])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
-				image:    /.(jpg|jpeg|png|gif|bmp)$/i,
+				image:    /\.(jpg|jpeg|png|gif|bmp)$/i,
 				url:      /^(http|https|ftp)\:\/\/[a-z0-9\-\.]+\.[a-z]{2,3}(:[a-z0-9]*)?\/?([a-z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*$/i
 			}
 		};
@@ -321,10 +321,10 @@
 				return this.regex(v, options.regex.url);
 			},
 			
-			regex: function(v, regex){
+			regex: function(v, regex, mod){
 				
 				if(typeof regex === "string")
-					regex = new RegExp(regex);
+					regex = new RegExp(regex, mod);
 				
 				return regex.test(v.value);
 			},
@@ -361,6 +361,20 @@
 				}
 				return false;
 			},
+			
+			extension: function(){
+				
+				var v = arguments[0];
+				var r = '';
+				if(!arguments[1])
+					return false
+				for(var i=1; i<arguments.length; i++){
+					r += arguments[i];
+					if(i != arguments.length-1)
+						r += '|';
+				}
+				return this.regex(v, '\\.(' +  r  + ')$', 'i');
+			}
 		};
 		
 		// bind validateOn event
@@ -436,12 +450,13 @@
 						
 						// if validator exists
 						if(typeof validator[validatorName] == 'function'){
-							// call validator function
-							var validationResult = validator[validatorName](inputValue, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
+							validatorParams.unshift(inputValue); // add input value to beginning of validatorParams
+							var validationResult = validator[validatorName].apply(validator, validatorParams); // call validator function
 						}
 						// call custom user dafined function
 						else if(typeof window[validatorName] == 'function'){
-							var validationResult = window[validatorName](inputValue.value, validatorParams[0], validatorParams[1], validatorParams[2], validatorParams[3]);
+							validatorParams.unshift(inputValue.value);
+							var validationResult = window[validatorName].apply(validator, validatorParams);
 						}
 						
 						if(_callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
@@ -470,8 +485,8 @@
 									
 									// replace values in braces
 									if(errMsg.indexOf('{')){
-										for(var i=0; i<4; i++)
-											errMsg = errMsg.replace(new RegExp("\\{" + i + "\\}", "g"), validatorParams[i]);
+										for(var i=0; i<validatorParams.length-1; i++)
+											errMsg = errMsg.replace(new RegExp("\\{" + i + "\\}", "g"), validatorParams[i+1]);
 									}
 									
 									if(!(errorMessages.length && validatorName == 'required'))
@@ -513,7 +528,7 @@
 								$(this).unbind(options.validateOn + '.bV');
 							
 							var evt = options.errorValidateOn;
-							if($(this).is('input:checkbox,input:radio,select'))
+							if($(this).is('input:checkbox,input:radio,select,input:file'))
 								evt = 'change';
 							
 							$(this).unbind(evt + '.bVerror');
