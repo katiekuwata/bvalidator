@@ -62,9 +62,9 @@
 					'minlength':  'The length must be at least {0} characters',
 					'maxlength':  'The length must be at max {0} characters',
 					'rangelength':'The length must be between {0} and {1}',
-					'min':        'Please enter a value greater than or equal to {0}.',
-					'max':        'Please enter a value less than or equal to {0}.',
-					'between':    'Please enter a value between {0} and {1}.',
+					'min':        'Please enter a number greater than or equal to {0}.',
+					'max':        'Please enter a number less than or equal to {0}.',
+					'between':    'Please enter a number between {0} and {1}.',
 					'required':   'This field is required.',
 					'alpha':      'Please enter alphabetic characters only.',
 					'alphanum':   'Please enter alphanumeric characters only.',
@@ -127,13 +127,13 @@
 		}
 		
 		// returns all inputs
-		var _getElementsForValidation = function(mainElement){
+		var _getElementsForValidation = function(element){
 		
-			if(mainElement.is(':input'))
+			if(element.is(':input'))
 				var elements = element;
 			else{
 				//skip hidden and input fields witch we do not want to validate
-				var elements = mainElement.find(':input').not(":button, :image, :reset, :submit, :hidden, :disabled");
+				var elements = element.find(':input').not(":button, :image, :reset, :submit, :hidden, :disabled");
 			}
 			
 			return elements;
@@ -273,24 +273,33 @@
 			min: function(v, min){		
 				if(v.selectedInGroup)
 					return v.selectedInGroup >= min
-				return (v.value >= min)
+				else{
+					if(!this.number(v))
+			 			return false;
+			 		return (parseFloat(v.value) >= parseFloat(min))
+				}
 			},
 			
 			max: function(v, max){		
 				if(v.selectedInGroup)
 					return v.selectedInGroup <= max
-				return (v.value <= max)
+				else{
+					if(!this.number(v))
+			 			return false;
+			 		return (parseFloat(v.value) <= parseFloat(min))
+				}
 			},
 			
-			between: function(v, min, max){		
-				return (v.value >= min && v.value <= max)
+			between: function(v, min, max){
+			   	if(!this.number(v))
+			 		return false;
+				var va = parseFloat(v.value);
+				return (va >= parseFloat(min) && va <= parseFloat(max))
 			},
 			
 			required: function(v){
-				
 				if(!v.value || !$.trim(v.value))
 					return false
-					
 				return true
 			},
 			
@@ -323,7 +332,6 @@
 			},
 			
 			regex: function(v, regex, mod){
-				
 				if(typeof regex === "string")
 					regex = new RegExp(regex, mod);
 				
@@ -334,12 +342,10 @@
 				var r = /^(([01]?\d\d?|2[0-4]\d|25[0-5])\.){3}([01]?\d\d?|25[0-5]|2[0-4]\d)$/;
 				if (!r.test(v.value) || v.value == "0.0.0.0" || v.value == "255.255.255.255")
 					return false
-				
 				return true;
 			},
 			
 			date: function(v, format){ // format can be any combination of mm,dd,yyyy with separator between. Example: 'mm.dd.yyyy' or 'yyyy-mm-dd'
-				
 				if(v.value.length == 10 && format.length == 10){
 					var s = format.match(/[^mdy]+/g);
 					if(s.length == 2 && s[0].length == 1 && s[0] == s[1]){
@@ -364,7 +370,6 @@
 			},
 			
 			extension: function(){
-				
 				var v = arguments[0];
 				var r = '';
 				if(!arguments[1])
@@ -380,7 +385,7 @@
 		
 		// bind validateOn event
 		if(options.validateOn)
-			instance._bindValidateOn(_getElementsForValidation(this));
+			_bindValidateOn(_getElementsForValidation(mainElement));
 		
 		
 		// API functinon:
