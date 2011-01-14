@@ -74,7 +74,7 @@
 					'image':      'This field should only contain image types',
 					'url':        'Please enter a valid URL.',
 					'ip4':        'Please enter a valid IP address.',
-					'date':       'Please enter a valid date in format {0}.',
+					'date':       'Please enter a valid date in format {0}.'
 				}
 			},
 			
