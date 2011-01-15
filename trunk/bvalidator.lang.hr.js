@@ -21,7 +21,7 @@ var bValidatorOptions = {
 			'image':      'Odaberite samo slikovne datoteke.',
 			'url':        'Unesite ispravan URL.',
 			'ip4':        'Unesite ispravnu IP adresu.',
-			'date':       'Unesite ispravan datum u formatu {0}.',
+			'date':       'Unesite ispravan datum u formatu {0}.'
 		}
 	}
 };
