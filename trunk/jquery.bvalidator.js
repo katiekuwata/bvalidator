@@ -30,7 +30,7 @@
 			position:            {x:'right', y:'top'}, // error message placement x:left|center|right  y:top|center|bottom
 			template:            '<div class="{errMsgClass}"><em/>{message}</div>', // template for error message
 			showCloseIcon:       true,	// put close icon on error message
-			showErrMsgSpeed:    'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of miliseconds
+			showErrMsgSpeed:    'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of milliseconds
 			scrollToError:       true,	// scroll to first error
 			// css class names
 			closeIconClass:      'bvalidator_close_icon',	// close error message icon class
@@ -41,8 +41,8 @@
 			lang: 'en', 				// default language for error messages 
 			errorMessageAttr:    'data-bvalidator-msg',// name of the attribute for overridden error message
 			validateActionsAttr: 'data-bvalidator', // name of the attribute which stores info what validation actions to do
-			paramsDelimiter:     ':',		// delimiter for validator options inside []
-			validatorsDelimiter: ',',		// delimiter for validators
+			paramsDelimiter:     ':',		// delimiter for validator action options inside []
+			validatorsDelimiter: ',',		// delimiter for validator actions
 			
 			// when to validate
 			validateOn:          null,		// null, 'change', 'blur', 'keyup'
@@ -150,7 +150,7 @@
 		// displays error message
 		var _showErrMsg = function(element, messages){
 			
-			// if error msg already exists remove it from DOM
+			// if error message already exists remove it from DOM
 			_removeErrMsg(element);
 			
 			msg_container = $('<div class="bVErrMsgContainer"></div>').css('position','absolute');
@@ -395,7 +395,7 @@
 			_bindValidateOn(_getElementsForValidation(mainElement));
 		
 		
-		// API functinon:
+		// API functions:
 		
 		
 		// validation function
@@ -436,7 +436,7 @@
 				
 				if(!is_valid){
 					
-					// get error messsage from attribute
+					// get error message from attribute
 					var errMsg = $(this).attr(options.errorMessageAttr);
 					var skip_messages = 0;
 					
