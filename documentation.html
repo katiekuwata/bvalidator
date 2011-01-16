@@ -289,10 +289,10 @@ body {
 			<tr>
 				<td nowrap="nowrap" class="fp">validateOn<a name="validateOn" id="validateActionsAttr2"></a></td>
 				<td>null</td>
-				<td>On which input field event to start validation. Values can be <span class="insource">null</span>, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'</span></td>
+				<td>On which input field event to start validation. Values can be <span class="insource">null</span>, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'.</span> See this option in action in this <a href="#positionstyle">example</a>.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap" class="fp">errorValidateOn</td>
+				<td nowrap="nowrap" class="fp">errorValidateOn<a name="errorValidateOn" id="validateActionsAttr3"></a></td>
 				<td>keyup</td>
 				<td>On which input field event to start validation if error message is already shown. Values can be <span class="insource">null</span>, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'</span></td>
 			</tr>
@@ -306,7 +306,7 @@ body {
 	</div>
 	<h2>Callbacks</h2>
 	<div class="content">
-		<p>Callbacks are user defined <strong>functions that are called by validator in certain moment</strong>. Callbacks are defined the same way as configuration options. Callback functions are called for each validator action.	Example	of defining callback is:</p>
+		<p>Callbacks are user defined <strong>functions that are called by validator in certain moment</strong>. Callbacks are defined the same way as configuration options. Callback functions are called for each validator action.	Example	of defining callback:</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -332,7 +332,7 @@ body {
 				<td nowrap="nowrap" class="fp">onBeforeValidate</td>
 				<td><ol>
 						<li>jQuery object containing input field</li>
-						<li>string validator action (example: min[5])</li>
+						<li>string validator action (example: <span class="insource">min[5]</span>)</li>
 					</ol></td>
 				<td>Called before the validation routine starts. Returning false will cause the validation to be skipped for that validator action.</td>
 			</tr>
@@ -340,27 +340,27 @@ body {
 				<td nowrap="nowrap" class="fp">onAfterValidate</td>
 				<td><ol>
 						<li>jQuery object containing input field</li>
-						<li>string validator action (example: max[10])</li>
+						<li>string validator action (example: <span class="insource">max[10]</span>)</li>
 						<li>validation result (true or false)</li>
 					</ol></td>
-				<td>Called after the validation routine ends. Returning false will stop executing that validator action,  displaying error messages and binding events to input fields will be skipped.</td>
+				<td>Called after the validation routine ends. Returning false will stop executing that validator action,  displaying error messages and binding events (<a href="#validateOn" class="insource">validateOn</a>, <a href="#errorValidateOn" class="insource">errorValidateOn</a>) to input fields will be skipped.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">onValidateFail</td>
 				<td><ol>
 						<li>jQuery object containing input field</li>
-						<li>string validator action (example: max[10])</li>
+						<li>string validator action (example: <span class="insource">max[10]</span>)</li>
 						<li>array of all error messages for this input element</li>
 					</ol></td>
-				<td>Called after validation  fails,  but before error messages are displayed to the user. Returning false will stop executing that validator action,  displaying error messages and binding events to input fields will be skipped.</td>
+				<td>Called after validation  fails,  but before error messages are displayed to the user. Returning false will stop executing that validator action,  displaying error messages and binding events (<a href="#validateOn" class="insource">validateOn</a>, <a href="#errorValidateOn" class="insource">errorValidateOn</a>) to input fields will be skipped.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">onValidateSuccess</td>
 				<td><ol>
 						<li>jQuery object containing input field</li>
-						<li>string validator action (example: max[10])</li>
+						<li>string validator action (example: <span class="insource">max[10]</span>)</li>
 					</ol></td>
-				<td>Called after validation is sucessfull. Returning false will stop executing that validator action,  hiding error messages (if any) and binding events to input fields will be skipped.</td>
+				<td>Called after validation is sucessfull. Returning false will stop executing that validator action,  hiding error messages (if any) and binding events (<a href="#validateOn" class="insource">validateOn</a>, <a href="#errorValidateOn" class="insource">errorValidateOn</a>) to input fields will be skipped.</td>
 			</tr>
 		</table>
 		<p>&nbsp;</p>
@@ -370,7 +370,7 @@ body {
 		<p>bValidator can retrieve error message from <a href="#options">configuration options</a> object passed as <a href="#optionsconstructor">argument to constructor</a> or defined as global <a href="#bValidatorOptions" class="insource">bValidatorOptions</a> object, or  from <a href="#errorMessageAttr" class="insource">data-bvalidator-msg</a> attribute.<br />
 		Most of the validator actions has error message named same as the action in configuration object. If you use some custom validation function (<a href="#customaction">example</a>) you can also add error message named same as the function into configuration object.<br />
 		You can use <span class="insource">{0}</span>, <span class="insource">{1}</span>, <span class="insource">{2}</span>, <span class="insource">{3},...</span> tags in error messages and they will be replaced with validator action parameters in <span class="insource">[]</span>.</p>
-		<p>Error messages can be localized (translated). To do that you need to <strong>pass translated messages as options</strong> to validator constructor: </p>
+		<p>Error messages can be localized (translated). To do that you need to <strong>pass translated messages as <a href="#options">options</a></strong> to validator constructor: </p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -457,7 +457,7 @@ body {
 						<li>modifier (optional)</li>
 				</ol></td>
 				<td><p>Checks if value matches pattern given by parameter.<br />
-				If you'll need to use characters like [],:   in pattern which are also used by validator to parse action arguments you'll have to write custom validator function like in this <a href="#customaction">example</a>.<br />
+				If you'll need to use characters like <span class="insource">[]</span>,<span class="insource">:</span> in pattern which are also used by validator to parse action arguments you'll have to write custom validator function like in this <a href="#customaction">example</a>.<br />
 				As second parameter regular expression modifier can be passed.</p></td>
 			</tr>
 			<tr>
@@ -465,7 +465,7 @@ body {
 				<td><ol>
 						<li>date format</li>
 					</ol></td>
-				<td>Checks if value is a valid date in format specified by action parameter. Format can be any combination of mm,dd,yyyy with one character separator between. Example: '<span class="insource">mm.dd.yyyy</span>' or '<span class="insource">yyyy-mm-dd</span>'.</td>
+				<td>Checks if value is a valid date in format specified by action parameter. Format can be any combination of <span class="insource">mm</span>,<span class="insource"> dd</span>,<span class="insource"> yyyy</span> with one character separator between. Example: '<span class="insource">mm.dd.yyyy</span>' or '<span class="insource">yyyy-mm-dd</span>'.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">required</td>
@@ -488,8 +488,8 @@ body {
 						<li>maximum value</li>
 					</ol></td>
 				<td><p>Checks is value less or equel than action parameter value.</p>
-					<p> If the input is a checkbox and it is in group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>) then <span class="insource">max</span> means &quot;select no more then max checkboxes&quot;.</p>
-					<p> If the input is a select  then <span class="insource">max</span> means &quot;select no more then max options&quot;.</p>
+					<p> If the input is a checkbox and it is in group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>) then <span class="insource">max</span> means &quot;<em>select no more then max checkboxes</em>&quot;.</p>
+					<p> If the input is a select  then <span class="insource">max</span> means &quot;<em>select no more then max options</em>&quot;.</p>
 					<p>If you use <span class="insource">max</span> with checkbox or select you should use custom error messages. See <a href="#errorMessageAttr">errorMessageAttr</a> option.</p></td>
 			</tr>
 			<tr>
@@ -498,8 +498,8 @@ body {
 						<li>minimum value</li>
 					</ol></td>
 				<td><p>Checks is value greater or equel than action parameter value.</p>
-					<p>If the input is a checkbox and it is in group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>) then <span class="insource">min</span> means &quot;select at least min checkboxes&quot;.</p>
-					<p> If the input is a select  then <span class="insource">min</span> means &quot;select at least min options&quot;.</p>
+					<p>If the input is a checkbox and it is in group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>) then <span class="insource">min</span> means &quot;<em>select at least min checkboxes</em>&quot;.</p>
+					<p> If the input is a select  then <span class="insource">min</span> means &quot;<em>select at least min options</em>&quot;.</p>
 					<p>If you use <span class="insource">min</span> with checkbox or select you should use custom error messages. See <a href="#errorMessageAttr">errorMessageAttr</a> option.</p></td>
 			</tr>
 			<tr>
@@ -610,7 +610,7 @@ body {
 				<td><ol>
 						<li>jQuery object containing inputs </li>
 					</ol></td>
-				<td>This function is helpful when using <span class="insource">validateOn</span> option and dynamic   forms. If you add some new input elements to form after validator is already initialized and you want to validate them on event specified with <span class="insource">validateOn</span> option you need to call this method. If you are not using <span class="insource">validateOn</span> option with dinamic forms you can forget about this function.</td>
+				<td>This function is helpful when using <span class="insource"><a href="#validateOn">validateOn</a></span> option and dynamic   forms. If you add some new input elements to form after validator is already initialized and you want to validate them on event specified with <span class="insource">validateOn</span> option you need to call this method. If you are not using <span class="insource">validateOn</span> option with dinamic forms you can forget about this function.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">reset</td>
@@ -814,7 +814,7 @@ body {
 	</p>
 </form>
 </div>
-		<p>You can dynamically   add inputs to form after the validator is initialized. Note that if some form elements are hidden they will be not validated. <br />
+		<p>You can dynamically   add inputs to the form after the validator is initialized. Note that hidden form elements are not validated. <br />
 			If you use <a href="#validateOn"><span class="insource">validateOn</span></a> option, then after adding new input to form you can call <a href="#bindValidateOn">bindValidateOn</a> function for new added inputs to bind <span class="insource">validateOn</span> event on them also.</p>
 	</div>
 	<h2>Server side validation <input type="button" value="Example source" onclick="showsource('ex5');"/></h2>
@@ -854,8 +854,9 @@ body {
 	</p>
 </form>
 </div>
-		This example is similar to custom validators example above. Just make your own validator action function which will do synchronus AJAX request that will check if value is valid.</div>
-	<h2>Error message position and style <input type="button" value="Example source" onclick="showsource('ex6');"/></h2>
+		This example is similar to custom validators example <a href="#customaction">above</a>. Just make your own validator action function which will do synchronus AJAX request that will check if value is valid.</div>
+	<h2>Error message position and style<a name="positionstyle" id="positionstyle"></a>
+<input type="button" value="Example source" onclick="showsource('ex6');"/></h2>
 	<div id="ex6s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex6sv">
@@ -893,7 +894,7 @@ body {
 	</p>
 </form>
 </div>
-		<p>You can set template, position and CSS styles for error messages.</p>
+		<p>You can set template, position and CSS styles for error messages. </p>
 	</div>
 	
 	
