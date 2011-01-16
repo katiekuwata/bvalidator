@@ -31,6 +31,7 @@
 			template:            '<div class="{errMsgClass}"><em/>{message}</div>', // template for error message
 			showCloseIcon:       true,	// put close icon on error message
 			showErrMsgSpeed:    'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of miliseconds
+			scrollToError:       true,	// scroll to first error
 			// css class names
 			closeIconClass:      'bvalidator_close_icon',	// close error message icon class
 			errMsgClass:         'bvalidator_errmsg',	// error message class
@@ -91,7 +92,7 @@
 		};
 		
 		// validator instance
-		var instance = this;
+		var instance = this, scroll_to;
 		
 		// global options
 		if(window['bValidatorOptions']){
@@ -167,14 +168,20 @@
 				messagesHtml = closeiconTpl.replace('{message}', messagesHtml);
 			}
 			
-			var template = options.template.replace('{errMsgClass}', options.errMsgClass).replace('{message}', messagesHtml);
+			// make tooltip from template
+			var tooltip = $(options.template.replace('{errMsgClass}', options.errMsgClass).replace('{message}', messagesHtml));
+			tooltip.appendTo(msg_container);
 			
-			var errmsg = $(template);
-			errmsg.appendTo(msg_container);
+			var pos = _getErrMsgPosition(element, tooltip); 
 			
-			var pos = _getErrMsgPosition(element, errmsg); 
+			tooltip.css({ visibility: 'visible', position: 'absolute', top: pos.top, left: pos.left }).fadeIn(options.showErrMsgSpeed);
 			
-			errmsg.css({ visibility: 'visible', position: 'absolute', top: pos.top, left: pos.left }).fadeIn(options.showErrMsgSpeed);
+			if(options.scrollToError){
+				// get most top tolltip
+				var tot = tooltip.offset().top;
+				if(scroll_to === null || tot < scroll_to)
+					scroll_to = tot;
+			}
 		}
 		
 		// removes error message from DOM
@@ -402,6 +409,8 @@
 			// return value
 			var ret = true;
 			
+			scroll_to = null;
+			
 			// validate each element
 			elementsl.each(function() {
 				
@@ -468,12 +477,11 @@
 						if(_callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
 							continue;
 						
+						// if validation failed
 						if(!validationResult){
-							
 							if(!doNotshowMessages){
 								
 								if(!skip_messages){
-									
 									if(!errMsg){
 										
 										if(options.errorMessages[options.lang] && options.errorMessages[options.lang][validatorName])
@@ -564,6 +572,12 @@
 					}
 				}
 			});
+			
+			// scroll to error
+			if(scroll_to && !elementsOverride && ($(window).scrollTop() > scroll_to || $(window).scrollTop()+$(window).height() < scroll_to)){
+				var ua = navigator.userAgent.toLowerCase();			
+				$(ua.indexOf('chrome')>-1 || ua.indexOf('safari')>-1 ? 'body' : 'html').animate({ scrollTop: scroll_to - 10}, { duration: 'slow'});
+			}
 			
 			return ret;
 		}
