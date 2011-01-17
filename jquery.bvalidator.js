@@ -129,21 +129,14 @@
 		
 		// returns all inputs
 		var _getElementsForValidation = function(element){
-		
-			if(element.is(':input'))
-				var elements = element;
-			else{
-				//skip hidden and input fields witch we do not want to validate
-				var elements = element.find(':input').not(":button, :image, :reset, :submit, :hidden, :disabled");
-			}
-			
-			return elements;
+			// skip hidden and input fields witch we do not want to validate
+			return element.is(':input') ? element : element.find(':input[' + options.validateActionsAttr + ']').not(":button, :image, :reset, :submit, :hidden, :disabled");
 		}
 		
 		// binds validateOn event
 		var _bindValidateOn = function(elements){
-			elements.bind(options.validateOn + '.bV', {'bValidatorInstance': instance}, function(event) {
-				event.data.bValidatorInstance.validate(false, $(this));
+			elements.bind(options.validateOn + '.bV', {'bVInstance': instance}, function(event) {
+				event.data.bVInstance.validate(false, $(this));
 			});
 		}
 		
@@ -233,15 +226,10 @@
 	
 			// checkbox
 			if(element.is('input:checkbox')){
-				if(element.attr('name'))
-					ret['selectedInGroup'] = $('input:checkbox[name=' + element.attr('name') + ']:checked').length;
-				ret['value'] = element.attr('checked');
+				ret['value'] = element.attr('name') ? ret['selectedInGroup'] = $('input:checkbox[name="' + element.attr('name') + '"]:checked').length : element.attr('checked');
 			}
 			else if(element.is('input:radio')){
-				if(element.attr('name'))
-					ret['value'] = $('input:radio[name=' + element.attr('name') + ']:checked').length;
-				else
-					ret['value'] = element.val();
+				ret['value'] = element.attr('name') ? ret['value'] = $('input:radio[name="' + element.attr('name') + '"]:checked').length : element.val();
 			}
 			else if(element.is('select')){
 				ret['selectedInGroup'] =  $("option:selected", element).length;
@@ -266,20 +254,20 @@
 			},
 			
 			minlength: function(v, minlength){
-				return (v.value.length >= minlength)
+				return (v.value.length >= parseInt(minlength))
 			},
 			
 			maxlength: function(v, maxlength){
-				return (v.value.length <= maxlength)
+				return (v.value.length <= parseInt(maxlength))
 			},
 			
 			rangelength: function(v, minlength, maxlength){		
-				return (v.value.length >= minlength && v.value.length <= maxlength)
+				return (v.value.length >= parseInt(minlength) && v.value.length <= parseInt(maxlength))
 			},
 			
 			min: function(v, min){		
 				if(v.selectedInGroup)
-					return v.selectedInGroup >= min
+					return v.selectedInGroup >= parseFloat(min)
 				else{
 					if(!this.number(v))
 			 			return false;
@@ -289,15 +277,17 @@
 			
 			max: function(v, max){		
 				if(v.selectedInGroup)
-					return v.selectedInGroup <= max
+					return v.selectedInGroup <= parseFloat(max)
 				else{
 					if(!this.number(v))
 			 			return false;
-			 		return (parseFloat(v.value) <= parseFloat(min))
+			 		return (parseFloat(v.value) <= parseFloat(max))
 				}
 			},
 			
 			between: function(v, min, max){
+				if(v.selectedInGroup)
+					return (v.selectedInGroup >= parseFloat(min) && v.selectedInGroup <= parseFloat(max))
 			   	if(!this.number(v))
 			 		return false;
 				var va = parseFloat(v.value);
@@ -401,10 +391,7 @@
 		// validation function
 		this.validate = function(doNotshowMessages, elementsOverride) {
 			
-			if(elementsOverride)
-				var elementsl = elementsOverride;
-			else
-				var elementsl = _getElementsForValidation(mainElement);
+			var elementsl = elementsOverride ? elementsOverride : _getElementsForValidation(mainElement);
 			
 			// return value
 			var ret = true;
@@ -415,7 +402,7 @@
 			elementsl.each(function() {
 				
 				// value of validateActionsAttr input attribute
-				var actionsStr = $.trim($(this).attr(options.validateActionsAttr));
+				var actionsStr = $.trim($(this).attr(options.validateActionsAttr).replace(new RegExp('\\s*\\' + options.validatorsDelimiter + '\\s*', 'g'), options.validatorsDelimiter));
 				var is_valid = 0;
 				
 				if(!actionsStr)
@@ -455,7 +442,7 @@
 						var validatorParams = actions[i].match(/^(.*?)\[(.*?)\]/);
 						
 						if(validatorParams && validatorParams.length == 3){
-							var validatorName = $.trim(validatorParams[1]);
+							var validatorName = validatorParams[1];
 							validatorParams = validatorParams[2].split(options.paramsDelimiter);
 						}
 						else{
@@ -525,30 +512,40 @@
 				}
 				
 				if(!doNotshowMessages){
+					
+					var chk_rad = $(this).is('input:checkbox,input:radio') ? 1 : 0;
+					
 					// if validation failed
 					if(errorMessages.length){
 						
 						_showErrMsg($(this), errorMessages)
 						
-						if(!$(this).is('input:checkbox,input:radio')){
+						if(!chk_rad){
 							$(this).removeClass(options.validClass);
 							if(options.errorClass)
 								$(this).addClass(options.errorClass);
 						}
 								
-						// input validation event             
+						// input validation event
 						if (options.errorValidateOn){
 							if(options.validateOn)
 								$(this).unbind(options.validateOn + '.bV');
 							
-							var evt = options.errorValidateOn;
-							if($(this).is('input:checkbox,input:radio,select,input:file'))
-								evt = 'change';
+							var evt = chk_rad || $(this).is('select,input:file') ? 'change' : options.errorValidateOn;
 							
-							$(this).unbind(evt + '.bVerror');
-							$(this).bind(evt + '.bVerror', {'bValidatorInstance': instance}, function(event) {
-								event.data.bValidatorInstance.validate(false, $(this));
-							});
+							if(chk_rad){
+								var group = $(this).is('input:checkbox') ? $('input:checkbox[name="' + $(this).attr('name') + '"]') : $('input:radio[name="' + $(this).attr('name') + '"]')
+								$(group).unbind('.bVerror');
+								$(group).bind('change.bVerror', {'bVInstance': instance, 'groupLeader': $(this)}, function(event) {
+									event.data.bVInstance.validate(false, event.data.groupLeader);
+								});
+							}
+							else{
+								$(this).unbind('.bVerror');
+								$(this).bind(evt + '.bVerror', {'bVInstance': instance}, function(event) {
+									event.data.bVInstance.validate(false, $(this));
+								});
+							}
 						}
 						
 						if (options.singleError)
@@ -557,7 +554,7 @@
 					else{
 						_removeErrMsg($(this));
 						
-						if(!$(this).is('input:checkbox,input:radio')){
+						if(!chk_rad){
 							$(this).removeClass(options.errorClass);
 							if(options.validClass)
 								$(this).addClass(options.validClass);
@@ -628,7 +625,6 @@
 			
 			mainElement.removeData("bValidator");
 		}
-		
 	}
 	
 })(jQuery);
