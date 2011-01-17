@@ -289,7 +289,7 @@ body {
 			<tr>
 				<td nowrap="nowrap" class="fp">validateOn<a name="validateOn" id="validateActionsAttr2"></a></td>
 				<td>null</td>
-				<td>On which input field event to start validation. Values can be <span class="insource">null</span>, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'.</span> See this option in action in this <a href="#positionstyle">example</a>.</td>
+				<td>On which input field event to start validation. Values can be <span class="insource">null</span>, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'.</span> See this option in action in this <a href="#positionstyle">example</a>. This option will be not applied on checkboxes and radio buttons.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">errorValidateOn<a name="errorValidateOn" id="validateActionsAttr3"></a></td>
@@ -480,7 +480,9 @@ body {
 						<li>minimum value</li>
 						<li>maximum value</li>
 					</ol></td>
-				<td>Checks is value between values in  action parameters. </td>
+				<td><p>Checks is value between values in  action parameters.</p>
+				<p>If the input is a checkbox and it is in a group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>)  or select then <span class="insource">between</span> means &quot;<em>number of selected checkboxes (options) must be between values set by action parameters</em>&quot;. See <a href="#groups">example</a>.				</p>
+				<p>If you use <span class="insource">between</span> with checkbox or select you should use custom error messages. See <a href="#errorMessageAttr">errorMessageAttr</a> option.</p></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">max</td>
@@ -488,7 +490,7 @@ body {
 						<li>maximum value</li>
 					</ol></td>
 				<td><p>Checks is value less or equel than action parameter value.</p>
-					<p> If the input is a checkbox and it is in group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>) then <span class="insource">max</span> means &quot;<em>select no more then max checkboxes</em>&quot;.</p>
+					<p> If the input is a checkbox and it is in a group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>) then <span class="insource">max</span> means &quot;<em>select no more then max checkboxes</em>&quot;. See <a href="#groups">example</a>.</p>
 					<p> If the input is a select  then <span class="insource">max</span> means &quot;<em>select no more then max options</em>&quot;.</p>
 					<p>If you use <span class="insource">max</span> with checkbox or select you should use custom error messages. See <a href="#errorMessageAttr">errorMessageAttr</a> option.</p></td>
 			</tr>
@@ -498,7 +500,7 @@ body {
 						<li>minimum value</li>
 					</ol></td>
 				<td><p>Checks is value greater or equel than action parameter value.</p>
-					<p>If the input is a checkbox and it is in group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>) then <span class="insource">min</span> means &quot;<em>select at least min checkboxes</em>&quot;.</p>
+					<p>If the input is a checkbox and it is in a group of checkboxes (all with the same name for example <span class="insource">name=&quot;chk[]&quot;</span>) then <span class="insource">min</span> means &quot;<em>select at least min checkboxes</em>&quot;. See <a href="#groups">example</a>.</p>
 					<p> If the input is a select  then <span class="insource">min</span> means &quot;<em>select at least min options</em>&quot;.</p>
 					<p>If you use <span class="insource">min</span> with checkbox or select you should use custom error messages. See <a href="#errorMessageAttr">errorMessageAttr</a> option.</p></td>
 			</tr>
@@ -701,9 +703,9 @@ body {
 				<input name="a" type="checkbox" value="1" data-bvalidator="required,required"/>
 			</p>
 			<p>Select at least two checkboxes:<br />
-				<input name="b[]" type="checkbox" value="1" data-bvalidator="min[2]" data-bvalidator-msg="Select at least two checkboxes"/>
-				<input name="b[]" type="checkbox" value="1" data-bvalidator="min[2]" data-bvalidator-msg="Select at least two checkboxes"/>
-				<input name="b[]" type="checkbox" value="1" data-bvalidator="min[2]" data-bvalidator-msg="Select at least two checkboxes"/>
+				<input name="b[]" type="checkbox" value="1" />
+				<input name="b[]" type="checkbox" value="1" />
+				<input name="b[]" type="checkbox" value="1" data-bvalidator="min[2],required" data-bvalidator-msg="Select at least two checkboxes"/>
 			</p>
 			<p>Select no more than 2 options:<br />
 				<select size="5" multiple="multiple" data-bvalidator="required,max[2],required" data-bvalidator-msg="Select no more than 2 options" >
@@ -927,6 +929,61 @@ body {
 </div>
 		<p>bValidator doesn't care if  inputs are not inside <span class="insource">&lt;form&gt;</span> element. It will work on any container element that has some child inputs that can be validated. Of course, you won't have submit button in that case and validation will not be automatically bind to it, but you can call it manually like in this example.</p>
 	</div>
+	
+	
+	
+	<h2>Groups of checkboxes and radio buttons<a name="groups" id="groups"></a>
+	<input type="button" value="Example source" onclick="showsource('ex8');"/></h2>
+	<div id="ex8s" class="showsource" style="display:none"> </div>
+	<div class="content">
+	<div id="ex8sv">
+<script type="text/javascript">			
+	
+	$(document).ready(function () {
+		$('#form8').bValidator();
+	});
+	
+</script>
+<form id="form8" method="post">
+	<p>
+		Select two or  none:
+		<input type="checkbox" name="chk8[]" />
+		<input type="checkbox" name="chk8[]" />
+		<input type="checkbox" name="chk8[]" />
+		<input type="checkbox" name="chk8[]" data-bvalidator="min[2],max[2]" data-bvalidator-msg="Select two or none checkboxes"/>
+	</p>
+	<p>
+		Select one:
+		<input type="radio" name="radio8" value="1" />
+		<input type="radio" name="radio8" value="2" />
+		<input type="radio" name="radio8" value="3" />
+		<input type="radio" name="radio8" value="4" data-bvalidator="required" data-bvalidator-msg="Select radio"/>
+	</p>
+	<p>Select between three and five:<br />
+		<input type="checkbox" name="chk81[]" />
+		<input type="checkbox" name="chk81[]" />
+		<input type="checkbox" name="chk81[]" />
+		<input type="checkbox" name="chk81[]" data-bvalidator="  between[3:5], required  " data-bvalidator-msg="Number of selected checkboxes must be between 3 and 5"/>
+		<br />
+		<input type="checkbox" name="chk81[]" />
+		<input type="checkbox" name="chk81[]" />
+		<input type="checkbox" name="chk81[]" />
+		<input type="checkbox" name="chk81[]" />
+		<br />
+		<input type="checkbox" name="chk81[]" />
+		<input type="checkbox" name="chk81[]" />
+		<input type="checkbox" name="chk81[]" />
+		<input type="checkbox" name="chk81[]" />
+	</p>
+	<p>
+		<input type="submit" value="Submit" />
+		<input type="reset" value="Reset" />
+	</p>
+</form>
+</div>
+		<p>A group of checkboxes or radio buttons is created by giving  the same  name attribute to all elements in the group. bValidator attributes for <a href="#validateActionsAttr">actions</a> and <a href="#errorMessageAttr">custom error message</a> should be added to only one element in the group  on which error message will be shown.</p>
+	</div>
+	
 	
 	
 	
