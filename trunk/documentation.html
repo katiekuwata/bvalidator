@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>bValidator documentation & examples</title>
 <script type="text/javascript" src="jquery-1.4.4.min.js"></script>
-<script type="text/javascript" src="jquery.bvalidator.js"></script>
+<script type="text/javascript" src="jquery.bvalidator-yc.js"></script>
 <script type="text/javascript">
 
 $(document).ready(function () { 
@@ -140,15 +140,17 @@ body {
 	<div class="content">
 		<p>bValidator is a <a href="http://jquery.com/" target="_blank">jQuery</a> plug-in for client side form validation. 
 			It supports fully customized error messages defined with template and CSS, many validation functions (<a href="#actions">actions</a>) like date, email, URL, IP address, validation of dynamic forms, customized validation functions and more. </p>
-		<p>Home page: <a href="http://code.google.com/p/bvalidator/" target="_blank">http://code.google.com/p/bvalidator/</a></p>
+		<p>Home page: <a href="http://code.google.com/p/bvalidator/">http://code.google.com/p/bvalidator/</a></p>
 	</div>
 	<h1>Setup</h1>
 	<div class="content">
-		<p>For basic setup you will need to include into your web page wich contains form you want to validate <span class="insource">jquery.bvalidator.js</span> file and, of course, jQuery:</p>
+		<p>For basic setup you will need to include into your web page which contains form you want to validate <span class="insource">jquery.bvalidator.js</span> file <strong>or</strong> compressed file  with <a href="http://developer.yahoo.com/yui/compressor/">YUI compressor</a> <span class="insource">jquery.bvalidator-yc.js</span> and, of course, jQuery:</p>
 		<blockquote>
 			<p><strong>include javascript:</strong></p>
 			<pre>
 &lt;script type=&quot;text/javascript&quot; src=&quot;jquery-1.4.3.min.js&quot;&gt;&lt;/script&gt;<br />&lt;script type=&quot;text/javascript&quot; src=&quot;jquery.bvalidator.js&quot;&gt;&lt;/script&gt;</pre>
+			<p><strong>or</strong> instead of <span class="insource">jquery.bvalidator.js</span> include <span class="insource">jquery.bvalidator-yc.js</span> which is the same file but compressed and much smaller in size:</p>
+			<pre>&lt;script type=&quot;text/javascript&quot; src=&quot;jquery.bvalidator-yc.js&quot;&gt;&lt;/script&gt;</pre>
 		</blockquote>
 		<p>You will also need to include CSS file with styles for error messages:</p>
 		<blockquote>
