@@ -128,6 +128,7 @@ body {
 	font-weight: bold;
 	color: #06F;
 }
+
 </style>
 </head>
 
@@ -215,93 +216,99 @@ body {
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">singleError</td>
-				<td>false</td>
+				<td class="insource">false</td>
 				<td>Enabling this shows only first validation error at a time. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">offset</td>
-				<td nowrap="nowrap">{x:-25, y:-3}</td>
+				<td nowrap="nowrap" class="insource">{x:-25, y:-3}</td>
 				<td>Fine tunes the error message tooltip position specified with the <span class="insource">position</span> property.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">position</td>
-				<td nowrap="nowrap">{x:'right', y:'top'}</td>
+				<td nowrap="nowrap" class="insource">{x:'right', y:'top'}</td>
 				<td>Specifies the position of the error message tooltip. Valid values for <strong>x</strong> are: <span class="insource">left</span>, <span class="insource">center</span>,<span class="insource"> right</span> and for <strong>y</strong> are <span class="insource">top</span>,<span class="insource"> center</span>,<span class="insource"> bottom</span></td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap" class="fp">template</td>
-				<td>&lt;div class=&quot;{errMsgClass}&quot;&gt;&lt;em/&gt;{message}&lt;/div&gt;</td>
-				<td><p>HTML template for the error message tooltip. This HTML code will be put inside container div element and appended after the input field. <span class="insource">{errMsgClass}</span> will be replaced with value of the <span class="insource">errMsgClass</span> propery and <span class="insource">{message}</span> will be replaced with error messages text.</p></td>
-			</tr>
-			<tr>
-				<td nowrap="nowrap" class="fp">showCloseIcon</td>
-				<td>true</td>
+				<td nowrap="nowrap" class="fp">showCloseIcon<a name="showCloseIcon" id="errorMessageAttr2"></a></td>
+				<td class="insource">true</td>
 				<td>Controls if the error message tooltip has close icon. If <span class="insource">true</span> user can click on it and close error message tooltip.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">showErrMsgSpeed</td>
-				<td>normal</td>
+				<td class="insource">normal</td>
 				<td> Error message's fade-in speed. Values can be '<span class="insource">fast</span>', '<span class="insource">normal</span>', '<span class="insource">slow</span>' or number of miliseconds.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap" class="fp">closeIconClass</td>
-				<td nowrap="nowrap">bvalidator_close_icon</td>
+				<td nowrap="nowrap" class="fp">closeIconClass<a name="closeIconClass" id="errorMessageAttr3"></a></td>
+				<td nowrap="nowrap" class="insource">bvalidator_close_icon</td>
 				<td>CSS class for error message tooltip close icon.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">errMsgClass</td>
-				<td nowrap="nowrap">bvalidator_errmsg</td>
+				<td nowrap="nowrap" class="insource">bvalidator_errmsg</td>
 				<td>CSS class for error message tooltip (error messages container).</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">errorClass</td>
-				<td nowrap="nowrap">bvalidator_invalid</td>
+				<td nowrap="nowrap" class="insource">bvalidator_invalid</td>
 				<td>CSS class for input field with invalid value. Will not be applied on checkboxes and radio buttons.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">validClass</td>
-				<td>&nbsp;</td>
+				<td class="insource">&nbsp;</td>
 				<td>CSS class for input field with valid value. Will not be applied on checkboxes and radio buttons.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">lang</td>
-				<td>en</td>
+				<td class="insource">en</td>
 				<td>Language for localization.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">errorMessageAttr<a name="errorMessageAttr" id="errorMessageAttr"></a></td>
-				<td nowrap="nowrap">data-bvalidator-msg</td>
+				<td nowrap="nowrap" class="insource">data-bvalidator-msg</td>
 				<td>Input field attribute which holds error message text. Message from this attribute  will override default messages or localized error messages.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">validateActionsAttr<a name="validateActionsAttr" id="validateActionsAttr"></a></td>
-				<td>data-bvalidator</td>
+				<td class="insource">data-bvalidator</td>
 				<td>Input field attribute which tells validator which validation actions to invoke for the field.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">paramsDelimiter</td>
-				<td>:</td>
+				<td class="insource">:</td>
 				<td>Options delimiter for validaton function parameters inside square brackets []. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">validatorsDelimiter</td>
-				<td>,</td>
+				<td class="insource">,</td>
 				<td>Validator functions (actions) delimiter in <span class="insource">validateActionsAttr</span> attribute.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">validateOn<a name="validateOn" id="validateActionsAttr2"></a></td>
-				<td>null</td>
+				<td class="insource">null</td>
 				<td>On which input field event to start validation. Values can be <span class="insource">null</span>, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'.</span> See this option in action in this <a href="#positionstyle">example</a>. This option will be not applied on checkboxes and radio buttons.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">errorValidateOn<a name="errorValidateOn" id="validateActionsAttr3"></a></td>
-				<td>keyup</td>
+				<td class="insource">keyup</td>
 				<td>On which input field event to start validation if error message is already shown. Values can be <span class="insource">null</span>, <span class="insource">'change'</span>, <span class="insource">'blur'</span>, <span class="insource">'keyup'</span></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">scrollToError</td>
-				<td>true</td>
+				<td class="insource">true</td>
 				<td>If first error message is not visible on the screen, page will be scrolled up or down to be visible.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">template<a name="template" id="validateActionsAttr5"></a></td>
+				<td class="insource">&lt;div class=&quot;{errMsgClass}&quot;&gt;<br />					&lt;em/&gt;{message}&lt;/div&gt;</td>
+				<td><p>HTML template for the error message tooltip. This HTML code will be put inside container div element and appended after the input field. <span class="insource">{errMsgClass}</span> will be replaced with value of the <span class="insource">errMsgClass</span> propery and <span class="insource">{message}</span> will be replaced with error messages text.</p></td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">templateCloseIcon<a name="templateCloseIcon" id="validateActionsAttr4"></a></td>
+				<td class="insource">&lt;div style=&quot;display:table&quot;&gt;<br />					&lt;div style=&quot;display:table-cell&quot;&gt;{message}&lt;/div&gt;&lt;div style=&quot;display:table-cell&quot;&gt;&lt;div class=&quot;{closeIconClass}&quot; onclick=&quot;{closeErrMsg}&quot;&gt;x&lt;/div&gt;<br />					&lt;/div&gt;&lt;/div&gt;</td>
+				<td>This piece of HTML will be used only when <span class="insource"><a href="#showCloseIcon">showCloseIcon</a></span> option is <span class="insource">true</span>. <span class="insource">{message}</span> in HTML code specified by <span class="insource"><a href="#template">template</a></span> option will be replaced by this code. With these two options you have full control over error messages layout. See <a href="#oldbrowser">example 9</a> where this option is used to support IE6.<br />
+				<span class="insource">{message}</span> will be replaced with error messages text, <span class="insource">{closeIconClass}</span> will be replaced with value of <span class="insource"><a href="#closeIconClass">closeIconClass</a></span> option and <span class="insource">{closeErrMsg}</span>will be replaced with javascript that hides error message tooltip.</td>
 			</tr>
 		</table>
 		<p>&nbsp;</p>
@@ -642,7 +649,8 @@ body {
 	
 	<h1>Examples<a name="examples" id="examples"></a></h1>
 	<div class="content">You can see source of each example by clicking on the 'Example source' button. Source will not look nice in Internet Explorer so  I recommend using Firefox, Opera or Chrome for that, but validator should work nice in all browsers.</div>
-	<h2>All validators in action <input type="button" value="Example source" onclick="showsource('ex1');"/></h2>
+	<h2>1 - All validators in action 
+		<input type="button" value="Example source" onclick="showsource('ex1');"/></h2>
 	<div id="ex1s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex1sv">
@@ -736,7 +744,8 @@ body {
 </script> 
 </div>
 	</div>
-	<h2>Input specific error message <input type="button" value="Example source" onclick="showsource('ex2');"/></h2>
+	<h2>2 - Input specific error message 
+		<input type="button" value="Example source" onclick="showsource('ex2');"/></h2>
 	<div id="ex2s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex2sv">
@@ -757,7 +766,8 @@ body {
 </div>
 	In this example <span class="insource">regex</span> validator action is used (<span class="insource">regex[a{3}]</span>) and error message which is defined in <span class="insource">data-bvalidator-msg</span> attribute.
 	</div>
-	<h2>custom validators<a name="customaction" id="customaction"></a> <input type="button" value="Example source" onclick="showsource('ex3');"/></h2>
+	<h2>3 - custom validators<a name="customaction" id="customaction"></a> 
+		<input type="button" value="Example source" onclick="showsource('ex3');"/></h2>
 	<div id="ex3s" class="showsource" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex3sv">
@@ -790,7 +800,8 @@ body {
 		<p>This example shows how you can  create   your own validation action. Just make function that returns true for successful validation and false for error and put function name in <span class="insource">data-bvalidator</span> attribute. <br />
 			You can see also in this example how to use parameters with  your own validation action. You can  put error message for your validation function in options object as described <a href="#localization">above</a> just call it the same as your validation function.</p>
 	</div>
-	<h2>Dynamic forms <input type="button" value="Example source" onclick="showsource('ex4');"/></h2>
+	<h2>4 - Dynamic forms 
+		<input type="button" value="Example source" onclick="showsource('ex4');"/></h2>
 	<div id="ex4s" class="showsource" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex4sv">
@@ -818,10 +829,11 @@ body {
 	</p>
 </form>
 </div>
-		<p>You can dynamically   add inputs to the form after the validator is initialized. Note that hidden form elements are not validated. <br />
+		<p>You can dynamically   add inputs to the form after the validator is initialized. Note that hidden form elements are not validated. If you need to hide or show some form elements, put them into some container element (like <span class="insource">&lt;div id=&quot;form4sh&quot;&gt;</span> in this example) and then show or hide that container because validation messages will not follow show/hide actions if you apply them only on input element which is validated.<br />
 			If you use <a href="#validateOn"><span class="insource">validateOn</span></a> option, then after adding new input to form you can call <a href="#bindValidateOn">bindValidateOn</a> function for new added inputs to bind <span class="insource">validateOn</span> event on them also.</p>
 	</div>
-	<h2>Server side validation <input type="button" value="Example source" onclick="showsource('ex5');"/></h2>
+	<h2>5 - Server side validation 
+		<input type="button" value="Example source" onclick="showsource('ex5');"/></h2>
 	<div id="ex5s" class="showsource" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex5sv">
@@ -859,8 +871,8 @@ body {
 </form>
 </div>
 		This example is similar to custom validators example <a href="#customaction">above</a>. Just make your own validator action function which will do synchronus AJAX request that will check if value is valid.</div>
-	<h2>Error message position and style<a name="positionstyle" id="positionstyle"></a>
-<input type="button" value="Example source" onclick="showsource('ex6');"/></h2>
+	<h2>6 - Error message position and style<a name="positionstyle" id="positionstyle"></a>
+		<input type="button" value="Example source" onclick="showsource('ex6');"/></h2>
 	<div id="ex6s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex6sv">
@@ -898,12 +910,12 @@ body {
 	</p>
 </form>
 </div>
-		<p>You can set template, position and CSS styles for error messages. </p>
+		<p>You can set template, position and CSS styles for error messages. See also <a href="#oldbrowser">example 9</a>.</p>
 	</div>
 	
 	
-	<h2>Instance on &lt;div&gt; element<a name="divvalidation" id="divvalidation"></a>
-<input type="button" value="Example source" onclick="showsource('ex7');"/></h2>
+	<h2>7 - Instance on &lt;div&gt; element<a name="divvalidation" id="divvalidation"></a>
+		<input type="button" value="Example source" onclick="showsource('ex7');"/></h2>
 	<div id="ex7s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex7sv">
@@ -934,8 +946,8 @@ body {
 	
 	
 	
-	<h2>Groups of checkboxes and radio buttons<a name="groups" id="groups"></a>
-	<input type="button" value="Example source" onclick="showsource('ex8');"/></h2>
+	<h2>8 - Groups of checkboxes and radio buttons<a name="groups" id="groups"></a>
+		<input type="button" value="Example source" onclick="showsource('ex8');"/></h2>
 	<div id="ex8s" class="showsource" style="display:none"> </div>
 	<div class="content">
 	<div id="ex8sv">
@@ -986,7 +998,88 @@ body {
 		<p>A group of checkboxes or radio buttons is created by giving  the same  name attribute to all elements in the group. bValidator attributes for <a href="#validateActionsAttr">actions</a> and <a href="#errorMessageAttr">custom error message</a> should be added to only one element in the group  on which error message will be shown.</p>
 	</div>
 	
+
+
+<h2>9 - For old browsers<a name="oldbrowser" id="oldbrowser"></a>
+	<input type="button" value="Example source" onclick="showsource('ex9');"/></h2>
+	<div id="ex9s" class="showsource" style="display:none"> </div>
+	<div class="content">
+<div id="ex9sv">
+<style type="text/css">
 	
+	/* invalid input */
+	.ex9_bvalidator_invalid{
+		background-color: #FFFFAE;
+	}
+	
+	/* error message */
+	.ex9_bvalidator_errmsg {
+		background-color:#333;
+		font-size:10px;
+		border:1px solid #999;
+		color:#FFF;
+		white-space:nowrap;
+		padding-right: 10px;
+		padding-left: 5px;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+	
+	/* close icon */
+	.ex9_bvalidator_errmsg .ex9_bvalidator_close_icon {
+		margin-left: 5px;
+		margin-top: -2px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-weight: bold;
+		color:#F96;
+		cursor:pointer;
+	}
+	
+	/* arrow */
+	.ex9_bvalidator_errmsg em {
+		display:block;
+		height: 9px;
+		width: 18px;
+		position:absolute;
+		bottom:-9px;
+		left:5px;
+		background-image: url(http://karmela.fsb.hr/~bmauser/bvalidator/arrow.gif);
+		background-repeat: no-repeat;
+	}
+</style>
+
+<script type="text/javascript">			
+	
+	var options9 = {
+		closeIconClass:      'ex9_bvalidator_close_icon',
+		errMsgClass:         'ex9_bvalidator_errmsg',
+		errorClass:          'ex9_bvalidator_invalid',
+		templateCloseIcon:   '<table><tr><td>{message}</td><td><div class="{closeIconClass}" onclick="{closeErrMsg}">x</div></td></tr></table>'
+	};
+	
+	$(document).ready(function () {
+		$('#form9').bValidator(options9);
+	});
+	
+</script>
+
+<form id="form9" method="post">
+	<p>Only digits:
+		<input type="text" data-bvalidator="digit,required" />
+		<br />
+		<br />
+		Minimum value 10:
+		<input type="text" data-bvalidator="min[10],required"/>
+	</p>
+	<p>
+		<input type="submit" value="Submit" />
+	</p>
+</form>
+</div>
+		<p>Some people live in the past and they love their favorite browser IE6. This example will work nice in IE6. CSS styles are changed to use image for arrow and <a href="#templateCloseIcon" class="insource">templateCloseIcon</a> option is used to replace default template with one that uses tables.</p>
+	</div>
+
+
+
 	
 	
 </div>
