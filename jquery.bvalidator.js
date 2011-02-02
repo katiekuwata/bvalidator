@@ -29,6 +29,7 @@
 			offset:              {x:-25, y:-3},	// offset position for error message tooltip
 			position:            {x:'right', y:'top'}, // error message placement x:left|center|right  y:top|center|bottom
 			template:            '<div class="{errMsgClass}"><em/>{message}</div>', // template for error message
+			templateCloseIcon:   '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="{closeIconClass}" onclick="{closeErrMsg}">x</div></div></div>', // template for error message container when showCloseIcon option is true
 			showCloseIcon:       true,	// put close icon on error message
 			showErrMsgSpeed:    'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of milliseconds
 			scrollToError:       true,	// scroll to first error
@@ -116,14 +117,11 @@
 
 			var messagesHtml = '';
 
-			for(var i in messages){
+			for(var i in messages)
 				messagesHtml += '<div>' + messages[i] + '</div>\n';
-			}
 
-			if(options.showCloseIcon){
-				var closeiconTpl = '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="'+options.closeIconClass+'" onclick="$(this).closest(\'.'+ options.errMsgClass +'\').css(\'visibility\', \'hidden\');">x</div></div></div>';
-				messagesHtml = closeiconTpl.replace('{message}', messagesHtml);
-			}
+			if(options.showCloseIcon)
+				messagesHtml = options.templateCloseIcon.replace('{message}', messagesHtml).replace('{closeIconClass}', options.closeIconClass).replace('{closeErrMsg}', '$(this).closest(\'.'+ options.errMsgClass +'\').css(\'visibility\', \'hidden\');');
 
 			// make tooltip from template
 			var tooltip = $(options.template.replace('{errMsgClass}', options.errMsgClass).replace('{message}', messagesHtml));
