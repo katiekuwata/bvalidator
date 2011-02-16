@@ -35,13 +35,20 @@ function showsource(ex){
 .header {
 	font-family: Verdana, Geneva, sans-serif;
 	width: 800px;
-	font-size: 40pt;
 	margin-right: auto;
 	margin-left: auto;
 }
+.header h1{
+	font-size: 40pt;
+	color: #000;
+	display: inline;
+}
 .content {
 	background-color: #FFF;
-	padding: 5px;
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-bottom: 15px;
+	padding-left: 5px;
 }
 .insource {
 	font-family: "Courier New", Courier, monospace;
@@ -97,6 +104,18 @@ h2 {
 	padding-left: 15px;
 	color: #FFF;
 }
+h3 {
+	font-size: 10pt;
+	font-weight: bold;
+}
+.by {
+	font-size: 8pt;
+	position: relative;
+	color: #CCC;
+	text-align: right;
+	margin-bottom: -20px;
+	font-style: italic;
+}
 body {
 }
 .table1 tr.disabled {
@@ -134,16 +153,42 @@ body {
 
 <body>
 <div class="header">
-	<strong>bValidator</strong> <span style="font-size: 12pt;">documentation & <a href="#examples">examples</a></span>
+	<h1>bValidator</h1> <span style="font-size: 12pt;">documentation & <a href="#examples">examples</a></span>
 </div>
 <div class="main_content">
+	<div class="by">by Bojan Mauser</div>
 	<h1>What is bValidator?</h1>
 	<div class="content">
 		<p>bValidator is a <a href="http://jquery.com/" target="_blank">jQuery</a> plug-in for client side form validation. 
 			It supports fully customized error messages defined with template and CSS, many validation functions (<a href="#actions">actions</a>) like date, email, URL, IP address, validation of dynamic forms, customized validation functions and more. </p>
 		<p>Home page: <a href="http://code.google.com/p/bvalidator/">http://code.google.com/p/bvalidator/</a></p>
+		<h3>Contents of this document:</h3>
+		<ul>
+			<li><a href="#setup">Setup</a></li>
+			<li><a href="#options">Configuration options</a>
+<ul>
+					<li><a href="#callbacks">Callbacks</a></li>
+					<li><a href="#localization">Error messages and localization</a></li>
+				</ul>
+			</li>
+			<li><a href="#actions">Validator actions</a></li>
+			<li><a href="#api">API functions</a></li>
+			<li><a href="#examples">Examples</a>
+				<ol>
+					<li><a href="#allvalidators">All validators in action</a></li>
+					<li><a href="#inputerrmsgs">Input specific error message</a></li>
+					<li><a href="#customaction">Custom validators</a></li>
+					<li><a href="#dynamicforms">Dynamic forms</a></li>
+					<li><a href="#serversidevalidation">Server side validation</a></li>
+					<li><a href="#positionstyle">Error message position and style</a></li>
+					<li><a href="#divvalidation">Instance on &lt;div&gt; element</a></li>
+					<li><a href="#groups">Groups of checkboxes and radio buttons</a></li>
+					<li><a href="#oldbrowser">For old browsers</a></li>
+				</ol>
+			</li>
+		</ul>
 	</div>
-	<h1>Setup</h1>
+	<h1>Setup<a name="setup" id="setup"></a></h1>
 	<div class="content">
 		<p>For basic setup you will need to include into your web page which contains form you want to validate <span class="insource">jquery.bvalidator.js</span> file <strong>or</strong> compressed file  with <a href="http://developer.yahoo.com/yui/compressor/">YUI compressor</a> <span class="insource">jquery.bvalidator-yc.js</span> and, of course, jQuery:</p>
 		<blockquote>
@@ -180,7 +225,7 @@ body {
 	</div>
 	<h1>Configuration options<a name="options" id="options"></a></h1>
 	<div class="content">
-		<p>Validator can be configured<strong> by passing object with options  to constructor</strong><strong><a name="optionsconstructor" id="bValidatorOptions2"></a></strong>. That passed options will override default options.</p>
+		<p>Validator can be configured<strong> by passing object with options  to constructor</strong><strong><a name="optionsconstructor" id="bValidatorOptions2"></a></strong>. Passed options will override default options.</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -206,11 +251,10 @@ body {
 
 &lt;/script&gt;</pre>
 		</blockquote>
-		<p><strong>OR BOTH</strong>, you can define global <strong>bValidatorOptions</strong> object and also pass options to<strong> validator constructor</strong>. In that case options from <span class="insource">bValidatorOptions</span> object override default options and options passed as argument to constructor will override options from <span class="insource">bValidatorOptions</span>.</p>
-		<p><strong>Available options:</strong><a name="optionslist" id="options2"></a></p>
+		<p><strong>OR BOTH</strong>, you can define global <strong>bValidatorOptions</strong> object and also pass options to validator<strong> constructor</strong>. In that case options from <span class="insource">bValidatorOptions</span> object override default options and options passed as argument to constructor will override options from <span class="insource">bValidatorOptions</span> object.		</p>
 		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table1">
 			<tr>
-				<th nowrap="nowrap">Property</th>
+				<th nowrap="nowrap">Option</th>
 				<th>Default</th>
 				<th>Description</th>
 			</tr>
@@ -311,9 +355,8 @@ body {
 				<span class="insource">{message}</span> will be replaced with error messages text, <span class="insource">{closeIconClass}</span> will be replaced with value of <span class="insource"><a href="#closeIconClass">closeIconClass</a></span> option and <span class="insource">{closeErrMsg}</span>will be replaced with javascript that hides error message tooltip.</td>
 			</tr>
 		</table>
-		<p>&nbsp;</p>
 	</div>
-	<h2>Callbacks</h2>
+	<h2>Callbacks<a name="callbacks" id="callbacks"></a></h2>
 	<div class="content">
 		<p>Callbacks are user defined <strong>functions that are called by validator in certain moment</strong>. Callbacks are defined the same way as configuration options. Callback functions are called for each validator action.	Example	of defining callback:</p>
 		<blockquote>
@@ -328,9 +371,8 @@ body {
 	$('#myform').bValidator(options);
 
 &lt;/script&gt;
-</pre>
+		</pre>
 		</blockquote>
-		<p><strong>Available callbacks:</strong></p>
 		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table1">
 			<tr>
 				<th nowrap="nowrap">Callback</th>
@@ -372,14 +414,13 @@ body {
 				<td>Called after validation is sucessfull. Returning false will stop executing that validator action,  hiding error messages (if any) and binding events (<a href="#validateOn" class="insource">validateOn</a>, <a href="#errorValidateOn" class="insource">errorValidateOn</a>) to input fields will be skipped.</td>
 			</tr>
 		</table>
-		<p>&nbsp;</p>
 	</div>
 	<h2>Error messages and localization<a name="localization" id="localization"></a></h2>
 	<div class="content">
 		<p>bValidator can retrieve error message from <a href="#options">configuration options</a> object passed as <a href="#optionsconstructor">argument to constructor</a> or defined as global <a href="#bValidatorOptions" class="insource">bValidatorOptions</a> object, or  from <a href="#errorMessageAttr" class="insource">data-bvalidator-msg</a> attribute.<br />
-		Most of the validator actions has error message named same as the action in configuration object. If you use some custom validation function (<a href="#customaction">example</a>) you can also add error message named same as the function into configuration object.<br />
+		Most of the validator actions has error message named same as the action in configuration object. If you use some custom validation function (<a href="#customaction">example</a>) you can also add error message named same as the validation function into configuration object.<br />
 		You can use <span class="insource">{0}</span>, <span class="insource">{1}</span>, <span class="insource">{2}</span>, <span class="insource">{3},...</span> tags in error messages and they will be replaced with validator action parameters in <span class="insource">[]</span>.</p>
-		<p>Error messages can be localized (translated). To do that you need to <strong>pass translated messages as <a href="#options">options</a></strong> to validator constructor: </p>
+		<p>Error messages can be localized (translated). To do that you need to <strong>pass translated messages as <a href="#options">options</a></strong> to validator constructor:</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -393,7 +434,7 @@ body {
 
 &lt;/script&gt;</pre>
 		</blockquote>
-		<p> <strong>OR</strong> define <strong>global <span class="insource">bValidatorOptions</span> object with translated error messages</strong> that will be used in all validator instances:</p>
+		<p> <strong>OR</strong> define <strong>global </strong><span class="insource"><a href="#bValidatorOptions">bValidatorOptions</a></span><strong> object with translated error messages</strong> that will be used in all validator instances:</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -405,9 +446,8 @@ body {
 
 	$('#myform').bValidator();
 
-&lt;/script&gt;</pre>
-		</blockquote>
-	</div>
+&lt;/script&gt;</pre></blockquote>
+		You can see all default English error messages in <span class="insource">jquery.bvalidator.js</span> file (search for '<span class="insource">errorMessages</span>' inside the file). If you  made translation please post it to <a href="http://groups.google.com/group/bvalidator">bValidator discussion group</a>. I will also put it on <a href="http://code.google.com/p/bvalidator/downloads/list">download page</a>.</div>
 	<h1>Validator actions<a name="actions" id="actions"></a></h1>
 	<div class="content">
 		<p>Validator actions are  functions that checks value of input field that is validated. Here are listed  built in actions but it is very simple to add custom validation functions (see <a href="#customaction">example</a>).</p>
@@ -560,7 +600,7 @@ body {
 		<p>&nbsp;</p>
 	</div>
 	
-	<h1>API functions</h1>
+	<h1>API functions<a name="api" id="api"></a></h1>
 	<div class="content">
 		<p>When you make instance of validator you can call some functions on that instance: </p>
 		<blockquote>
@@ -649,8 +689,8 @@ body {
 	
 	<h1>Examples<a name="examples" id="examples"></a></h1>
 	<div class="content">You can see source of each example by clicking on the 'Example source' button. Source will not look nice in Internet Explorer so  I recommend using Firefox, Opera or Chrome for that, but validator should work nice in all browsers.</div>
-	<h2>1 - All validators in action 
-		<input type="button" value="Example source" onclick="showsource('ex1');"/></h2>
+	<h2>1 - All validators in action<a name="allvalidators" id="allvalidators"></a>
+<input type="button" value="Example source" onclick="showsource('ex1');"/></h2>
 	<div id="ex1s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex1sv">
@@ -744,8 +784,8 @@ body {
 </script> 
 </div>
 	</div>
-	<h2>2 - Input specific error message 
-		<input type="button" value="Example source" onclick="showsource('ex2');"/></h2>
+	<h2>2 - Input specific error message<a name="inputerrmsgs" id="inputerrmsgs"></a>
+<input type="button" value="Example source" onclick="showsource('ex2');"/></h2>
 	<div id="ex2s" class="showsource" style="display:none"> </div>
 	<div class="content">
 <div id="ex2sv">
@@ -766,7 +806,7 @@ body {
 </div>
 	In this example <span class="insource">regex</span> validator action is used (<span class="insource">regex[a{3}]</span>) and error message which is defined in <span class="insource">data-bvalidator-msg</span> attribute.
 	</div>
-	<h2>3 - custom validators<a name="customaction" id="customaction"></a> 
+	<h2>3 - Custom validators<a name="customaction" id="customaction"></a> 
 		<input type="button" value="Example source" onclick="showsource('ex3');"/></h2>
 	<div id="ex3s" class="showsource" style="display:none"> </div>
 	<div class="content"> 
@@ -798,10 +838,10 @@ body {
 </form>
 </div>
 		<p>This example shows how you can  create   your own validation action. Just make function that returns true for successful validation and false for error and put function name in <span class="insource">data-bvalidator</span> attribute. <br />
-			You can see also in this example how to use parameters with  your own validation action. You can  put error message for your validation function in options object as described <a href="#localization">above</a> just call it the same as your validation function.</p>
+			You can see also in this example how to use parameters with  your own validation action. You can also put error message for your validation function in options object as described <a href="#localization">above</a>, just call it the same as your validation function.</p>
 	</div>
-	<h2>4 - Dynamic forms 
-		<input type="button" value="Example source" onclick="showsource('ex4');"/></h2>
+	<h2>4 - Dynamic forms<a name="dynamicforms" id="dynamicforms"></a>
+<input type="button" value="Example source" onclick="showsource('ex4');"/></h2>
 	<div id="ex4s" class="showsource" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex4sv">
@@ -829,11 +869,11 @@ body {
 	</p>
 </form>
 </div>
-		<p>You can dynamically   add inputs to the form after the validator is initialized. Note that hidden form elements are not validated. If you need to hide or show some form elements, put them into some container element (like <span class="insource">&lt;div id=&quot;form4sh&quot;&gt;</span> in this example) and then show or hide that container because validation messages will not follow show/hide actions if you apply them only on input element which is validated.<br />
+		<p>You can dynamically   add inputs to the form after the validator is initialized. Note that <strong>hidden form elements are not validated</strong>. If you need to hide or show some form elements, put them into some container element (like <span class="insource">&lt;div id=&quot;form4sh&quot;&gt;</span> in this example) and then show or hide that container because validation messages will not follow show/hide actions if you apply them only on input element which is validated.<br />
 			If you use <a href="#validateOn"><span class="insource">validateOn</span></a> option, then after adding new input to form you can call <a href="#bindValidateOn">bindValidateOn</a> function for new added inputs to bind <span class="insource">validateOn</span> event on them also.</p>
 	</div>
-	<h2>5 - Server side validation 
-		<input type="button" value="Example source" onclick="showsource('ex5');"/></h2>
+	<h2>5 - Server side validation<a name="serversidevalidation" id="serversidevalidation"></a>
+<input type="button" value="Example source" onclick="showsource('ex5');"/></h2>
 	<div id="ex5s" class="showsource" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex5sv">
