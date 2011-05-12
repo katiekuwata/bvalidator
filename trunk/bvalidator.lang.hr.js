@@ -20,7 +20,8 @@ var bValidatorOptions = {
 			'email':      'Unesite ispravnu Email adresu.',
 			'image':      'Odaberite samo slikovne datoteke.',
 			'url':        'Unesite ispravan URL.',
-			'ip4':        'Unesite ispravnu IP adresu.',
+			'ip4':        'Unesite ispravnu IPv4 adresu.',
+			'ip6':        'Unesite ispravnu IPv6 adresu.',
 			'date':       'Unesite ispravan datum u formatu {0}.'
 		}
 	}
