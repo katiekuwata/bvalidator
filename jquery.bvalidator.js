@@ -54,6 +54,10 @@
 			onAfterValidate:     null,
 			onValidateFail:      null,
 			onValidateSuccess:   null,
+			onBeforeElementValidation: null,
+			onAfterElementValidation:  null,
+			onBeforeAllValidations:    null,
+			onAfterAllValidations:     null,
 
 			// default error messages
 			errorMessages: {
@@ -75,20 +79,10 @@
 					'email':      'Please enter a valid email address.',
 					'image':      'This field should only contain image types',
 					'url':        'Please enter a valid URL.',
-					'ip4':        'Please enter a valid IP address.',
+					'ip4':        'Please enter a valid IPv4 address.',
+					'ip6':        'Please enter a valid IPv6 address.',
 					'date':       'Please enter a valid date in format {0}.'
 				}
-			},
-
-			// regular expressions used by validator methods
-			regex: {
-				alpha:    /^[a-z ._\-]+$/i,
-				alphanum: /^[a-z0-9 ._\-]+$/i,
-				digit:    /^\d+$/,
-				number:   /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,
-				email:    /^([a-zA-Z0-9_\.\-\+%])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
-				image:    /\.(jpg|jpeg|png|gif|bmp)$/i,
-				url:      /^(http|https|ftp)\:\/\/[a-z0-9\-\.]+\.[a-z]{2,3}(:[a-z0-9]*)?\/?([a-z0-9\-\._\?\,\'\/\\\+&amp;%\$#\=~])*$/i
 			}
 		},
 
@@ -173,7 +167,7 @@
 			return {top: top, left: left};
 		},
 
-		// calls callback functions
+		// calls callback function
 		_callBack = function(type, param1, param2, param3){
 		        if($.isFunction(options[type])){
 		        	return options[type](param1, param2, param3);
@@ -203,7 +197,7 @@
 			return ret;
 		},
 
-		// object with validator functions
+		// object with validator actions
 		validator = {
 
 			equalto: function(v, elementId){
@@ -262,31 +256,31 @@
 			},
 
 			alpha: function(v){
-				return this.regex(v, options.regex.alpha);
+				return this.regex(v, /^[a-z ._\-]+$/i);
 			},
-
+			
 			alphanum: function(v){
-				return this.regex(v, options.regex.alphanum);
+				return this.regex(v, /^[a-z\d ._\-]+$/i);
 			},
 
 			digit: function(v){
-				return this.regex(v, options.regex.digit);
+				return this.regex(v, /^\d+$/);
 			},
 
 			number: function(v){
-				return this.regex(v, options.regex.number);
+				return this.regex(v, /^[-+]?\d+(\.\d+)?$/);
 			},
 
 			email: function(v){
-				return this.regex(v, options.regex.email);
+				return this.regex(v, /^([a-zA-Z\d_\.\-\+%])+\@(([a-zA-Z\d\-])+\.)+([a-zA-Z\d]{2,4})+$/);
 			},
 
 			image: function(v){
-				return this.regex(v, options.regex.image);
+				return this.regex(v, /\.(jpg|jpeg|png|gif|bmp)$/i);
 			},
 
 			url: function(v){
-				return this.regex(v, options.regex.url);
+				return this.regex(v, /^(http|https|ftp)\:\/\/[a-z\d\-\.]+\.[a-z]{2,3}(:[a-z\d]*)?\/?([a-z\d\-\._\?\,\'\/\\\+&amp;%\$#\=~])*$/i);
 			},
 
 			regex: function(v, regex, mod){
@@ -296,10 +290,11 @@
 			},
 
 			ip4: function(v){
-				var r = /^(([01]?\d\d?|2[0-4]\d|25[0-5])\.){3}([01]?\d\d?|25[0-5]|2[0-4]\d)$/;
-				if (!r.test(v.value) || v.value == "0.0.0.0" || v.value == "255.255.255.255")
-					return false
-				return true;
+				return this.regex(v, /^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/);
+			},
+			
+			ip6: function(v){
+				return this.regex(v, /^(?:(?:(?:[A-F\d]{1,4}:){5}[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){4}:[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){3}(?::[A-F\d]{1,4}){1,2}|(?:[A-F\d]{1,4}:){2}(?::[A-F\d]{1,4}){1,3}|[A-F\d]{1,4}:(?::[A-F\d]{1,4}){1,4}|(?:[A-F\d]{1,4}:){1,5}|:(?::[A-F\d]{1,4}){1,5}|:):(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)|(?:[A-F\d]{1,4}:){7}[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){6}:[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){5}(?::[A-F\d]{1,4}){1,2}|(?:[A-F\d]{1,4}:){4}(?::[A-F\d]{1,4}){1,3}|(?:[A-F\d]{1,4}:){3}(?::[A-F\d]{1,4}){1,4}|(?:[A-F\d]{1,4}:){2}(?::[A-F\d]{1,4}){1,5}|[A-F\d]{1,4}:(?::[A-F\d]{1,4}){1,6}|(?:[A-F\d]{1,4}:){1,7}:|:(?::[A-F\d]{1,4}){1,7})$/i);
 			},
 
 			date: function(v, format){ // format can be any combination of mm,dd,yyyy with separator between. Example: 'mm.dd.yyyy' or 'yyyy-mm-dd'
@@ -355,7 +350,7 @@
 		// return existing instance
 		if(mainElement.data("bValidator"))
 			return mainElement.data("bValidator");
-
+		
 		mainElement.data("bValidator", this);
 
 		// if selector is a form
@@ -392,173 +387,184 @@
 
 			scroll_to = null;
 
-			// validate each element
-			elementsl.each(function(){
+			if(_callBack('onBeforeAllValidations', elementsl) !== false){
 
-				// value of validateActionsAttr input attribute
-				var actionsStr = $.trim($(this).attr(options.validateActionsAttr).replace(new RegExp('\\s*\\' + options.validatorsDelimiter + '\\s*', 'g'), options.validatorsDelimiter)),
-				 is_valid = 0;
-
-				if(!actionsStr)
-					return true;
-
-				var actions = actionsStr.split(options.validatorsDelimiter), // all validation actions
-				 inputValue = _getValue($(this)), // value of input field for validation
-				 errorMessages = [];
-
-				// if value is not required and is empty
-				if(jQuery.inArray('required',actions) == -1 && !validator.required(inputValue)){
-					is_valid = 1;
-				}
-
-				if(!is_valid){
-
-					// get error message from attribute
-					var errMsg = $(this).attr(options.errorMessageAttr),
-					 skip_messages = 0;
-
-					// for each validation action
-					for(var i in actions){
-
-						actions[i] = $.trim(actions[i]);
-
-						if(!actions[i])
-							continue;
-
-						if(_callBack('onBeforeValidate', $(this), actions[i]) === false)
-							continue;
-
-						// check if we have some parameters for validator
-						var validatorParams = actions[i].match(/^(.*?)\[(.*?)\]/);
-
-						if(validatorParams && validatorParams.length == 3){
-							var validatorName = validatorParams[1];
-							validatorParams = validatorParams[2].split(options.paramsDelimiter);
-						}
-						else{
-							validatorParams = [];
-							var validatorName = actions[i];
-						}
-
-						// if validator exists
-						if(typeof validator[validatorName] == 'function'){
-							validatorParams.unshift(inputValue); // add input value to beginning of validatorParams
-							var validationResult = validator[validatorName].apply(validator, validatorParams); // call validator function
-						}
-						// call custom user dafined function
-						else if(typeof window[validatorName] == 'function'){
-							validatorParams.unshift(inputValue.value);
-							var validationResult = window[validatorName].apply(validator, validatorParams);
-						}
-
-						if(_callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
-							continue;
-
-						// if validation failed
-						if(!validationResult){
-							if(!doNotshowMessages){
-
-								if(!skip_messages){
-									if(!errMsg){
-
-										if(options.errorMessages[options.lang] && options.errorMessages[options.lang][validatorName])
-											errMsg = options.errorMessages[options.lang][validatorName];
-										else if(options.errorMessages.en[validatorName])
-											errMsg = options.errorMessages.en[validatorName];
-										else if(options.errorMessages[options.lang] && options.errorMessages[options.lang]['default'])
-											errMsg = options.errorMessages[options.lang]['default'];
-										else
-											errMsg = options.errorMessages.en['default'];
+				// validate each element
+				elementsl.each(function(){
+	
+					// value of validateActionsAttr input attribute
+					var actionsStr = $.trim($(this).attr(options.validateActionsAttr).replace(new RegExp('\\s*\\' + options.validatorsDelimiter + '\\s*', 'g'), options.validatorsDelimiter)),
+					 is_valid = 0;
+	
+					if(!actionsStr)
+						return true;
+	
+					var actions = actionsStr.split(options.validatorsDelimiter), // all validation actions
+					 inputValue = _getValue($(this)), // value of input field for validation
+					 errorMessages = [];
+	
+					// if value is not required and is empty
+					if(jQuery.inArray('required',actions) == -1 && !validator.required(inputValue)){
+						is_valid = 1;
+					}
+	
+					if(!is_valid){
+	
+						// get error message from attribute
+						var errMsg = $(this).attr(options.errorMessageAttr),
+						 skip_messages = 0;
+						
+						if(_callBack('onBeforeElementValidation', $(this)) !== false){
+		
+							// for each validation action
+							for(var i in actions){
+		
+								actions[i] = $.trim(actions[i]);
+		
+								if(!actions[i])
+									continue;
+		
+								if(_callBack('onBeforeValidate', $(this), actions[i]) === false)
+									continue;
+		
+								// check if we have some parameters for validator
+								var validatorParams = actions[i].match(/^(.*?)\[(.*?)\]/);
+		
+								if(validatorParams && validatorParams.length == 3){
+									var validatorName = validatorParams[1];
+									validatorParams = validatorParams[2].split(options.paramsDelimiter);
+								}
+								else{
+									validatorParams = [];
+									var validatorName = actions[i];
+								}
+		
+								// if validator exists
+								if(typeof validator[validatorName] == 'function'){
+									validatorParams.unshift(inputValue); // add input value to beginning of validatorParams
+									var validationResult = validator[validatorName].apply(validator, validatorParams); // call validator function
+								}
+								// call custom user dafined function
+								else if(typeof window[validatorName] == 'function'){
+									validatorParams.unshift(inputValue.value);
+									var validationResult = window[validatorName].apply(validator, validatorParams);
+								}
+		
+								if(_callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
+									continue;
+		
+								// if validation failed
+								if(!validationResult){
+									if(!doNotshowMessages){
+		
+										if(!skip_messages){
+											if(!errMsg){
+		
+												if(options.errorMessages[options.lang] && options.errorMessages[options.lang][validatorName])
+													errMsg = options.errorMessages[options.lang][validatorName];
+												else if(options.errorMessages.en[validatorName])
+													errMsg = options.errorMessages.en[validatorName];
+												else if(options.errorMessages[options.lang] && options.errorMessages[options.lang]['default'])
+													errMsg = options.errorMessages[options.lang]['default'];
+												else
+													errMsg = options.errorMessages.en['default'];
+											}
+											else{
+												skip_messages = 1;
+											}
+		
+											// replace values in braces
+											if(errMsg.indexOf('{')){
+												for(var j=0; j<validatorParams.length-1; j++)
+													errMsg = errMsg.replace(new RegExp("\\{" + j + "\\}", "g"), validatorParams[j+1]);
+											}
+		
+											if(!(errorMessages.length && validatorName == 'required'))
+												errorMessages[errorMessages.length] = errMsg;
+		
+											errMsg = null;
+										}
 									}
-									else{
-										skip_messages = 1;
-									}
-
-									// replace values in braces
-									if(errMsg.indexOf('{')){
-										for(var j=0; j<validatorParams.length-1; j++)
-											errMsg = errMsg.replace(new RegExp("\\{" + j + "\\}", "g"), validatorParams[j+1]);
-									}
-
-									if(!(errorMessages.length && validatorName == 'required'))
-										errorMessages[errorMessages.length] = errMsg;
-
-									errMsg = null;
+									else
+										errorMessages[errorMessages.length] = '';
+		
+									ret = false;
+		
+									_callBack('onValidateFail', $(this), actions[i], errorMessages);
+								}
+								else{
+									_callBack('onValidateSuccess', $(this), actions[i]);
 								}
 							}
-							else
-								errorMessages[errorMessages.length] = '';
-
-							ret = false;
-
-							if(_callBack('onValidateFail', $(this), actions[i], errorMessages) === false)
-								continue;
 						}
-						else{
-							if(_callBack('onValidateSuccess', $(this), actions[i]) === false)
-								continue;
-						}
-					}
-				}
-
-				if(!doNotshowMessages){
-
-					var chk_rad = $(this).is('input:checkbox,input:radio') ? 1 : 0;
-
-					// if validation failed
-					if(errorMessages.length){
-
-						_showErrMsg($(this), errorMessages)
-
-						if(!chk_rad){
-							$(this).removeClass(options.validClass);
-							if(options.errorClass)
-								$(this).addClass(options.errorClass);
-						}
+						
+						var onAfterElementValidation = _callBack('onAfterElementValidation', $(this), errorMessages);
+						
+						// show error messages and bind events
+						if(!doNotshowMessages && onAfterElementValidation !== false){
 		
-						// input validation event
-						if (options.errorValidateOn){
-							if(options.validateOn)
-								$(this).unbind(options.validateOn + '.bV');
-
-							var evt = chk_rad || $(this).is('select,input:file') ? 'change' : options.errorValidateOn;
-
-							if(chk_rad){
-								var group = $(this).is('input:checkbox') ? $('input:checkbox[name="' + $(this).attr('name') + '"]') : $('input:radio[name="' + $(this).attr('name') + '"]');
-								$(group).unbind('.bVerror');
-								$(group).bind('change.bVerror', {'bVInstance': instance, 'groupLeader': $(this)}, function(event){
-									event.data.bVInstance.validate(false, event.data.groupLeader);
-								});
+							var chk_rad = $(this).is('input:checkbox,input:radio') ? 1 : 0;
+		
+							// if validation failed
+							if(errorMessages.length){
+								
+								if(onAfterElementValidation !== 0)
+									_showErrMsg($(this), errorMessages)
+		
+								if(!chk_rad){
+									$(this).removeClass(options.validClass);
+									if(options.errorClass)
+										$(this).addClass(options.errorClass);
+								}
+				
+								// input validation event
+								if (options.errorValidateOn){
+									if(options.validateOn)
+										$(this).unbind(options.validateOn + '.bV');
+		
+									var evt = chk_rad || $(this).is('select,input:file') ? 'change' : options.errorValidateOn;
+		
+									if(chk_rad){
+										var group = $(this).is('input:checkbox') ? $('input:checkbox[name="' + $(this).attr('name') + '"]') : $('input:radio[name="' + $(this).attr('name') + '"]');
+										$(group).unbind('.bVerror');
+										$(group).bind('change.bVerror', {'bVInstance': instance, 'groupLeader': $(this)}, function(event){
+											event.data.bVInstance.validate(false, event.data.groupLeader);
+										});
+									}
+									else{
+										$(this).unbind('.bVerror');
+										$(this).bind(evt + '.bVerror', {'bVInstance': instance}, function(event){
+											event.data.bVInstance.validate(false, $(this));
+										});
+									}
+								}
+		
+								if (options.singleError)
+									return false;
 							}
 							else{
-								$(this).unbind('.bVerror');
-								$(this).bind(evt + '.bVerror', {'bVInstance': instance}, function(event){
-									event.data.bVInstance.validate(false, $(this));
-								});
+								if(onAfterElementValidation !== 0)
+									_removeErrMsg($(this));
+		
+								if(!chk_rad){
+									$(this).removeClass(options.errorClass);
+									if(options.validClass)
+										$(this).addClass(options.validClass);
+								}
+		
+								//if (options.errorValidateOn)
+								//	$(this).unbind('.bVerror');
+								if (options.validateOn){
+									$(this).unbind(options.validateOn + '.bV');
+									_bindValidateOn($(this));
+								}
 							}
 						}
-
-						if (options.singleError)
-							return false;
 					}
-					else{
-						_removeErrMsg($(this));
+				});
+			}
 
-						if(!chk_rad){
-							$(this).removeClass(options.errorClass);
-							if(options.validClass)
-								$(this).addClass(options.validClass);
-						}
-
-						//if (options.errorValidateOn)
-						//	$(this).unbind('.bVerror');
-						if (options.validateOn){
-							$(this).unbind(options.validateOn + '.bV');
-							_bindValidateOn($(this));
-						}
-					}
-				}
-			});
+			_callBack('onAfterAllValidations', elementsl, ret);
 
 			// scroll to error
 			if(scroll_to && !elementsOverride && ($(window).scrollTop() > scroll_to || $(window).scrollTop()+$(window).height() < scroll_to)){
