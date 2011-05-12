@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>bValidator documentation & examples</title>
-<script type="text/javascript" src="jquery-1.4.4.min.js"></script>
+<title>bValidator documentation &amp; examples</title>
+<script type="text/javascript" src="jquery-1.5.2.min.js"></script>
 <script type="text/javascript" src="jquery.bvalidator.js"></script>
 <script type="text/javascript">
 
@@ -80,6 +80,12 @@ function showsource(ex){
 .ex6_invalid {
 	background-color: #F96;
 }
+#ex10errors{
+	border: 1px solid #C00;
+	font-weight: bold;
+	display: none;
+	padding: 2px;
+}
 /* tables */
 .table1 td {
 	border-right-width: 1px;
@@ -142,18 +148,34 @@ body {
 	white-space: pre;
 	background-color: #F0F0F0;
 	margin-bottom: 10px;
+	padding: 5px;
 }
 .fp {
 	font-weight: bold;
 	color: #06F;
 }
 
+.donatecont {
+	background-color: #9FD9FF;
+	padding: 5px;
+	border-radius: 10px;
+	margin-top: 25px;
+	margin-right: 15px;
+	margin-bottom: 15px;
+	margin-left: 15px;
+	text-align: center;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11pt;
+	font-weight: bold;
+	color: #333;
+	border: 1px solid #666;
+}
 </style>
 </head>
 
 <body>
 <div class="header">
-	<h1>bValidator</h1> <span style="font-size: 12pt;">documentation & <a href="#examples">examples</a></span>
+	<h1>bValidator</h1> <span style="font-size: 12pt;">documentation &amp; <a href="#examples">examples</a></span>
 </div>
 <div class="main_content">
 	<div class="by">by Bojan Mauser</div>
@@ -184,17 +206,44 @@ body {
 					<li><a href="#divvalidation">Instance on &lt;div&gt; element</a></li>
 					<li><a href="#groups">Groups of checkboxes and radio buttons</a></li>
 					<li><a href="#oldbrowser">For old browsers</a></li>
+					<li><a href="#allerrors">Put error messages into container</a></li>
 				</ol>
 			</li>
 		</ul>
+		
+
+<div class="donatecont">If you like and use bValidator, I'd like small donation from you and <br />
+	I promise I'll use it only for good things:)
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="donate_form">
+			<input type="hidden" name="cmd" value="_s-xclick">
+	<input type="hidden" name="hosted_button_id" value="WHSA95VNSYHSG">
+	<select name="os0" style="margin-top:5px;margin-bottom:5px;">
+		<option value="-">- $1.00</option>
+		<option value="--">-- $3.00</option>
+		<option value="---" selected="selected">--- $5.00</option>
+		<option value="----">---- $10.00</option>
+		<option value="-----">----- $15.00</option>
+		<option value="------">------ $20.00</option>
+	</select>
+	<input type="hidden" name="currency_code" value="USD">
+	<br />
+	<input name="submit" type="image" src="https://www.paypalobjects.com/WEBSCR-640-20110429-1/en_US/i/btn/btn_donate_LG.gif" alt="Donate via PayPal" title="Donate via PayPal" align="middle" border="0">
+</form>
+</div>
+
+		
+		
 	</div>
+
+	
+	
 	<h1>Setup<a name="setup" id="setup"></a></h1>
 	<div class="content">
 		<p>For basic setup you will need to include into your web page which contains form you want to validate <span class="insource">jquery.bvalidator.js</span> file <strong>or</strong> compressed file  with <a href="http://developer.yahoo.com/yui/compressor/">YUI compressor</a> <span class="insource">jquery.bvalidator-yc.js</span> and, of course, jQuery:</p>
 		<blockquote>
 			<p><strong>include javascript:</strong></p>
 			<pre>
-&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-1.4.3.min.js&quot;&gt;&lt;/script&gt;<br />&lt;script type=&quot;text/javascript&quot; src=&quot;jquery.bvalidator.js&quot;&gt;&lt;/script&gt;</pre>
+&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-1.5.2.min.js&quot;&gt;&lt;/script&gt;<br />&lt;script type=&quot;text/javascript&quot; src=&quot;jquery.bvalidator.js&quot;&gt;&lt;/script&gt;</pre>
 			<p><strong>or</strong> instead of <span class="insource">jquery.bvalidator.js</span> include <span class="insource">jquery.bvalidator-yc.js</span> which is the same file but compressed and much smaller in size:</p>
 			<pre>&lt;script type=&quot;text/javascript&quot; src=&quot;jquery.bvalidator-yc.js&quot;&gt;&lt;/script&gt;</pre>
 		</blockquote>
@@ -380,12 +429,45 @@ body {
 				<th>Description</th>
 			</tr>
 			<tr>
-				<td nowrap="nowrap" class="fp">onBeforeValidate</td>
+				<td nowrap="nowrap" class="fp">onBeforeElementValidation</td>
+				<td><ol>
+					<li>jQuery object containing input field</li>
+				</ol></td>
+				<td>Called  before the validation routine starts for each element (input field) that is validated. Returning <span class="insource">false</span> will cause the validation to be skipped for that element.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">onAfterElementValidation<a name="onAfterElementValidation" id="onAfterAllValidations2"></a></td>
+				<td><ol>
+					<li>jQuery object containing input field</li>
+					<li>array containing all error messages for the element</li>
+				</ol></td>
+				<td>Called  after the validation routine ends for each element (input field) that is validated. <br />
+					Returning <span class="insource">false</span> will stop executing that validator action,  error messages (if any) won't be displayed, and binding events (<a href="#validateOn" class="insource">validateOn</a>, <a href="#errorValidateOn" class="insource">errorValidateOn</a>) to input fields will be skipped.<br />
+					Returning <span class="insource">0</span> (zero) will only disable bValidator error messages.  See <a href="#allerrors">example 10</a>.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">onBeforeAllValidations</td>
+				<td><ol>
+					<li>jQuery object containing all inputs that will be validated</li>
+				</ol></td>
+				<td>Called once before  the validation is started. Returning <span class="insource">false</span> will skip the validation. For example, if you validate a form with more input elements this callback will be called once before all validations and if <span class="insource">false</span> is returned form will not be validated at all.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">onAfterAllValidations<a name="onAfterAllValidations" id="onAfterAllValidations"></a></td>
+				<td><ol>
+					<li>jQuery object containing all inputs that are validated</li>
+					<li>validation result (true or false)</li>
+				</ol></td>
+				<td>Called once after all validations are done. For example, if you validate a form with more input elements this callback will be called once after all validations are done and error messages (if any) are displayed. See <a href="#allerrors">example 10</a>.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">onBeforeValidate<a name="onBeforeValidate" id="onBeforeValidate"></a></td>
 				<td><ol>
 						<li>jQuery object containing input field</li>
 						<li>string validator action (example: <span class="insource">min[5]</span>)</li>
 					</ol></td>
-				<td>Called before the validation routine starts. Returning false will cause the validation to be skipped for that validator action.</td>
+				<td><p>Called before the validation routine starts for each validation action. Returning <span class="insource">false</span> will cause the validation to be skipped for that validator action.<br />
+				This callback function will be called for each validation action so if you put more actions on one form element for example: <span class="insource">max[10],email,required</span> this callback will be called two times (for <span class="insource">max</span> and for <span class="insource">email</span>). <span class="insource">required</span> actinon doesn't trigger any callbacks.</p></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">onAfterValidate</td>
@@ -394,16 +476,18 @@ body {
 						<li>string validator action (example: <span class="insource">max[10]</span>)</li>
 						<li>validation result (true or false)</li>
 					</ol></td>
-				<td>Called after the validation routine ends. Returning false will stop executing that validator action,  displaying error messages and binding events (<a href="#validateOn" class="insource">validateOn</a>, <a href="#errorValidateOn" class="insource">errorValidateOn</a>) to input fields will be skipped.</td>
+				<td>Called after  each validation routine ends. Returning <span class="insource">false</span> will stop executing that validator action,  displaying error messages and binding events (<a href="#validateOn" class="insource">validateOn</a>, <a href="#errorValidateOn" class="insource">errorValidateOn</a>) to input fields will be skipped.<br />
+				Will be called for each validation action (see <a href="#onBeforeValidate">onBeforeValidate</a> description).</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">onValidateFail</td>
 				<td><ol>
 						<li>jQuery object containing input field</li>
 						<li>string validator action (example: <span class="insource">max[10]</span>)</li>
-						<li>array of all error messages for this input element</li>
+						<li>array containing all error messages for the element</li>
 					</ol></td>
-				<td>Called after validation  fails,  but before error messages are displayed to the user. Returning false will stop executing that validator action,  displaying error messages and binding events (<a href="#validateOn" class="insource">validateOn</a>, <a href="#errorValidateOn" class="insource">errorValidateOn</a>) to input fields will be skipped.</td>
+				<td>Called after validation  fails.<br />
+				Will be called for each validation action that fails (see <a href="#onBeforeValidate">onBeforeValidate</a> description).</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">onValidateSuccess</td>
@@ -411,7 +495,8 @@ body {
 						<li>jQuery object containing input field</li>
 						<li>string validator action (example: <span class="insource">max[10]</span>)</li>
 					</ol></td>
-				<td>Called after validation is sucessfull. Returning false will stop executing that validator action,  hiding error messages (if any) and binding events (<a href="#validateOn" class="insource">validateOn</a>, <a href="#errorValidateOn" class="insource">errorValidateOn</a>) to input fields will be skipped.</td>
+				<td>Called after validation is sucessfull.<br />
+				Will be called for each validation action that is successful  (see <a href="#onBeforeValidate">onBeforeValidate</a> description).</td>
 			</tr>
 		</table>
 	</div>
@@ -467,12 +552,12 @@ body {
 			<tr>
 				<td nowrap="nowrap" class="fp">alpha</td>
 				<td>&nbsp;</td>
-				<td>Checks if all characters are alphabetic.</td>
+				<td>Checks if all characters are alphabetic.  Empty space (' '), underscore(_) and minus(-) are also valid.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">alphanum</td>
 				<td>&nbsp;</td>
-				<td>Checks if all characters are alphanumeric.</td>
+				<td>Checks if all characters are alphanumeric.  Empty space (' '), underscore(_) and minus(-) are also valid.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">digit</td>
@@ -596,6 +681,17 @@ body {
 				You can put as many file extensions you need as parameters to this action. For example: <span class="insource">extension[jpg:png:txt]</span><br />
 				This action doesn't have it's default error message so use your own custom error message. </td>
 			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">ip4</td>
+				<td>&nbsp;</td>
+				<td>Checks if the value is a valid IPv4 address.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">ip6</td>
+				<td>&nbsp;</td>
+				<td>Checks if the value is a valid IPv6 address. <br />
+				<strong>NOTE</strong> that this action uses complex regular expression which can be pretty slow and  <strong>doesn't work in Chrome</strong> which shows &quot;Aw, Snap!&quot; page! So be careful where you use this action or make your own custom action for IPv6 address validation.</td>
+			</tr>
 		</table>
 		<p>&nbsp;</p>
 	</div>
@@ -615,7 +711,7 @@ body {
 
 &lt;/script&gt;</pre>
 		</blockquote>
-		<p>or you can access validator instance through jQuery data function: </p>
+		<p>or you can access validator instance through jQuery <span class="insource">data</span> function:</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -671,7 +767,7 @@ body {
 			<tr>
 				<td nowrap="nowrap" class="fp">destroy</td>
 				<td>&nbsp;</td>
-				<td>Removes existing validator instance.</td>
+				<td>Removes existing bValidator instance.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">validate</td>
@@ -715,9 +811,6 @@ body {
 			<p>Url:<br />
 				<input type="text" data-bvalidator="url,required"/>
 			</p>
-			<p>IP address:<br />
-				<input type="text" data-bvalidator="ip4,required"/>
-			</p>
 			<p>Date in format dd.mm.yyyy:<br />
 				<input type="text" data-bvalidator="date[dd.mm.yyyy],required"/>
 			</p>
@@ -726,6 +819,9 @@ body {
 			</p>
 			<p>Value between 100 and 200:<br />
 				<input type="text" data-bvalidator="between[100:200],required"/>
+			</p>
+			<p>IPv4 address:<br />
+				<input type="text" data-bvalidator="ip4,required"/>
 			</p>
 		</div>
 		<div style="display:table-cell">
@@ -765,10 +861,10 @@ body {
 					<option value="4">Four</option>
 				</select>
 			</p>
-			<p>Choose radio:<br />
+			<p>Choose one:
 				<input name="e" type="radio" value="1" />
 				<input name="e" type="radio" value="1" />
-				<input name="e" type="radio" value="1" data-bvalidator="required" />
+				<input name="e" type="radio" value="1" data-bvalidator="required" data-bvalidator-msg="Select one radio button"/>
 			</p>
 		</div>
 	</div>
@@ -888,7 +984,7 @@ body {
 		
 		$.ajax({
 			type: 'POST',
-			url: 'documentation.html',
+			url: 'bvalidator.css', // just to load something for this example
 			async: false,
 			data: {'username':username},
 			success: function(data){
@@ -1119,14 +1215,96 @@ body {
 	</div>
 
 
-
+<h2>10 - Put error messages into container<a name="allerrors" id="allerrors"></a> 
+	<input type="button" value="Example source" onclick="showsource('ex10');"/></h2>
+	<div id="ex10s" class="showsource" style="display:none"> </div>
+	<div class="content"> 
+<div id="ex10sv">
+<script type="text/javascript">   
+	
+	var options10 = {
+		
+		// shows or hides error all messages container after validation completes
+		onAfterAllValidations: function(elements, formIsValid){
+			
+			// if validation failed or there are some visible error messages
+			if(!formIsValid || $('#ex10errors > :visible').length)
+				$('#ex10errors').show();
+			else
+				$('#ex10errors').hide();
+		},
+		
+		// shows or hides error messages for each form element
+		onAfterElementValidation: function(element, errorMessages){
+			
+			// Make ID for elment that will be container for error messages.
+			// Note that ID of the form element must be set if you want to do it this way.
+			var containerID = 'err' + element.attr('id');
+			
+			// container jQuery element
+			var container = $('#' + containerID);
+			
+			// if there are any error messages
+			if(errorMessages.length){
+				
+				// make new container element
+				if(!container.length){
+					$('#ex10errors').append('<div id="' + containerID + '"></div>');
+					 container = $('#' + containerID);
+				}
+				// clean container
+				else
+					container.html('');
+				
+				// put each error message into it's error messages container
+				for(var i = 0; i < errorMessages.length; i ++){
+					container.append(errorMessages[i] + '<br />');
+				}
+				
+				container.show();
+			}
+			else
+				container.hide();
+			
+			// return 0 to only disable bValidator error messages
+			return 0;
+		}
+	};
 	
 	
+	$(document).ready(function () {
+		$('#form10').bValidator(options10);
+	});
+	
+</script>
+<div style="height:60px">
+<div id="ex10errors"></div>
 </div>
+<form id="form10" method="post">
+	<p>IPv4 address:
+		<input id="form10ip" type="text" data-bvalidator="ip4,required" />
+	</p>
+	<p> Select something:
+		<select id="form10select" data-bvalidator="required" data-bvalidator-msg="Select something from drop-down menu.">
+			<option value=""></option>
+			<option value="one">one</option>
+			<option value="two">two</option>
+			<option value="three">three</option>
+		</select>
+	</p>
+	<p>
+		<input type="submit" value="Submit" />
+		<input type="reset" value="Reset" />
+	</p>
+</form>
+</div>
+		<p>This example shows how to put error messages into the container element. This functionality is not built-in into the bValidator, but you can achieve it by using callbacks. <a href="#onAfterAllValidations">onAfterAllValidations</a> and <a href="#onAfterElementValidation">onAfterElementValidation</a> callbacks are used in this example.</p>
+	</div>
+
 <script type="text/javascript">
 
 $(document).ready(function () { 
-	$('form').submit(function() {
+	$('form').not('#donate_form').submit(function() {
 		alert('Form is submitted.');
 		return false;
 	});
