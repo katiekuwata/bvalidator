@@ -404,7 +404,7 @@
 					 errorMessages = [];
 	
 					// if value is not required and is empty
-					if(jQuery.inArray('required',actions) == -1 && !validator.required(inputValue)){
+					if($.inArray('valempty', actions) == -1 && $.inArray('required', actions) == -1 && !validator.required(inputValue)){
 						is_valid = 1;
 					}
 	
@@ -444,7 +444,7 @@
 									validatorParams.unshift(inputValue); // add input value to beginning of validatorParams
 									var validationResult = validator[validatorName].apply(validator, validatorParams); // call validator function
 								}
-								// call custom user dafined function
+								// call custom user defined function
 								else if(typeof window[validatorName] == 'function'){
 									validatorParams.unshift(inputValue.value);
 									var validationResult = window[validatorName].apply(validator, validatorParams);
@@ -457,7 +457,7 @@
 								if(!validationResult){
 									if(!doNotshowMessages){
 		
-										if(!skip_messages){
+										if(!skip_messages && validatorName != 'valempty'){
 											if(!errMsg){
 		
 												if(options.errorMessages[options.lang] && options.errorMessages[options.lang][validatorName])
