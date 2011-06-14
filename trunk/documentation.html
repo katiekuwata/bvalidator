@@ -207,6 +207,7 @@ body {
 					<li><a href="#groups">Groups of checkboxes and radio buttons</a></li>
 					<li><a href="#oldbrowser">For old browsers</a></li>
 					<li><a href="#allerrors">Put error messages into container</a></li>
+					<li><a href="#dependinginputs">Depending inputs</a></li>
 				</ol>
 			</li>
 		</ul>
@@ -239,7 +240,7 @@ body {
 	
 	<h1>Setup<a name="setup" id="setup"></a></h1>
 	<div class="content">
-		<p>For basic setup you will need to include into your web page which contains form you want to validate <span class="insource">jquery.bvalidator.js</span> file <strong>or</strong> compressed file  with <a href="http://developer.yahoo.com/yui/compressor/">YUI compressor</a> <span class="insource">jquery.bvalidator-yc.js</span> and, of course, jQuery:</p>
+		<p>For a basic setup you will need to include into your web page which contains form you want to validate <span class="insource">jquery.bvalidator.js</span> file <strong>or</strong> (recommended) compressed file  with <a href="http://developer.yahoo.com/yui/compressor/">YUI compressor</a> <span class="insource">jquery.bvalidator-yc.js</span> and, of course, jQuery:</p>
 		<blockquote>
 			<p><strong>include javascript:</strong></p>
 			<pre>
@@ -252,14 +253,14 @@ body {
 			<p><strong>include CSS:</strong></p>
 			<pre>&lt;link href=&quot;bvalidator.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</pre>
 		</blockquote>
-		<p>The web page should have elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form (see <a href="#divvalidation">example</a>). Note the <span class="insource">data-bvalidator</span> input field attribute which tells validator which validation function (action) to invoke for the field. The name of that attribute can be changed and this can be for example <span class="insource">class</span> or <span class="insource">rel</span>, see <a href="#optionslist">options</a> for details.</p>
+		<p>The web page should have elements you want to validate. This is usually a form, but validator can also work on input fields which are not inside the form (see <a href="#divvalidation">example</a>). Note the <span class="insource"><strong>data-bvalidator</strong></span> input field attribute which tells bValidator which validation function (action) to invoke for the field. The name of that attribute can be changed and this can be for example <span class="insource">class</span> or <span class="insource">rel</span>, see <a href="#optionslist">options</a> for details.</p>
 		<blockquote>
 			<p><strong>HTML:</strong></p>
 			<pre>&lt;form id=&quot;myform&quot;&gt;
 	Email: &lt;input type=&quot;text&quot; data-bvalidator=&quot;required,email&quot;/&gt;<br />	Url: &lt;input type=&quot;text&quot; data-bvalidator=&quot;url&quot;/&gt;
 &lt;/form&gt;</pre>
 		</blockquote>
-		<p>And at last you need to initialize validator for the form:</p>
+		<p>And, at last, you need to initialize bValidator for the form:</p>
 		<blockquote>
 			<p><strong>javascript:</strong></p>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
@@ -274,7 +275,7 @@ body {
 	</div>
 	<h1>Configuration options<a name="options" id="options"></a></h1>
 	<div class="content">
-		<p>Validator can be configured<strong> by passing object with options  to constructor</strong><strong><a name="optionsconstructor" id="bValidatorOptions2"></a></strong>. Passed options will override default options.</p>
+		<p>bValidator can be configured<strong> by passing object with options  to constructor</strong><strong><a name="optionsconstructor" id="bValidatorOptions2"></a></strong>. Passed options will override  default options.</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -287,7 +288,7 @@ body {
 
 &lt;/script&gt;</pre>
 		</blockquote>
-		<p><strong>OR</strong> by defining <strong>global object with options</strong> called <strong>bValidatorOptions<a name="bValidatorOptions" id="bValidatorOptions"></a></strong>. Validatior will check if this object exists and if does, will load options from it and override default options.</p>
+		<p><strong>OR</strong> by defining a <strong>global object with options</strong> called <strong>bValidatorOptions<a name="bValidatorOptions" id="bValidatorOptions"></a></strong>. bValidatior will check if this object exists and if does, will load options from it and override default options.</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -300,7 +301,7 @@ body {
 
 &lt;/script&gt;</pre>
 		</blockquote>
-		<p><strong>OR BOTH</strong>, you can define global <strong>bValidatorOptions</strong> object and also pass options to validator<strong> constructor</strong>. In that case options from <span class="insource">bValidatorOptions</span> object override default options and options passed as argument to constructor will override options from <span class="insource">bValidatorOptions</span> object.		</p>
+		<p><strong>OR BOTH</strong>, you can define a global <strong>bValidatorOptions</strong> object and also pass options to the validator<strong> constructor</strong>. In that case options from the <span class="insource">bValidatorOptions</span> object override default options and options passed as argument to constructor will override options from the <span class="insource">bValidatorOptions</span> object.		</p>
 		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table1">
 			<tr>
 				<th nowrap="nowrap">Option</th>
@@ -315,17 +316,17 @@ body {
 			<tr>
 				<td nowrap="nowrap" class="fp">offset</td>
 				<td nowrap="nowrap" class="insource">{x:-25, y:-3}</td>
-				<td>Fine tunes the error message tooltip position specified with the <span class="insource">position</span> property.</td>
+				<td>Fine tunes the error message tooltip position specified with the <span class="insource"><a href="#position">position</a></span> property.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap" class="fp">position</td>
+				<td nowrap="nowrap" class="fp">position<a name="position" id="errorMessageAttr4"></a></td>
 				<td nowrap="nowrap" class="insource">{x:'right', y:'top'}</td>
 				<td>Specifies the position of the error message tooltip. Valid values for <strong>x</strong> are: <span class="insource">left</span>, <span class="insource">center</span>,<span class="insource"> right</span> and for <strong>y</strong> are <span class="insource">top</span>,<span class="insource"> center</span>,<span class="insource"> bottom</span></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">showCloseIcon<a name="showCloseIcon" id="errorMessageAttr2"></a></td>
 				<td class="insource">true</td>
-				<td>Controls if the error message tooltip has close icon. If <span class="insource">true</span> user can click on it and close error message tooltip.</td>
+				<td>Controls if the error message tooltip has a close icon. If <span class="insource">true</span> user can click on it and close the error message tooltip.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">showErrMsgSpeed</td>
@@ -335,22 +336,22 @@ body {
 			<tr>
 				<td nowrap="nowrap" class="fp">closeIconClass<a name="closeIconClass" id="errorMessageAttr3"></a></td>
 				<td nowrap="nowrap" class="insource">bvalidator_close_icon</td>
-				<td>CSS class for error message tooltip close icon.</td>
+				<td>CSS class for the error message tooltip close icon.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">errMsgClass</td>
 				<td nowrap="nowrap" class="insource">bvalidator_errmsg</td>
-				<td>CSS class for error message tooltip (error messages container).</td>
+				<td>CSS class for the error message tooltip (error messages container).</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">errorClass</td>
 				<td nowrap="nowrap" class="insource">bvalidator_invalid</td>
-				<td>CSS class for input field with invalid value. Will not be applied on checkboxes and radio buttons.</td>
+				<td>CSS class for the input field containing an invalid value. Will not be applied on checkboxes and radio buttons.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">validClass</td>
 				<td class="insource">&nbsp;</td>
-				<td>CSS class for input field with valid value. Will not be applied on checkboxes and radio buttons.</td>
+				<td>CSS class for the input field containing a valid value. Will not be applied on checkboxes and radio buttons.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">lang</td>
@@ -395,19 +396,19 @@ body {
 			<tr>
 				<td nowrap="nowrap" class="fp">template<a name="template" id="validateActionsAttr5"></a></td>
 				<td class="insource">&lt;div class=&quot;{errMsgClass}&quot;&gt;<br />					&lt;em/&gt;{message}&lt;/div&gt;</td>
-				<td><p>HTML template for the error message tooltip. This HTML code will be put inside container div element and appended after the input field. <span class="insource">{errMsgClass}</span> will be replaced with value of the <span class="insource">errMsgClass</span> propery and <span class="insource">{message}</span> will be replaced with error messages text.</p></td>
+				<td><p>HTML template for the error message tooltip. This HTML code will be put inside the container div element and appended after the input field. <span class="insource">{errMsgClass}</span> will be replaced with value of the <span class="insource">errMsgClass</span> propery and <span class="insource">{message}</span> will be replaced with error messages text.</p></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">templateCloseIcon<a name="templateCloseIcon" id="validateActionsAttr4"></a></td>
 				<td class="insource">&lt;div style=&quot;display:table&quot;&gt;<br />					&lt;div style=&quot;display:table-cell&quot;&gt;{message}&lt;/div&gt;&lt;div style=&quot;display:table-cell&quot;&gt;&lt;div class=&quot;{closeIconClass}&quot; onclick=&quot;{closeErrMsg}&quot;&gt;x&lt;/div&gt;<br />					&lt;/div&gt;&lt;/div&gt;</td>
-				<td>This piece of HTML will be used only when <span class="insource"><a href="#showCloseIcon">showCloseIcon</a></span> option is <span class="insource">true</span>. <span class="insource">{message}</span> in HTML code specified by <span class="insource"><a href="#template">template</a></span> option will be replaced by this code. With these two options you have full control over error messages layout. See <a href="#oldbrowser">example 9</a> where this option is used to support IE6.<br />
-				<span class="insource">{message}</span> will be replaced with error messages text, <span class="insource">{closeIconClass}</span> will be replaced with value of <span class="insource"><a href="#closeIconClass">closeIconClass</a></span> option and <span class="insource">{closeErrMsg}</span>will be replaced with javascript that hides error message tooltip.</td>
+				<td>This piece of HTML will be used only when <span class="insource"><a href="#showCloseIcon">showCloseIcon</a></span> option is <span class="insource">true</span>. <span class="insource">{message}</span> tag in the HTML code specified by <span class="insource"><a href="#template">template</a></span> option will be replaced by this code. With these two options you have full control over the error messages layout. See <a href="#oldbrowser">example 9</a> where this option is used to support IE6.<br />
+				<span class="insource">{message}</span> tag in this code will be replaced with the error messages text, <span class="insource">{closeIconClass}</span> will be replaced with the value of <span class="insource"><a href="#closeIconClass">closeIconClass</a></span> option and <span class="insource">{closeErrMsg}</span>will be replaced with javascript that hides error message tooltip.</td>
 			</tr>
 		</table>
 	</div>
 	<h2>Callbacks<a name="callbacks" id="callbacks"></a></h2>
 	<div class="content">
-		<p>Callbacks are user defined <strong>functions that are called by validator in certain moment</strong>. Callbacks are defined the same way as configuration options. Callback functions are called for each validator action.	Example	of defining callback:</p>
+		<p>Callbacks are user defined <strong>functions that are called by validator in certain moment</strong>. Callbacks are defined the same way as configuration options.	Here is an example	of defining callback:</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -450,7 +451,7 @@ body {
 				<td><ol>
 					<li>jQuery object containing all inputs that will be validated</li>
 				</ol></td>
-				<td>Called once before  the validation is started. Returning <span class="insource">false</span> will skip the validation. For example, if you validate a form with more input elements this callback will be called once before all validations and if <span class="insource">false</span> is returned form will not be validated at all.</td>
+				<td>Called once before  the validation is started. Returning <span class="insource">false</span> will skip the validation. For example, if you validate a form with more input elements this callback will be called once before all validations and if <span class="insource">false</span> is returned the form will not be validated at all.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">onAfterAllValidations<a name="onAfterAllValidations" id="onAfterAllValidations"></a></td>
@@ -502,7 +503,7 @@ body {
 	</div>
 	<h2>Error messages and localization<a name="localization" id="localization"></a></h2>
 	<div class="content">
-		<p>bValidator can retrieve error message from <a href="#options">configuration options</a> object passed as <a href="#optionsconstructor">argument to constructor</a> or defined as global <a href="#bValidatorOptions" class="insource">bValidatorOptions</a> object, or  from <a href="#errorMessageAttr" class="insource">data-bvalidator-msg</a> attribute.<br />
+		<p>bValidator can retrieve error message from the <a href="#options">configuration options</a> object passed as <a href="#optionsconstructor">argument to constructor</a> or defined as global <a href="#bValidatorOptions" class="insource">bValidatorOptions</a> object, or  from <a href="#errorMessageAttr" class="insource">data-bvalidator-msg</a> attribute.<br />
 		Most of the validator actions has error message named same as the action in configuration object. If you use some custom validation function (<a href="#customaction">example</a>) you can also add error message named same as the validation function into configuration object.<br />
 		You can use <span class="insource">{0}</span>, <span class="insource">{1}</span>, <span class="insource">{2}</span>, <span class="insource">{3},...</span> tags in error messages and they will be replaced with validator action parameters in <span class="insource">[]</span>.</p>
 		<p>Error messages can be localized (translated). To do that you need to <strong>pass translated messages as <a href="#options">options</a></strong> to validator constructor:</p>
@@ -535,7 +536,7 @@ body {
 		You can see all default English error messages in <span class="insource">jquery.bvalidator.js</span> file (search for '<span class="insource">errorMessages</span>' inside the file). If you  made translation please post it to <a href="http://groups.google.com/group/bvalidator">bValidator discussion group</a>. I will also put it on <a href="http://code.google.com/p/bvalidator/downloads/list">download page</a>.</div>
 	<h1>Validator actions<a name="actions" id="actions"></a></h1>
 	<div class="content">
-		<p>Validator actions are  functions that checks value of input field that is validated. Here are listed  built in actions but it is very simple to add custom validation functions (see <a href="#customaction">example</a>).</p>
+		<p>Validator actions are  functions that checks value of input field that is validated. Here are listed  built-in actions but it is very simple to add custom validation functions (see <a href="#customaction">example</a>).</p>
 		<p>Validations which validator will perform on a single input field are stated in <span class="insource">data-bvalidator</span> attribute by default. You can use different attribute like <span class="insource">class</span> or <span class="insource">rel</span> if you need that your HTML is valid. Just set the name of the attribute  in <span class="insource"><a href="#validateActionsAttr">validateActionsAttr</a></span> option.</p>
 		<p>Some validator actions can have parameters and those are stated in square brackets  after the action name and delimited with '<span class="insource">:</span>'. For example: <span class="insource">[param1:param2:param3]</span>. You can have unlimited number of parameters per action.</p>
 		<p>For example:</p>
@@ -604,9 +605,10 @@ body {
 			<tr>
 				<td nowrap="nowrap" class="fp">required</td>
 				<td>&nbsp;</td>
-				<td><p>Is a value required.</p>
+				<td><p><span class="fp"><a name="required" id="required"></a></span>Is a value required.</p>
 					<p>If you put <span class="insource">required</span> in front of other actions like <span class="insource">data-bvalidator=&quot;required,max[10],email&quot;</span> then error message that field is required will be shown in error messages tooltip with other error messages.</p>
-					<p>If you put <span class="insource">required</span> after  other actions like <span class="insource">data-bvalidator=&quot;max[10],email,required&quot;</span> then error message that field is required will not be shown in error messages tooltip if there are some   more error messages.</p></td>
+					<p>If you put <span class="insource">required</span> after  other actions like <span class="insource">data-bvalidator=&quot;max[10],email,required&quot;</span> then error message that field is required will not be shown in error messages tooltip if there are some   more error messages.</p>
+					<p><strong>NOTE</strong> that if a field is not marked as <span class="insource">required</span> and it is empty it will not be validated at all. For example, if you have field with <span class="insource">data-bvalidator=&quot;email&quot;</span> and you leave it empty, <span class="insource">email</span>  action will not be called. If you want to call validator action even if value is empty and not required use <a href="#valempty">valempty</a>.</p></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">between</td>
@@ -692,6 +694,11 @@ body {
 				<td>Checks if the value is a valid IPv6 address. <br />
 				<strong>NOTE</strong> that this action uses complex regular expression which can be pretty slow and  <strong>doesn't work in Chrome</strong> which shows &quot;Aw, Snap!&quot; page! So be careful where you use this action or make your own custom action for IPv6 address validation.</td>
 			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">valempty</td>
+				<td>&nbsp;</td>
+				<td><span class="fp"><a name="valempty" id="valempty"></a></span>Validate field even if it's not marked as <a href="#required"><span class="insource">required</span></a> and is empty. This action makes sense only if some other custom validator action is also used on that field and the field is not <a href="#required"><span class="insource">required</span></a>. For example, you can have an input box that can be  empty in some cases that depend on some other field. In that case you cannot put  <a href="#required"><span class="insource">required</span></a> action on it because it can be empty, but you need to validate it even if its empty. See <a href="#dependinginputs">example</a>.</td>
+			</tr>
 		</table>
 		<p>&nbsp;</p>
 	</div>
@@ -745,7 +752,7 @@ body {
 				<td><ol>
 						<li>jQuery object containing inputs</li>
 					</ol></td>
-				<td>Deletes error message </td>
+				<td>Removes (hides) the error message </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">getInputs</td>
@@ -757,7 +764,8 @@ body {
 				<td><ol>
 						<li>jQuery object containing inputs </li>
 					</ol></td>
-				<td>This function is helpful when using <span class="insource"><a href="#validateOn">validateOn</a></span> option and dynamic   forms. If you add some new input elements to form after validator is already initialized and you want to validate them on event specified with <span class="insource">validateOn</span> option you need to call this method. If you are not using <span class="insource">validateOn</span> option with dinamic forms you can forget about this function.</td>
+				<td>This function is helpful when using <span class="insource"><a href="#validateOn">validateOn</a></span> option and dynamic   forms. If you add some new input elements to form after validator is already initialized and you want to validate them on event specified with <span class="insource">validateOn</span> option you need to call this method.<br />
+				If you are not using <span class="insource">validateOn</span> option with dinamic forms you can forget about this function.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">reset</td>
@@ -933,7 +941,7 @@ body {
 	</p>
 </form>
 </div>
-		<p>This example shows how you can  create   your own validation action. Just make function that returns true for successful validation and false for error and put function name in <span class="insource">data-bvalidator</span> attribute. <br />
+		<p>This example shows how you can  create   your own validation action. Just make a function that returns <span class="insource">true</span> for successful validation and <span class="insource">false</span> for an error and put the function name in <span class="insource">data-bvalidator</span> attribute. See also this <a href="#dependinginputs">example</a>.<br />
 			You can see also in this example how to use parameters with  your own validation action. You can also put error message for your validation function in options object as described <a href="#localization">above</a>, just call it the same as your validation function.</p>
 	</div>
 	<h2>4 - Dynamic forms<a name="dynamicforms" id="dynamicforms"></a>
@@ -1077,7 +1085,7 @@ body {
 	</p>
 </div>
 </div>
-		<p>bValidator doesn't care if  inputs are not inside <span class="insource">&lt;form&gt;</span> element. It will work on any container element that has some child inputs that can be validated. Of course, you won't have submit button in that case and validation will not be automatically bind to it, but you can call it manually like in this example.</p>
+		<p>bValidator doesn't care if  inputs are not inside a <span class="insource">&lt;form&gt;</span> element. It will work on any container element that has some child inputs that can be validated. Of course, you won't have submit button in that case and validation will not be automatically bind to it, but you can call it manually like in this example.</p>
 	</div>
 	
 	
@@ -1300,6 +1308,60 @@ body {
 </div>
 		<p>This example shows how to put error messages into the container element. This functionality is not built-in into the bValidator, but you can achieve it by using callbacks. <a href="#onAfterAllValidations">onAfterAllValidations</a> and <a href="#onAfterElementValidation">onAfterElementValidation</a> callbacks are used in this example.</p>
 	</div>
+
+
+
+
+<h2>11 - Depending inputs<a name="dependinginputs" id="dependinginputs"></a> 
+	<input type="button" value="Example source" onclick="showsource('ex11');"/></h2>
+	<div id="ex11s" class="showsource" style="display:none"> </div>
+	<div class="content"> 
+<div id="ex11sv">
+<script type="text/javascript">   
+	
+	$(document).ready(function () {
+		$('#form11').bValidator();
+	});
+	
+	function checkMyInputs(value, field){
+		
+		if(field == '1'){
+			if(!value && $('#val_2').val())
+				return false;
+		}
+		else if(field == '2'){
+			if(!value && $('#val_1').val())
+				return false;
+		}
+		return true;
+	}
+	
+</script>
+<form id="form11" method="post">
+	<p>Value 1:
+		<input id="val_1" type="text" data-bvalidator="checkMyInputs[1],valempty" data-bvalidator-msg="Please enter value in both fields or leave them empty"/>
+		</p>
+	<p>
+		Value 2:
+		<input id="val_2" type="text" data-bvalidator="checkMyInputs[2],valempty" data-bvalidator-msg="Please enter value in both fields or leave them empty"/>
+	</p>
+	<p>Enter something in both fiels or leave them empy.</p>
+	<p>
+		<input type="submit" value="Submit" />
+		<input type="reset" value="Reset" />
+</p>
+</form>
+</div>
+	<p>In this example validation of one input field that depends on value entered in another field. This is achieved with <span class="insource">checkMyInputs</span> custom  action.<br />
+		This example also shows the use of <a href="#valempty"><span class="insource">valempty</span></a> action which is	used to trigger <span class="insource">checkMyInputs</span> action even if the field is empty. If you need both fields to be required then you should use <a href="#required"><span class="insource">required</span></a> action instead of  <a href="#valempty"><span class="insource">valempty</span></a> action.</p>
+</div>
+
+
+
+
+
+
+
 </div>
 
 
