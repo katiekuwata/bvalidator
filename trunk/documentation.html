@@ -744,15 +744,19 @@ body {
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">isValid</td>
-				<td>&nbsp;</td>
-				<td>Just checks if inputs in current validator instance are valid. Doesn't show error messages. Calling this function is the same as calling <span class="insource">validate(true)</span> function.</td>
+				<td><ol>
+					<li>jQuery object containing inputs to check only <br />
+						(optional)</li>
+				</ol></td>
+				<td>Just checks if inputs in current validator instance are valid. Doesn't show error messages. Calling this function is the same as calling <span class="insource">validate(true)</span> function (this is just wrapper  for <span class="insource"><a href="#validate">validate()</a></span> function  with first argument set to <span class="insource">true</span>.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">removeErrMsg</td>
 				<td><ol>
-						<li>jQuery object containing inputs</li>
+						<li>jQuery object 
+						containing inputs</li>
 					</ol></td>
-				<td>Removes (hides) the error message </td>
+				<td>Removes (hides) the error message</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">getInputs</td>
@@ -760,17 +764,18 @@ body {
 				<td>Returns all input fields associated with the validator.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap" class="fp">bindValidateOn<a name="bindValidateOn" id="bindValidateOn"></a></td>
+				<td nowrap="nowrap" class="fp">bindValidateOn</td>
 				<td><ol>
-						<li>jQuery object containing inputs </li>
+						<li>jQuery object 
+						containing inputs </li>
 					</ol></td>
-				<td>This function is helpful when using <span class="insource"><a href="#validateOn">validateOn</a></span> option and dynamic   forms. If you add some new input elements to form after validator is already initialized and you want to validate them on event specified with <span class="insource">validateOn</span> option you need to call this method.<br />
+				<td><span class="fp"><a name="bindValidateOn" id="bindValidateOn"></a></span>This function is helpful when using <span class="insource"><a href="#validateOn">validateOn</a></span> option and dynamic   forms. If you add some new input elements to the form after validator is already initialized and you want to validate them on event specified with <span class="insource">validateOn</span> option you need to call this method.<br />
 				If you are not using <span class="insource">validateOn</span> option with dinamic forms you can forget about this function.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">reset</td>
 				<td>&nbsp;</td>
-				<td>Resets the validator. Hides all error messages like the validator is only initialized. If you have a reset button on your form this   reset function is automatically bind to it. </td>
+				<td>Resets the validator. Hides all error messages like the validator is only initialized. If you have a reset button on your form this    function is automatically bind to it. </td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">destroy</td>
@@ -780,7 +785,8 @@ body {
 			<tr>
 				<td nowrap="nowrap" class="fp">validate</td>
 				<td><ol>
-						<li>if true error messages are not displayed (optional)</li>
+						<li><a name="validate" id="validate"></a>if true error messages are not displayed <br />
+						(optional)</li>
 						<li>jQuery object containing inputs to validate only (optional)</li>
 					</ol></td>
 				<td>Does validation.</td>
