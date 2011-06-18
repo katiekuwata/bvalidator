@@ -580,9 +580,9 @@
 			return options;
 		}
 
-		// chechs validity
-		this.isValid = function(){
-			return this.validate(true);
+		// checks validity
+		this.isValid = function(elements){
+			return this.validate(true, elements);
 		}
 
 		// deletes error message
