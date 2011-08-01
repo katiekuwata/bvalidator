@@ -1,6 +1,11 @@
+/*
+ * Croatian error messages.
+ *
+ * $Id$
+ */
+
 var bValidatorOptions = {
 	
-	// croatian error messages
 	errorMessages: {
 		hr: {
 			'default':    'Ispravite ovu vrijednost.',
