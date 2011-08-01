@@ -1,6 +1,11 @@
+/*
+ * Estonian error messages. Thanks to Mare Kotsulim.
+ *
+ * $Id$
+ */
+
 var bValidatorOptions = {
 
-	// Estonian error messages. Thanks to Mare Kotsulim.
 	errorMessages: {
 		ee: {
 			'default':    'Palun paranda see sisestus.',
