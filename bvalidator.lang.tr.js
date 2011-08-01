@@ -1,7 +1,7 @@
 /*
  * Turkish error messages. Thanks to Onur Aydemir.
  *
- * $Id: jquery.bvalidator.js 67 2011-06-18 13:18:50Z bmauser $
+ * $Id$
  */
 
 var bValidatorOptions = {
