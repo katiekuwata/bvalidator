@@ -26,7 +26,7 @@
 		var options = {
 
 			singleError:         false,		// validate all inputs at once
-			offset:              {x:-25, y:-3},	// offset position for error message tooltip
+			offset:              {x:-23, y:-4},	// offset position for error message tooltip
 			position:            {x:'right', y:'top'}, // error message placement x:left|center|right  y:top|center|bottom
 			template:            '<div class="{errMsgClass}"><em/>{message}</div>', // template for error message
 			templateCloseIcon:   '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="{closeIconClass}" onclick="{closeErrMsg}">x</div></div></div>', // template for error message container when showCloseIcon option is true
@@ -34,10 +34,11 @@
 			showErrMsgSpeed:    'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of milliseconds
 			scrollToError:       true,	// scroll to first error
 			// css class names
-			closeIconClass:      'bvalidator_close_icon',	// close error message icon class
-			errMsgClass:         'bvalidator_errmsg',	// error message class
-			errorClass:          'bvalidator_invalid',	// input field class name in case of validation error
-			validClass:          '',			// input field class name in case of valid value
+			classNamePrefix:     'bvalidator_',	// prefix for css class names
+			closeIconClass:      'close_icon',	// close error message icon class
+			errMsgClass:         'errmsg',		// error message class
+			errorClass:          'invalid',		// input field class name in case of validation error
+			validClass:          '',		// input field class name in case of valid value
 
 			lang: 'en', 				// default language for error messages 
 			errorMessageAttr:    'data-bvalidator-msg',// name of the attribute for overridden error message
@@ -115,10 +116,10 @@
 				messagesHtml += '<div>' + messages[i] + '</div>\n';
 
 			if(options.showCloseIcon)
-				messagesHtml = options.templateCloseIcon.replace('{message}', messagesHtml).replace('{closeIconClass}', options.closeIconClass).replace('{closeErrMsg}', '$(this).closest(\'.'+ options.errMsgClass +'\').css(\'visibility\', \'hidden\');');
+				messagesHtml = options.templateCloseIcon.replace('{message}', messagesHtml).replace('{closeIconClass}', options.classNamePrefix+options.closeIconClass).replace('{closeErrMsg}', '$(this).closest(\'.'+ options.classNamePrefix+options.errMsgClass +'\').css(\'visibility\', \'hidden\');');
 
 			// make tooltip from template
-			var tooltip = $(options.template.replace('{errMsgClass}', options.errMsgClass).replace('{message}', messagesHtml));
+			var tooltip = $(options.template.replace('{errMsgClass}', options.classNamePrefix+options.errMsgClass).replace('{message}', messagesHtml));
 			tooltip.appendTo(msg_container);
 
 			var pos = _getErrMsgPosition(element, tooltip); 
@@ -512,9 +513,9 @@
 									_showErrMsg($(this), errorMessages)
 		
 								if(!chk_rad){
-									$(this).removeClass(options.validClass);
+									$(this).removeClass(options.classNamePrefix+options.validClass);
 									if(options.errorClass)
-										$(this).addClass(options.errorClass);
+										$(this).addClass(options.classNamePrefix+options.errorClass);
 								}
 				
 								// input validation event
@@ -547,9 +548,9 @@
 									_removeErrMsg($(this));
 		
 								if(!chk_rad){
-									$(this).removeClass(options.errorClass);
+									$(this).removeClass(options.classNamePrefix+options.errorClass);
 									if(options.validClass)
-										$(this).addClass(options.validClass);
+										$(this).addClass(options.classNamePrefix+options.validClass);
 								}
 		
 								//if (options.errorValidateOn)
@@ -608,8 +609,8 @@
 			elements.each(function(){
 				_removeErrMsg($(this));
 				$(this).unbind('.bVerror');
-				$(this).removeClass(options.errorClass);
-				$(this).removeClass(options.validClass);
+				$(this).removeClass(options.classNamePrefix+options.errorClass);
+				$(this).removeClass(options.classNamePrefix+options.validClass);
 			});
 		}
 
