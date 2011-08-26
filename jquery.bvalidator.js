@@ -403,18 +403,21 @@
 					var actions = actionsStr.split(options.validatorsDelimiter), // all validation actions
 					 inputValue = _getValue($(this)), // value of input field for validation
 					 errorMessages = [];
-	
+
 					// if value is not required and is empty
 					if($.inArray('valempty', actions) == -1 && $.inArray('required', actions) == -1 && !validator.required(inputValue)){
 						is_valid = 1;
 					}
-	
+
 					if(!is_valid){
-	
+
 						// get error message from attribute
 						var errMsg = $(this).attr(options.errorMessageAttr),
 						 skip_messages = 0;
-						
+
+						// mark field as validated
+						$(this).data('checked.bV', 1);
+
 						if(_callBack('onBeforeElementValidation', $(this)) !== false){
 		
 							// for each validation action
@@ -499,67 +502,70 @@
 							}
 						}
 						
-						var onAfterElementValidation = _callBack('onAfterElementValidation', $(this), errorMessages);
+						var onAfterElementValidation = _callBack('onAfterElementValidation', $(this), errorMessages);	
+					}
 						
-						// show error messages and bind events
-						if(!doNotshowMessages && onAfterElementValidation !== false){
-		
-							var chk_rad = $(this).is('input:checkbox,input:radio') ? 1 : 0;
-		
-							// if validation failed
-							if(errorMessages.length){
-								
-								if(onAfterElementValidation !== 0)
-									_showErrMsg($(this), errorMessages)
-		
-								if(!chk_rad){
-									$(this).removeClass(options.classNamePrefix+options.validClass);
-									if(options.errorClass)
-										$(this).addClass(options.classNamePrefix+options.errorClass);
-								}
-				
-								// input validation event
-								if (options.errorValidateOn){
-									if(options.validateOn)
-										$(this).unbind(options.validateOn + '.bV');
-		
-									var evt = chk_rad || $(this).is('select,input:file') ? 'change' : options.errorValidateOn;
-		
-									if(chk_rad){
-										var group = $(this).is('input:checkbox') ? $('input:checkbox[name="' + $(this).attr('name') + '"]') : $('input:radio[name="' + $(this).attr('name') + '"]');
-										$(group).unbind('.bVerror');
-										$(group).bind('change.bVerror', {'bVInstance': instance, 'groupLeader': $(this)}, function(event){
-											event.data.bVInstance.validate(false, event.data.groupLeader);
-										});
-									}
-									else{
-										$(this).unbind('.bVerror');
-										$(this).bind(evt + '.bVerror', {'bVInstance': instance}, function(event){
-											event.data.bVInstance.validate(false, $(this));
-										});
-									}
-								}
-		
-								if (options.singleError)
-									return false;
+					
+					// show error messages and bind events
+					if(!doNotshowMessages && onAfterElementValidation !== false && $(this).data('checked.bV')){
+
+						var chk_rad = $(this).is('input:checkbox,input:radio') ? 1 : 0;
+	
+						// if validation failed
+						if(errorMessages.length){
+							
+							if(onAfterElementValidation !== 0)
+								_showErrMsg($(this), errorMessages)
+	
+							if(!chk_rad){
+								$(this).removeClass(options.classNamePrefix+options.validClass);
+								if(options.errorClass)
+									$(this).addClass(options.classNamePrefix+options.errorClass);
 							}
-							else{
-								if(onAfterElementValidation !== 0)
-									_removeErrMsg($(this));
-		
-								if(!chk_rad){
-									$(this).removeClass(options.classNamePrefix+options.errorClass);
-									if(options.validClass)
-										$(this).addClass(options.classNamePrefix+options.validClass);
-								}
-		
-								//if (options.errorValidateOn)
-								//	$(this).unbind('.bVerror');
-								if (options.validateOn){
+			
+							// input validation event
+							if (options.errorValidateOn){
+								if(options.validateOn)
 									$(this).unbind(options.validateOn + '.bV');
-									_bindValidateOn($(this));
+	
+								var evt = chk_rad || $(this).is('select,input:file') ? 'change' : options.errorValidateOn;
+	
+								if(chk_rad){
+									var group = $(this).is('input:checkbox') ? $('input:checkbox[name="' + $(this).attr('name') + '"]') : $('input:radio[name="' + $(this).attr('name') + '"]');
+									$(group).unbind('.bVerror');
+									$(group).bind('change.bVerror', {'bVInstance': instance, 'groupLeader': $(this)}, function(event){
+										event.data.bVInstance.validate(false, event.data.groupLeader);
+									});
+								}
+								else{
+									$(this).unbind('.bVerror');
+									$(this).bind(evt + '.bVerror', {'bVInstance': instance}, function(event){
+										event.data.bVInstance.validate(false, $(this));
+									});
 								}
 							}
+	
+							if (options.singleError)
+								return false;
+						}
+						else{
+							if(onAfterElementValidation !== 0)
+								_removeErrMsg($(this));
+	
+							if(!chk_rad){
+								$(this).removeClass(options.classNamePrefix+options.errorClass);
+								if(options.validClass)
+									$(this).addClass(options.classNamePrefix+options.validClass);
+							}
+	
+							//if (options.errorValidateOn)
+							//	$(this).unbind('.bVerror');
+							if (options.validateOn){
+								$(this).unbind(options.validateOn + '.bV');
+								_bindValidateOn($(this));
+							}
+							
+							$(this).data('checked.bV', 0);
 						}
 					}
 				});
