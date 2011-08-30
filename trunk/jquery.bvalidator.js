@@ -112,7 +112,7 @@
 
 			var messagesHtml = '';
 
-			for(var i in messages)
+			for(var i=0; i<messages.length; i++)
 				messagesHtml += '<div>' + messages[i] + '</div>\n';
 
 			if(options.showCloseIcon)
@@ -421,7 +421,7 @@
 						if(_callBack('onBeforeElementValidation', $(this)) !== false){
 		
 							// for each validation action
-							for(var i in actions){
+							for(var i=0; i<actions.length; i++){
 		
 								actions[i] = $.trim(actions[i]);
 		
@@ -586,6 +586,11 @@
 		this.getOptions = function(){
 			return options;
 		}
+		
+		// returns actions object
+		this.getActions = function(){
+			return validator;
+		} 
 
 		// checks validity
 		this.isValid = function(elements){
