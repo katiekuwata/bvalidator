@@ -590,7 +590,7 @@ body {
 	
 	<h1>Validator actions<a name="actions" id="actions"></a></h1>
 	<div class="content">
-		<p>Validator actions are  functions that checks value of input field that is validated. Here are listed  built-in actions but it is very simple to add custom validation functions (see <a href="#customaction">example</a>).</p>
+		<p>Validator actions are  functions that checks value of input field that is validated. Here are listed  built-in actions but it is very simple to add custom validation functions (see <a href="#customaction">example</a> and <a href="#getActions">getActions</a> API function).</p>
 		<p>Validations which validator will perform on a single input field are stated in <span class="insource">data-bvalidator</span> attribute by default. You can use different attribute like <span class="insource">class</span> or <span class="insource">rel</span> if you need that your HTML is valid. Just set the name of the attribute  in <span class="insource"><a href="#validateActionsAttr">validateActionsAttr</a></span> option.</p>
 		<p>Some validator actions can have parameters and those are stated in square brackets  after the action name and delimited with '<span class="insource">:</span>'. For example: <span class="insource">[param1:param2:param3]</span>. You can have unlimited number of parameters per action.</p>
 		<p>For example:</p>
@@ -767,10 +767,10 @@ body {
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
-	var myvalidator = $('#myform').bValidator();
+	var validator = $('#myform').bValidator();
 	
 	// check if form is valid
-	if(myvalidator.isValid()){
+	if(validator.isValid()){
 		// do somenthing
 	}
 
@@ -848,6 +848,19 @@ body {
 						<li>jQuery object containing inputs to validate only (optional)</li>
 					</ol></td>
 				<td>Does validation.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">getActions</td>
+				<td>&nbsp;</td>
+				<td><p><a name="getActions" id="validate2"></a>Returns the object with all built-in validator <a href="#actions">action functions</a> of the current validator instance. This is useful for adding custom validator actions which are not accessible from global scope or overriding existing built-in actions. For example, you can add your validation function like this:<br />
+				</p><pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	var validator = $('#myform').bValidator();
+					
+	validator.getActions().myAction = function(){
+		// do something here and return true or false
+	}
+&lt;/script&gt;</pre>
+				</td>
 			</tr>
 		</table>
 		<p>&nbsp;</p>
@@ -1023,7 +1036,8 @@ body {
 </form>
 </div>
 		<p>This example shows how you can  create   your own validation action. Just make a function that returns <span class="insource">true</span> for successful validation and <span class="insource">false</span> for an error and put the function name in <span class="insource">data-bvalidator</span> attribute. See also this <a href="#dependinginputs">example</a>.<br />
-			You can see also in this example how to use parameters with  your own validation action. You can also put error message for your validation function in options object as described <a href="#localization">above</a>, just call it the same as your validation function.</p>
+			You can see also in this example how to use parameters with  your own validation action. You can also put error message for your validation function in options object as described <a href="#localization">above</a>, just call it the same as your validation function.<br />
+		See also <a href="#getActions">getActions</a> API function if your validation function is not accessible from global scope.</p>
 	</div>
 	
 	
