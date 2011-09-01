@@ -440,7 +440,7 @@
 								}
 								else{
 									validatorParams = [];
-									var validatorName = actions[i];
+									validatorName = actions[i];
 								}
 		
 								// if validator exists
@@ -451,7 +451,7 @@
 								// call custom user defined function
 								else if(typeof window[validatorName] == 'function'){
 									validatorParams.unshift(inputValue.value);
-									var validationResult = window[validatorName].apply(validator, validatorParams);
+									validationResult = window[validatorName].apply(validator, validatorParams);
 								}
 		
 								if(_callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
