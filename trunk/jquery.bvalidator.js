@@ -515,8 +515,6 @@
 									validatorParams.unshift(inputValue.value);
 									validationResult = window[validatorName].apply(validator, validatorParams);
 								}
-								else
-									console.log('bValidator: unknown ' + validatorName + ' action.');
 		
 								if(_callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
 									continue;
