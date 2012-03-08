@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>bValidator documentation &amp; examples</title>
-<script type="text/javascript" src="jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="jquery.bvalidator.js"></script>
 <script type="text/javascript">
 
@@ -229,6 +229,8 @@ body {
 					<li><a href="#oldbrowser">For old browsers</a></li>
 					<li><a href="#allerrors">Put error messages into container</a></li>
 					<li><a href="#dependinginputs">Depending inputs</a></li>
+					<li><a href="#moreinstances">More types of error messages</a></li>
+					<li>						<a href="#justmessages">Just displaying messages</a></li>
 				</ol>
 			</li>
 			<li><a href="#themes">Themes</a>
@@ -439,9 +441,25 @@ body {
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">templateCloseIcon</td>
-				<td class="insource">&lt;div style=&quot;display:table&quot;&gt;<br />					&lt;div style=&quot;display:table-cell&quot;&gt;{message}&lt;/div&gt;&lt;div style=&quot;display:table-cell&quot;&gt;&lt;div class=&quot;{closeIconClass}&quot; onclick=&quot;{closeErrMsg}&quot;&gt;x&lt;/div&gt;<br />					&lt;/div&gt;&lt;/div&gt;</td>
+				<td class="insource">&lt;div style=&quot;display:table&quot;&gt;<br />					&lt;div style=&quot;display:table-cell&quot;&gt;{message}&lt;/div&gt;&lt;div style=&quot;display:table-cell&quot;&gt;&lt;div class=&quot;{closeIconClass}&quot;&gt;x&lt;/div&gt;<br />					
+				&lt;/div&gt;&lt;/div&gt;</td>
 				<td><span class="fp"><a name="templateCloseIcon" id="validateActionsAttr4"></a></span>This piece of HTML will be used only when <span class="insource"><a href="#showCloseIcon">showCloseIcon</a></span> option is <span class="insource">true</span>. <span class="insource">{message}</span> tag in the HTML code specified by <span class="insource"><a href="#template">template</a></span> option will be replaced by this code. With these two options you have full control over the error messages layout. See <a href="#oldbrowser">example 9</a> where this option is used to support IE6.<br />
-				<span class="insource">{message}</span> tag in this code will be replaced with the error messages text, <span class="insource">{closeIconClass}</span> will be replaced with the value of <span class="insource"><a href="#closeIconClass">closeIconClass</a></span> option and <span class="insource">{closeErrMsg}</span>will be replaced with javascript that hides error message tooltip.</td>
+				<span class="insource">{message}</span> tag in this code will be replaced with the error messages text, <span class="insource">{closeIconClass}</span> will be replaced with the value of <span class="insource"><a href="#closeIconClass">closeIconClass</a></span> option.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">noMsgIfExistsForInstance</td>
+				<td class="insource">empty array</td>
+				<td>This option can be usefull if you are using more bValidator instances and you don't want to show message for element if already exists for instance specified by this option. If message is already shown it will not be removed.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">validateOnSubmit<a name="validateOnSubmit" id="validateOnSubmit"></a></td>
+				<td class="insource">true</td>
+				<td>If <span class="insource">true</span>, validation will occur on form submit if validator is bind to a form.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">stopSubmitPropagation</td>
+				<td class="insource">true</td>
+				<td>If <span class="insource">true</span>,  submit event will be stopped on error if validator is bind to a form. This option is considered only if value of <a href="#validateOnSubmit"><span class="insource">validateOnSubmit</span></a><span class="insource"></span> option is true.</td>
 			</tr>
 		</table>
 	</div>
@@ -774,9 +792,9 @@ body {
 		// do somenthing
 	}
 
-&lt;/script&gt;</pre>
-		</blockquote>
-		<p>or you can access validator instance through jQuery <span class="insource">data</span> function:</p>
+&lt;/script&gt;</pre></blockquote>
+		
+<p>or you can access validator instance through jQuery <span class="insource">data</span> function:</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -788,7 +806,24 @@ body {
 	}
 
 &lt;/script&gt;</pre>
-		</blockquote>
+
+
+<p><span class="insource"><a name="data_bValidators" id="data_bValidators"></a>.data('bValidator')</span> will return only first instance of validator and If you have more instances on the same form (see <a href="#moreinstances">example 12</a>) all references are returned by <span class="insource">.data('bValidator<strong>s</strong>')</span>. Note the 's' here.</p>
+<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	
+	$('#myform').bValidator();
+	$('#myform').bValidator(null, 'secondInstanceName');
+	
+	// validate form with the first instance
+	$('#myform').data(&quot;bValidators&quot;).first.validate();
+
+	// validate form with the second instance
+	$('#myform').data(&quot;bValidators&quot;).secondInstanceName.validate();
+
+&lt;/script&gt;</pre>
+
+		</blockquote>		
+
 		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table1">
 			<tr>
 				<th nowrap="nowrap">Function</th>
@@ -809,12 +844,21 @@ body {
 				<td>Just checks if inputs in current validator instance are valid. Doesn't show error messages. Calling this function is the same as calling <span class="insource">validate(true)</span> function (this is just wrapper  for <span class="insource"><a href="#validate">validate()</a></span> function  with first argument set to <span class="insource">true</span>.</td>
 			</tr>
 			<tr>
-				<td nowrap="nowrap" class="fp">removeErrMsg</td>
+				<td nowrap="nowrap" class="fp">removeMsg</td>
 				<td><ol>
 						<li>jQuery object 
-						containing inputs</li>
+						containing input</li>
 					</ol></td>
-				<td>Removes (hides) the error message</td>
+				<td>Removes (hides) the  message</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">showMsg</td>
+				<td><ol>
+					<li>jQuery object 
+						containing input</li>
+					<li>string message</li>
+				</ol></td>
+				<td>Displays message. This function doesn't have anything with validation, it just displays message on the element specified with the first argument. Message can be displayed for any element on page. Element doesn't have to be part of the form  (or container element) for which bValidator is instanced.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">getInputs</td>
@@ -1253,7 +1297,7 @@ body {
 	</p>
 </form>
 </div>
-		<p>A group of checkboxes or radio buttons is created by giving  the same  name attribute to all elements in the group. bValidator attributes for <a href="#validateActionsAttr">actions</a> and <a href="#errorMessageAttr">custom error message</a> should be added to only one element in the group  on which error message will be shown.</p>
+		<p>A group of checkboxes or radio buttons is created by giving  the same  name attribute to all elements in the group. bValidator attributes for <a href="#validateActionsAttr">actions</a> and <a href="#errorMessageAttr">custom error message</a> should be added to only one element in the group  on which error message will be shown. As of bValidator version 0.6 you can have element names with some value in [] like <span class="insource">name=&quot;chk81[abc]&quot;</span>.</p>
 	</div>
 	
 
@@ -1311,7 +1355,7 @@ body {
 	
 	var options9 = {
 		classNamePrefix:   'ex9_bvalidator_',
-		templateCloseIcon: '<table><tr><td>{message}</td><td><div class="{closeIconClass}" onclick="{closeErrMsg}">x</div></td></tr></table>'
+		templateCloseIcon: '<table><tr><td>{message}</td><td><div class="{closeIconClass}">x</div></td></tr></table>'
 	};
 	
 	$(document).ready(function () {
@@ -1473,6 +1517,129 @@ body {
 	<p>In this example validation of one input field that depends on value entered in another field. This is achieved with <span class="insource">checkMyInputs</span> custom  action.<br />
 		This example also shows the use of <a href="#valempty"><span class="insource">valempty</span></a> action which is	used to trigger <span class="insource">checkMyInputs</span> action even if the field is empty. If you need both fields to be required then you should use <a href="#required"><span class="insource">required</span></a> action instead of  <a href="#valempty"><span class="insource">valempty</span></a> action.</p>
 </div>
+
+
+<!-- section -->
+
+
+<h2>12 - More types of error messages<a name="moreinstances" id="moreinstances"></a> 
+	<input type="button" value="Example source" onclick="showsource('ex12');"/></h2>
+	<div id="ex12s" class="showsource" style="display:none"> </div>
+	<div class="content"> 
+<div id="ex12sv">
+<script type="text/javascript">   
+	
+	// options for first instance
+	var options12 = {
+		classNamePrefix: 'bvalidator_red_'
+	};
+	
+	// options for second instance (for warning messages)
+	var optionsWarning12 = {
+		errorMessageAttr:    'data-bvalidator-warning-msg',
+		validateActionsAttr: 'data-bvalidator-warning',
+		classNamePrefix:     'bvalidator_gray2_',
+		position:            {x:'right', y:'center'},
+		offset:	             {x:15, y:0},
+		template:            '<div class="{errMsgClass}"><div class="bvalidator_gray2_arrow"></div><div class="bvalidator_gray2_cont1">{message}</div></div>',
+		hideMsgIfExistsForInstance: ['first'],
+		validateOn:          'keyup',
+		validateOnSubmit:     false
+	};
+	
+	
+	$(document).ready(function () {
+		// note that order of this lines is important
+		$('#form12').bValidator(options12); // first instance
+		$('#form12').bValidator(optionsWarning12, 'secondInstance'); // second instance
+	});
+	
+</script>
+
+
+<form id="form12" method="post">
+	<p>
+		minimum 5 characters:
+		<input type="text" data-bvalidator="minlength[5],required" data-bvalidator-msg="Please enter 5 characters." data-bvalidator-warning="alpha" data-bvalidator-warning-msg="It would be nice if you enter only letters." />
+	</p>
+	<p></p>
+	<p>
+		Numbers are preferred:
+			<input type="text" data-bvalidator="required" data-bvalidator-warning="digit" data-bvalidator-warning-msg="Numbers are prefered here." />
+	</p>
+	<p>
+		<input type="submit" value="Submit" />
+		<input type="reset" value="Reset" />
+	</p>
+</form>
+</div>
+	<p>Try to enter numbers and letters in both fields to see two types of error messages. From version 0.6 you can have more instances of bValidator on the same form (container element). In this example there are two bValidator instances for the same form. Red messages are  messages from the first validator instance and gray are from the second validator instance.<br />
+		For every validator instance you can have it's own settings. Instances are totally independent from each other like they are bind to two different forms so you can adjust settings for each instance as you like. In this example second instance is configured just to show warning messages and not to stop form from submitting. <br />
+		See <a href="#data_bValidators">here</a> how to access validator instances if you need to call some functions on them and also see <a href="#themes">themes section</a> below for changing messages style.</p>
+	</div>
+
+
+<!-- section -->
+
+
+<h2>13 - Just displaying messages<a name="justmessages" id="justmessages"></a> 
+	<input type="button" value="Example source" onclick="showsource('ex13');"/></h2>
+	<div id="ex13s" class="showsource" style="display:none"> </div>
+	<div class="content"> 
+<div id="ex13sv" style="padding-top:40px">
+<script type="text/javascript">   
+	
+	// options for second instance
+	var options131 = {
+		classNamePrefix: 'bvalidator_red_'
+	};
+	
+	// options for third instance
+	var options132 = {
+		classNamePrefix: 'bvalidator_orange_'
+	};
+	
+	$(document).ready(function () {
+		instance131 = $('#div13').bValidator(); // first instance
+		instance132 = $('#div13').bValidator(options131, 'secondInstance'); // second instance
+		instance133 = $('#div13').bValidator(options132, 'thirdInstance'); // third instance
+	});
+	
+	// function that shows messages
+	function showMessges13(){
+		instance131.showMsg($('#input131'), 'This is message');;
+		instance133.showMsg($('#spant133'), 'bla Bla Bla');
+		
+		instance131.showMsg($('#input134'), '123');
+		instance132.showMsg($('#input135'), 'Hi there');
+	}
+	
+	// function that hides messages
+	function hideMessges13(){
+		instance131.removeMsg($('#input131'));
+		instance133.removeMsg($('#spant133'));
+		instance131.removeMsg($('#input134'));
+		instance132.removeMsg($('#input135'));
+	}
+	
+</script>
+
+<div id="div13">
+	<input id="input134" type="text" />
+	<input id="input135" type="text" />
+	<input id="input131" type="text" />
+	<span id="spant133" style="background-color:#99C">&lt;span&gt; element</span>
+</div>
+
+<p>
+	<input name="Button" type="button" value="Show messages" onclick="showMessges13()" />
+	<input name="Button" type="button" value="Hide messages" onclick="hideMessges13()" />
+</p>
+
+</div>
+	<p>In this example no validation is done. Just tooltip messages are displayed. This can be  useful for example if you validate all your data on the server and just want to show messages to user or want to show some other information in tooltip messages beside validation messages.<br />
+	Note that messages can be displayed on any element, it doesn't have to be input and it doesn't have to be inside container element that bValidator is bind on. In this example more instances of bValidator are used for various styles of error messages (see also<a href="#moreinstances"> example 12</a>).</p>
+	</div>
 
 
 <!-- section -->
