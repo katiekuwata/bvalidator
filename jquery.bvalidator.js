@@ -16,7 +16,9 @@
 
 	// constructor
 	$.fn.bValidator = function(overrideOptions, instanceName){
-		return new bValidator(this, overrideOptions, instanceName);
+		return this.each(function(){
+			new bValidator($(this), overrideOptions, instanceName);
+   		});
 	};
 
 	// bValidator class
@@ -704,6 +706,7 @@
 			this.reset();
 			
 			mainElement.removeData("bValidator");
+			mainElement.removeData("bValidators");
 		}
 	}
 
