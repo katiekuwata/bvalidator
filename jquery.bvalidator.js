@@ -3,7 +3,7 @@
  *
  * http://code.google.com/p/bvalidator/
  *
- * Copyright (c) 2011 Bojan Mauser
+ * Copyright (c) 2012 Bojan Mauser
  *
  * $Id$
  *
@@ -15,12 +15,12 @@
 (function($){
 
 	// constructor
-	$.fn.bValidator = function(overrideOptions){
-		return new bValidator(this, overrideOptions);
+	$.fn.bValidator = function(overrideOptions, instanceName){
+		return new bValidator(this, overrideOptions, instanceName);
 	};
 
 	// bValidator class
-	bValidator = function(mainElement, overrideOptions){
+	bValidator = function(mainElement, overrideOptions, instanceName){
 
 		// default options
 		var options = {
@@ -29,7 +29,7 @@
 			offset:              {x:-23, y:-4},	// offset position for error message tooltip
 			position:            {x:'right', y:'top'}, // error message placement x:left|center|right  y:top|center|bottom
 			template:            '<div class="{errMsgClass}"><em/>{message}</div>', // template for error message
-			templateCloseIcon:   '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="{closeIconClass}" onclick="{closeErrMsg}">x</div></div></div>', // template for error message container when showCloseIcon option is true
+			templateCloseIcon:   '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="{closeIconClass}">x</div></div></div>', // template for error message container when showCloseIcon option is true
 			showCloseIcon:       true,	// put close icon on error message
 			showErrMsgSpeed:    'normal',	// message's fade-in speed 'fast', 'normal', 'slow' or number of milliseconds
 			scrollToError:       true,	// scroll to first error
@@ -59,8 +59,12 @@
 			onAfterElementValidation:  null,
 			onBeforeAllValidations:    null,
 			onAfterAllValidations:     null,
+			
+			validateOnSubmit: true,  // should validation occur on form submit if validator is bind to a form
+			stopSubmitPropagation: true, // should submit event be stopped on error if validator is bind to a form
+			noMsgIfExistsForInstance: [],
 
-			// default error messages
+			// default messages
 			errorMessages: {
 				en: {
 					'default':    'Please correct this value.',
@@ -95,19 +99,29 @@
 
 		// binds validateOn event
 		_bindValidateOn = function(elements){
-			elements.bind(options.validateOn + '.bV', {'bVInstance': instance}, function(event){
+			elements.bind(options.validateOn + '.bV' + instanceName, {'bVInstance': instance}, function(event){
 				event.data.bVInstance.validate(false, $(this));
 			});
 		},
+		
+		// checks does message from validator instance exists on element
+		_isMsgFromInstanceExists = function(element, instance_names){
+			for(var i=0; i<instance_names.length; i++){
+				if(element.data("errMsg.bV" + instance_names[i]))
+					return true;
+			}
+			
+			return false;
+		},
 
-		// displays error message
-		_showErrMsg = function(element, messages){
+		// displays message
+		_showMsg = function(element, messages){
 
-			// if error message already exists remove it from DOM
-			_removeErrMsg(element);
+			// if message already exists remove it from DOM
+			_removeMsg(element);
 
 			msg_container = $('<div class="bVErrMsgContainer"></div>').css('position','absolute');
-			element.data("errMsg.bV", msg_container);
+			element.data("errMsg.bV" + instanceName, msg_container);
 			msg_container.insertAfter(element);
 
 			var messagesHtml = '';
@@ -116,11 +130,17 @@
 				messagesHtml += '<div>' + messages[i] + '</div>\n';
 
 			if(options.showCloseIcon)
-				messagesHtml = options.templateCloseIcon.replace('{message}', messagesHtml).replace('{closeIconClass}', options.classNamePrefix+options.closeIconClass).replace('{closeErrMsg}', '$(this).closest(\'.'+ options.classNamePrefix+options.errMsgClass +'\').css(\'visibility\', \'hidden\');');
+				messagesHtml = options.templateCloseIcon.replace('{message}', messagesHtml).replace('{closeIconClass}', options.classNamePrefix+options.closeIconClass);
 
 			// make tooltip from template
 			var tooltip = $(options.template.replace('{errMsgClass}', options.classNamePrefix+options.errMsgClass).replace('{message}', messagesHtml));
 			tooltip.appendTo(msg_container);
+			
+			// bind close tootlip function
+			tooltip.find('.' + options.classNamePrefix+options.closeIconClass).click(function(e){
+				e.preventDefault();
+				$(this).closest('.'+ options.classNamePrefix+options.errMsgClass).css('visibility', 'hidden');
+			});
 
 			var pos = _getErrMsgPosition(element, tooltip); 
 
@@ -134,18 +154,19 @@
 			}
 		},
 
-		// removes error message from DOM
-		_removeErrMsg = function(element){
-			var existingMsg = element.data("errMsg.bV")
+		// removes message from DOM
+		_removeMsg = function(element){
+			var existingMsg = element.data("errMsg.bV" + instanceName)
 			if(existingMsg){
 				existingMsg.remove();
+				element.data("errMsg.bV" + instanceName, null);
 			}
 		},
 
-		// calculates error message position
+		// calculates message position
 		_getErrMsgPosition = function(input, tooltip){
 
-		        var tooltipContainer = input.data("errMsg.bV"),
+		        var tooltipContainer = input.data("errMsg.bV" + instanceName),
 		         top  = - ((tooltipContainer.offset().top - input.offset().top) + tooltip.outerHeight() - options.offset.y),
 		         left = (input.offset().left + input.outerWidth()) - tooltipContainer.offset().left + options.offset.x,
 			 x = options.position.x,
@@ -175,6 +196,19 @@
 			}
 		},
 		
+		// returns checkboxes in a group
+		_chkboxGroup = function(chkbox){
+			var name = chkbox.attr('name');
+			if(name && /^[^\[\]]+\[.*\]$/.test(name)){
+				return $('input:checkbox').filter(function(){
+					var r = new RegExp(name.match(/^[^\[\]]+/)[0] + '\\[.*\\]$');
+					return this.name.match(r);
+				});	
+			}
+			
+			return chkbox;
+		},
+		
 		// gets element value	
 		_getValue = function(element){
 
@@ -182,7 +216,7 @@
 
 			// checkbox
 			if(element.is('input:checkbox')){
-				ret['value'] = element.attr('name') ? ret['selectedInGroup'] = $('input:checkbox[name="' + element.attr('name') + '"]:checked').length : element.attr('checked');
+				ret['value'] = element.attr('name') ? ret['selectedInGroup'] = _chkboxGroup(element).filter(':checked').length : element.attr('checked');
 			}
 			else if(element.is('input:radio')){
 				ret['value'] = element.attr('name') ? ret['value'] = $('input:radio[name="' + element.attr('name') + '"]:checked').length : element.val();
@@ -194,7 +228,7 @@
 			else if(element.is(':input')){
 				ret['value'] = element.val();
 			}
-
+			
 			return ret;
 		},
 
@@ -338,36 +372,58 @@
 
 		// validator instance, scroll position flag
 		instance = this, scroll_to;
+		
 
 		// global options
-		if(window['bValidatorOptions']){
+		if(window['bValidatorOptions'])
 			$.extend(true, options, window['bValidatorOptions']);
-		}
 
 		// passed options
 		if(overrideOptions)
 			$.extend(true, options, overrideOptions);
-
-		// return existing instance
-		if(mainElement.data("bValidator"))
-			return mainElement.data("bValidator");
+	
+	
+		// object with all validator instances
+		var allInstances = mainElement.data("bValidators");
+		if(!allInstances){
+			allInstances = {};
+			mainElement.data("bValidators", allInstances);
+		}
 		
-		mainElement.data("bValidator", this);
+		// if there is already first instance
+		if(mainElement.data("bValidator")){
+			if(!instanceName)
+				return mainElement.data("bValidator"); // return existing instance
 
-		// if selector is a form
+			if(allInstances[instanceName])
+				return allInstances[instanceName];
+		}
+		else{
+			if(!instanceName)
+				instanceName = 'first';
+			mainElement.data("bValidator", this);
+		}
+		
+		allInstances[instanceName] = this;
+		
+		
+		// if bind to a form
 		if(mainElement.is('form')){
+			
 			// bind validation on form submit
-			mainElement.bind('submit.bV', function(event){
-				if(instance.validate())
-					return true;
-				else{
-					event.stopImmediatePropagation();
-					return false;
-				}
-			});
+			if(options.validateOnSubmit){
+				mainElement.bind("submit.bV" + instanceName, function(event){
+					if(instance.validate())
+						return true;
+					else if(options.stopSubmitPropagation){
+						event.stopImmediatePropagation();
+						return false;
+					}
+				});
+			}
 
 			// bind reset on form reset
-			mainElement.bind("reset.bV", function(){
+			mainElement.bind("reset.bV" + instanceName, function(){
 				instance.reset();			
 			});
 		}
@@ -393,6 +449,10 @@
 				// validate each element
 				elementsl.each(function(){
 	
+					// do not show message if exists for instance specified by noMsgIfExistsForInstance option
+					if(options.noMsgIfExistsForInstance.length && _isMsgFromInstanceExists($(this), options.noMsgIfExistsForInstance))
+						doNotshowMessages = 1;
+					
 					// value of validateActionsAttr input attribute
 					var actionsStr = $.trim($(this).attr(options.validateActionsAttr).replace(new RegExp('\\s*\\' + options.validatorsDelimiter + '\\s*', 'g'), options.validatorsDelimiter)),
 					 is_valid = 0;
@@ -411,12 +471,12 @@
 
 					if(!is_valid){
 
-						// get error message from attribute
+						// get message from attribute
 						var errMsg = $(this).attr(options.errorMessageAttr),
 						 skip_messages = 0;
 
 						// mark field as validated
-						$(this).data('checked.bV', 1);
+						$(this).data('checked.bV' + instanceName, 1);
 
 						if(_callBack('onBeforeElementValidation', $(this)) !== false){
 		
@@ -453,6 +513,8 @@
 									validatorParams.unshift(inputValue.value);
 									validationResult = window[validatorName].apply(validator, validatorParams);
 								}
+								else
+									console.log('bValidator: unknown ' + validatorName + ' action.');
 		
 								if(_callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
 									continue;
@@ -506,8 +568,8 @@
 					}
 						
 					
-					// show error messages and bind events
-					if(!doNotshowMessages && onAfterElementValidation !== false && $(this).data('checked.bV')){
+					// show messages and bind events
+					if(!doNotshowMessages && onAfterElementValidation !== false && $(this).data('checked.bV' + instanceName)){
 
 						var chk_rad = $(this).is('input:checkbox,input:radio') ? 1 : 0;
 	
@@ -515,7 +577,7 @@
 						if(errorMessages.length){
 							
 							if(onAfterElementValidation !== 0)
-								_showErrMsg($(this), errorMessages)
+								_showMsg($(this), errorMessages)
 	
 							if(!chk_rad){
 								$(this).removeClass(options.classNamePrefix+options.validClass);
@@ -526,20 +588,20 @@
 							// input validation event
 							if (options.errorValidateOn){
 								if(options.validateOn)
-									$(this).unbind(options.validateOn + '.bV');
+									$(this).unbind(options.validateOn + '.bV + instanceName');
 	
 								var evt = chk_rad || $(this).is('select,input:file') ? 'change' : options.errorValidateOn;
 	
 								if(chk_rad){
-									var group = $(this).is('input:checkbox') ? $('input:checkbox[name="' + $(this).attr('name') + '"]') : $('input:radio[name="' + $(this).attr('name') + '"]');
-									$(group).unbind('.bVerror');
-									$(group).bind('change.bVerror', {'bVInstance': instance, 'groupLeader': $(this)}, function(event){
+									var group = $(this).is('input:checkbox') ? _chkboxGroup($(this)) : $('input:radio[name="' + $(this).attr('name') + '"]');
+									$(group).unbind('.bVerror' + instanceName);
+									$(group).bind('change.bVerror' + instanceName, {'bVInstance': instance, 'groupLeader': $(this)}, function(event){
 										event.data.bVInstance.validate(false, event.data.groupLeader);
 									});
 								}
 								else{
-									$(this).unbind('.bVerror');
-									$(this).bind(evt + '.bVerror', {'bVInstance': instance}, function(event){
+									$(this).unbind('.bVerror' + instanceName);
+									$(this).bind(evt + '.bVerror' + instanceName, {'bVInstance': instance}, function(event){
 										event.data.bVInstance.validate(false, $(this));
 									});
 								}
@@ -550,7 +612,7 @@
 						}
 						else{
 							if(onAfterElementValidation !== 0)
-								_removeErrMsg($(this));
+								_removeMsg($(this));
 	
 							if(!chk_rad){
 								$(this).removeClass(options.classNamePrefix+options.errorClass);
@@ -559,13 +621,13 @@
 							}
 	
 							//if (options.errorValidateOn)
-							//	$(this).unbind('.bVerror');
+							//	$(this).unbind('.bVerror' + instanceName);
 							if (options.validateOn){
-								$(this).unbind(options.validateOn + '.bV');
+								$(this).unbind(options.validateOn + '.bV' + instanceName);
 								_bindValidateOn($(this));
 							}
 							
-							$(this).data('checked.bV', 0);
+							$(this).data('checked.bV' + instanceName, 0);
 						}
 					}
 				});
@@ -573,7 +635,7 @@
 
 			_callBack('onAfterAllValidations', elementsl, ret);
 
-			// scroll to error
+			// scroll to message
 			if(scroll_to && !elementsOverride && ($(window).scrollTop() > scroll_to || $(window).scrollTop()+$(window).height() < scroll_to)){
 				var ua = navigator.userAgent.toLowerCase();			
 				$(ua.indexOf('chrome')>-1 || ua.indexOf('safari')>-1 ? 'body' : 'html').animate({scrollTop: scroll_to - 10}, {duration: 'slow'});
@@ -597,9 +659,19 @@
 			return this.validate(true, elements);
 		}
 
-		// deletes error message
-		this.removeErrMsg = function(element){
-			_removeErrMsg(element);
+		// deletes message
+		this.removeMsg = this.removeErrMsg = function(element){
+			_removeMsg(element);
+		}
+		
+		// shows message
+		this.showMsg = function(element, message){
+			if(element.length){
+				if(typeof(message)=='string')
+					message = [message];
+				
+				_showMsg(element, message);
+			}
 		}
 
 		// returns all inputs
@@ -618,8 +690,8 @@
 			if (options.validateOn)
 				_bindValidateOn(elements);
 			elements.each(function(){
-				_removeErrMsg($(this));
-				$(this).unbind('.bVerror');
+				_removeMsg($(this));
+				$(this).unbind('.bVerror' + instanceName);
 				$(this).removeClass(options.classNamePrefix+options.errorClass);
 				$(this).removeClass(options.classNamePrefix+options.validClass);
 			});
@@ -627,7 +699,7 @@
 
 		this.destroy = function(){
 			if (mainElement.is('form'))
-				mainElement.unbind('.bV');
+				mainElement.unbind('.bV' + instanceName);
 			
 			this.reset();
 			
