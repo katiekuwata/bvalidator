@@ -781,20 +781,7 @@ body {
 	
 	<h1>API functions<a name="api" id="api"></a></h1>
 	<div class="content">
-		<p>When you make instance of validator you can call some functions on that instance: </p>
-		<blockquote>
-			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
-	
-	var validator = $('#myform').bValidator();
-	
-	// check if form is valid
-	if(validator.isValid()){
-		// do somenthing
-	}
-
-&lt;/script&gt;</pre></blockquote>
-		
-<p>or you can access validator instance through jQuery <span class="insource">data</span> function:</p>
+		<p>When you make instance of validator you can call some functions on that instance. You can access validator instance through jQuery <span class="insource">data</span> function:</p>
 		<blockquote>
 			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 	
@@ -822,8 +809,26 @@ body {
 
 &lt;/script&gt;</pre>
 
-		</blockquote>		
+		</blockquote>
+		<p>
+		<a name="note06" id="note06"></a><strong>NOTE:</strong> prior to version 0.6 you could get validator instance like this:
+		<blockquote>
+		<pre>&lt;script type=&quot;text/javascript&quot;&gt;
 
+	var instance = $('#myform').bValidator();
+
+&lt;/script&gt;</pre>
+		<p>From version 0.6 plugin function doesn't return
+			validator instance to maintain chainability. Now you can do for example:</p>
+			<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	
+	// bind validatoor on all forms on page
+	$('form').bValidator();
+
+	// or bind validatoor on all forms on page and set some css for the forms
+	$('form').bValidator().css('width', '100%');
+
+&lt;/script</pre></blockquote>
 		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table1">
 			<tr>
 				<th nowrap="nowrap">Function</th>
@@ -897,10 +902,12 @@ body {
 				<td nowrap="nowrap" class="fp">getActions</td>
 				<td>&nbsp;</td>
 				<td><p><a name="getActions" id="validate2"></a>Returns the object with all built-in validator <a href="#actions">action functions</a> of the current validator instance. This is useful for adding custom validator actions which are not accessible from global scope or overriding existing built-in actions. For example, you can add your validation function like this:<br />
-				</p><pre>&lt;script type=&quot;text/javascript&quot;&gt;
-	var validator = $('#myform').bValidator();
+				</p>
+					<pre>&lt;script type=&quot;text/javascript&quot;&gt;
+	$('#myform').bValidator();
 					
-	validator.getActions().myAction = function(){
+	$('#myform').data('bValidator').getActions().myAction = 
+		function(){
 		// do something here and return true or false
 	}
 &lt;/script&gt;</pre>
@@ -1463,7 +1470,7 @@ body {
 	</p>
 	<p>
 		<input type="submit" value="Submit" />
-		<input type="reset" value="Reset" />
+		<input type="reset" value="Reset" onclick="$('#ex10errors').hide()"/>
 	</p>
 </form>
 </div>
@@ -1575,7 +1582,7 @@ body {
 </div>
 	<p>Try to enter numbers and letters in both fields to see two types of error messages. From version 0.6 you can have more instances of bValidator on the same form (container element). In this example there are two bValidator instances for the same form. Red messages are  messages from the first validator instance and gray are from the second validator instance.<br />
 		For every validator instance you can have it's own settings. Instances are totally independent from each other like they are bind to two different forms so you can adjust settings for each instance as you like. In this example second instance is configured just to show warning messages and not to stop form from submitting. <br />
-		See <a href="#data_bValidators">here</a> how to access validator instances if you need to call some functions on them and also see <a href="#themes">themes section</a> below for changing messages style.</p>
+		See <a href="#data_bValidators">here</a> how to access validator instances if you need to call some functions on them and also see <a href="#themes">themes section</a> below for changing messages style. See also  <a href="#justmessages">example 13</a>.</p>
 	</div>
 
 
@@ -1600,26 +1607,25 @@ body {
 	};
 	
 	$(document).ready(function () {
-		instance131 = $('#div13').bValidator(); // first instance
-		instance132 = $('#div13').bValidator(options131, 'secondInstance'); // second instance
-		instance133 = $('#div13').bValidator(options132, 'thirdInstance'); // third instance
+		$('#div13').bValidator(); // first instance
+		$('#div13').bValidator(options131, 'secondInstance'); // second instance
+		$('#div13').bValidator(options132, 'thirdInstance'); // third instance
 	});
 	
 	// function that shows messages
 	function showMessges13(){
-		instance131.showMsg($('#input131'), 'This is message');;
-		instance133.showMsg($('#spant133'), 'bla Bla Bla');
-		
-		instance131.showMsg($('#input134'), '123');
-		instance132.showMsg($('#input135'), 'Hi there');
+		$('#div13').data('bValidators').first.showMsg($('#input131'), 'This is message');;
+		$('#div13').data('bValidators').thirdInstance.showMsg($('#spant133'), 'bla Bla Bla');
+		$('#div13').data('bValidators').first.showMsg($('#input134'), '123');
+		$('#div13').data('bValidators').secondInstance.showMsg($('#input135'), 'Hi there');
 	}
 	
 	// function that hides messages
 	function hideMessges13(){
-		instance131.removeMsg($('#input131'));
-		instance133.removeMsg($('#spant133'));
-		instance131.removeMsg($('#input134'));
-		instance132.removeMsg($('#input135'));
+		$('#div13').data('bValidators').first.removeMsg($('#input131'));
+		$('#div13').data('bValidators').thirdInstance.removeMsg($('#spant133'));
+		$('#div13').data('bValidators').first.removeMsg($('#input134'));
+		$('#div13').data('bValidators').secondInstance.removeMsg($('#input135'));
 	}
 	
 </script>
