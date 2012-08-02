@@ -1138,8 +1138,13 @@ body {
 	<div class="content"> 
 <div id="ex5sv">
 <script type="text/javascript">   
+	
+	var options5 = {
+		errorValidateOn: null
+	}
+	
 	$(document).ready(function () {
-		$('#form5').bValidator();
+		$('#form5').bValidator(options5);
 	});
 	
 	function checkUsername(username){
