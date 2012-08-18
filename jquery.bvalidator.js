@@ -45,8 +45,10 @@
 			lang: 'en', 				// default language for error messages 
 			errorMessageAttr:    'data-bvalidator-msg',// name of the attribute for overridden error message
 			validateActionsAttr: 'data-bvalidator', // name of the attribute which stores info what validation actions to do
+			forceValidAttr:      'data-bvalidator-forcevalid', // name of the attribute which which makes validator to act like the field is valid
+			modifyActionsAttr:   'data-bvalidator-modifier',
 			paramsDelimiter:     ':',		// delimiter for validator action options inside []
-			validatorsDelimiter: ',',		// delimiter for validator actions
+			actionsDelimiter:    ',',		// delimiter for validator actions
 
 			// when to validate
 			validateOn:          null,		// null, 'change', 'blur', 'keyup'
@@ -65,6 +67,21 @@
 			validateOnSubmit: true,  // should validation occur on form submit if validator is bind to a form
 			stopSubmitPropagation: true, // should submit event be stopped on error if validator is bind to a form
 			noMsgIfExistsForInstance: [],
+			
+			autoModifiers: {
+				'digit':  ['trim'],
+				'number': ['trim'],
+				'email':  ['trim'],
+				'url':    ['trim'],
+				'date':   ['trim'],
+				'ip4':    ['trim'],
+				'ip6':    ['trim']
+				},
+			
+			ajaxAnswerValid: 'ok',
+			ajaxDelay: 300,
+			ajaxOptions: {cache: false},
+			ajaxParamName: 'bValue',
 
 			// default messages
 			errorMessages: {
@@ -93,10 +110,70 @@
 			}
 		},
 
+		_ajaxValidation = function(element, instanceName, ajaxUrl, sync){
+			
+			var ajax_data = element.data("ajaxData.bV" + instanceName);
+			
+			if(!ajax_data){
+				ajax_data = {};
+				element.data("ajaxData.bV" + instanceName, ajax_data);
+			}
+			else{
+				clearTimeout(ajax_data.timeOut);
+			}
+			
+			// value to validate
+			ajax_data.val = element.val();
+			
+			// do not do ajax if value is already validated
+			if(ajax_data.lastValidated === ajax_data.val)
+				return validator.ajax(ajax_data.lastResponse);
+			
+			var ajaxOptions = $.extend({}, options.ajaxOptions);
+			if(typeof ajaxOptions.data != 'object')
+				ajaxOptions.data = {}
+			ajaxOptions.url = ajaxUrl;
+			
+			if(sync){
+				var ret = false;
+				ajaxOptions.async = false;
+				ajaxOptions.data[options.ajaxParamName] = ajax_data.val;
+				
+				$.ajax(ajaxOptions).done(function(ajaxResponse){
+					ajax_data.lastValidated = ajax_data.val;
+					ajax_data.lastResponse = ajaxResponse;
+					ret = validator.ajax(ajaxResponse)
+				});
+		
+				return ret;
+			}
+			else{
+				ajax_data.timeOut = setTimeout(function() {
+	
+					var val =  element.val();
+					
+					// only check if the value has not changed
+					if(ajax_data.val == val){
+						
+						ajaxOptions.async = true;
+						ajaxOptions.data[options.ajaxParamName] = val;
+						
+						$.ajax(ajaxOptions).done(function(ajaxResponse){
+							ajax_data.lastValidated = val;
+							ajax_data.lastResponse = ajaxResponse;
+							instance.validate(false, element, undefined, ajaxResponse)
+						});
+					}
+				}, options.ajaxDelay);
+			}
+			
+			return;
+		},
+
 		// returns all inputs
 		_getElementsForValidation = function(element){
 			// skip hidden and input fields witch we do not want to validate
-			return element.is(':input') ? element : element.find(':input[' + options.validateActionsAttr + ']').not(":button, :image, :reset, :submit, :hidden, :disabled");
+			return element.is(':input') ? element : element.find(':input[' + options.validateActionsAttr + '], :input[' + options.modifyActionsAttr + ']').not(":button, :image, :reset, :submit, :hidden, :disabled");
 		},
 
 		// binds validateOn event
@@ -233,6 +310,79 @@
 			
 			return ret;
 		},
+		
+		// parses bValidator attributes
+		_parseAttr = function(attrVal){
+		
+			// value of validateActionsAttr input attribute
+			var action_str = $.trim(attrVal).replace(new RegExp('\\s*\\' + options.actionsDelimiter + '\\s*', 'g'), options.actionsDelimiter);  
+			
+			if(!action_str)
+				return null;
+
+			return action_str.split(options.actionsDelimiter);
+		},
+		
+		// parses validator action and parameters
+		_parseAction = function(actionStr){
+		
+			var ap = $.trim(actionStr).match(/^(.*?)\[(.*?)\]/);
+		
+			if(ap && ap.length == 3){
+				return {
+					name: ap[1], 
+					params: ap[2].split(options.paramsDelimiter)
+				}
+			}
+			else{
+				return {
+					name: actionStr, 
+					params:[]
+				}
+			}
+		},
+		
+		// applys modifier
+		_applyModifier = function(action, el){
+			
+			var oldVal, newVal = _callModifier(action, el);
+			if(typeof newVal !== 'undefined'){
+				oldVal = $(el).val();
+				if(oldVal != newVal)
+					$(el).val(newVal);
+			}
+		},
+		
+		// calls modifier
+		_callModifier = function(action, el){
+
+			action.params.unshift($(el).val());
+			
+			if(typeof modifier[action.name] == 'function')
+				return modifier[action.name].apply(el, action.params);
+			else if(typeof window[action.name] == 'function')
+				return window[action.name].apply(el, action.params);
+			else if(window.console.warn)
+				window.console.warn('[bValidator] unknown modifier: ' + action.name);
+		},
+		
+		// calls validator
+		_callValidator = function(action, el, value){
+
+			if(typeof validator[action.name] == 'function'){
+				action.params.unshift(value); // add input value to beginning of action.params
+				return validator[action.name].apply(el, action.params);
+			}
+			
+			// call custom user defined function
+			if(typeof window[action.name] == 'function'){
+				action.params.unshift(value.value);
+				return window[action.name].apply(el, action.params);
+			}
+			
+			if(window.console.warn)
+				window.console.warn('[bValidator] unknown validator: ' + action.name);
+		},					
 
 		// object with validator actions
 		validator = {
@@ -261,7 +411,7 @@
 				if(v.selectedInGroup)
 					return v.selectedInGroup >= parseFloat(min)
 				else{
-					if(!this.number(v))
+					if(!validator.number(v))
 			 			return false;
 			 		return (parseFloat(v.value) >= parseFloat(min))
 				}
@@ -271,7 +421,7 @@
 				if(v.selectedInGroup)
 					return v.selectedInGroup <= parseFloat(max)
 				else{
-					if(!this.number(v))
+					if(!validator.number(v))
 			 			return false;
 			 		return (parseFloat(v.value) <= parseFloat(max))
 				}
@@ -280,7 +430,7 @@
 			between: function(v, min, max){
 				if(v.selectedInGroup)
 					return (v.selectedInGroup >= parseFloat(min) && v.selectedInGroup <= parseFloat(max))
-			   	if(!this.number(v))
+			   	if(!validator.number(v))
 			 		return false;
 				var va = parseFloat(v.value);
 				return (va >= parseFloat(min) && va <= parseFloat(max))
@@ -293,31 +443,31 @@
 			},
 
 			alpha: function(v){
-				return this.regex(v, /^[a-z ._\-]+$/i);
+				return validator.regex(v, /^[a-z ._\-]+$/i);
 			},
 			
 			alphanum: function(v){
-				return this.regex(v, /^[a-z\d ._\-]+$/i);
+				return validator.regex(v, /^[a-z\d ._\-]+$/i);
 			},
 
 			digit: function(v){
-				return this.regex(v, /^\d+$/);
+				return validator.regex(v, /^\d+$/);
 			},
 
 			number: function(v){
-				return this.regex(v, /^[-+]?\d+(\.\d+)?$/);
+				return validator.regex(v, /^[-+]?\d+(\.\d+)?$/);
 			},
 
 			email: function(v){
-				return this.regex(v, /^([a-zA-Z\d_\.\-\+%])+\@(([a-zA-Z\d\-])+\.)+([a-zA-Z\d]{2,4})+$/);
+				return validator.regex(v, /^([a-zA-Z\d_\.\-\+%])+\@(([a-zA-Z\d\-])+\.)+([a-zA-Z\d]{2,4})+$/);
 			},
 
 			image: function(v){
-				return this.regex(v, /\.(jpg|jpeg|png|gif|bmp)$/i);
+				return validator.regex(v, /\.(jpg|jpeg|png|gif|bmp)$/i);
 			},
 
 			url: function(v){
-				return this.regex(v, /^(http|https|ftp)\:\/\/[a-z\d\-\.]+\.[a-z]{2,3}(:[a-z\d]*)?\/?([a-z\d\-\._\?\,\'\/\\\+&amp;%\$#\=~])*$/i);
+				return validator.regex(v, /^\b(https?|ftp):\/\/([-A-Z0-9.]+)(\/[-A-Z0-9+&@#\/%=~_|!:,.;]*)?(\?[A-Z0-9+&@#\/%=~_|!:,.;]*)?$/i);
 			},
 
 			regex: function(v, regex, mod){
@@ -327,11 +477,11 @@
 			},
 
 			ip4: function(v){
-				return this.regex(v, /^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/);
+				return validator.regex(v, /^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/);
 			},
 			
 			ip6: function(v){
-				return this.regex(v, /^(?:(?:(?:[A-F\d]{1,4}:){5}[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){4}:[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){3}(?::[A-F\d]{1,4}){1,2}|(?:[A-F\d]{1,4}:){2}(?::[A-F\d]{1,4}){1,3}|[A-F\d]{1,4}:(?::[A-F\d]{1,4}){1,4}|(?:[A-F\d]{1,4}:){1,5}|:(?::[A-F\d]{1,4}){1,5}|:):(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)|(?:[A-F\d]{1,4}:){7}[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){6}:[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){5}(?::[A-F\d]{1,4}){1,2}|(?:[A-F\d]{1,4}:){4}(?::[A-F\d]{1,4}){1,3}|(?:[A-F\d]{1,4}:){3}(?::[A-F\d]{1,4}){1,4}|(?:[A-F\d]{1,4}:){2}(?::[A-F\d]{1,4}){1,5}|[A-F\d]{1,4}:(?::[A-F\d]{1,4}){1,6}|(?:[A-F\d]{1,4}:){1,7}:|:(?::[A-F\d]{1,4}){1,7})$/i);
+				return validator.regex(v, /^(?:(?:(?:[A-F\d]{1,4}:){5}[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){4}:[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){3}(?::[A-F\d]{1,4}){1,2}|(?:[A-F\d]{1,4}:){2}(?::[A-F\d]{1,4}){1,3}|[A-F\d]{1,4}:(?::[A-F\d]{1,4}){1,4}|(?:[A-F\d]{1,4}:){1,5}|:(?::[A-F\d]{1,4}){1,5}|:):(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.){3}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)|(?:[A-F\d]{1,4}:){7}[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){6}:[A-F\d]{1,4}|(?:[A-F\d]{1,4}:){5}(?::[A-F\d]{1,4}){1,2}|(?:[A-F\d]{1,4}:){4}(?::[A-F\d]{1,4}){1,3}|(?:[A-F\d]{1,4}:){3}(?::[A-F\d]{1,4}){1,4}|(?:[A-F\d]{1,4}:){2}(?::[A-F\d]{1,4}){1,5}|[A-F\d]{1,4}:(?::[A-F\d]{1,4}){1,6}|(?:[A-F\d]{1,4}:){1,7}:|:(?::[A-F\d]{1,4}){1,7})$/i);
 			},
 
 			date: function(v, format){ // format can be any combination of mm,dd,yyyy with separator between. Example: 'mm.dd.yyyy' or 'yyyy-mm-dd'
@@ -368,7 +518,21 @@
 					if(i != arguments.length-1)
 						r += '|';
 				}
-				return this.regex(v, '\\.(' +  r  + ')$', 'i');
+				return validator.regex(v, '\\.(' +  r  + ')$', 'i');
+			},
+			
+			ajax: function(ajaxResponse){
+				if(ajaxResponse == options.ajaxAnswerValid)
+					return true;
+				return false;
+			}
+		},
+		
+		// object with modifiers
+		modifier = {
+			
+			trim: function(v){
+				return $.trim(v);
 			}
 		},
 
@@ -415,7 +579,8 @@
 			// bind validation on form submit
 			if(options.validateOnSubmit){
 				mainElement.bind("submit.bV" + instanceName, function(event){
-					if(instance.validate())
+					
+					if(instance.validate(false, undefined, 1))
 						return true;
 					else if(options.stopSubmitPropagation){
 						event.stopImmediatePropagation();
@@ -438,7 +603,7 @@
 		// API functions:
 
 		// validation function
-		this.validate = function(doNotshowMessages, elementsOverride){
+		this.validate = function(doNotshowMessages, elementsOverride, forceAjaxSync, ajaxResponse){
 
 			// return value, elements to validate
 			var ret = true, 
@@ -446,30 +611,93 @@
 
 			scroll_to = null;
 
-			if(_callBack('onBeforeAllValidations', elementsl) !== false){
+			if(typeof ajaxResponse !== 'undefined' || _callBack('onBeforeAllValidations', elementsl) !== false){
 
 				// validate each element
 				elementsl.each(function(){
-	
+
+					var actions_exp = _parseAttr($(this).attr(options.validateActionsAttr)), // all validation actions
+					 modifiers_exp = _parseAttr($(this).attr(options.modifyActionsAttr)), // all modifier actions
+					 k = -1, action_data = [], action, is_valid = 0;
+					
+					// call modifiers
+					if(modifiers_exp){
+						for(var i=0; i<modifiers_exp.length; i++){
+						
+							action = _parseAction(modifiers_exp[i]);
+							
+							if(!action.name)
+								continue;
+							
+							// call modifier
+							_applyModifier(action, this);
+						}
+					}
+					
+					// call auto modifiers and prepare validation actions
+					if(actions_exp){
+						for(var i=0; i<actions_exp.length; i++){
+						
+							action = _parseAction(actions_exp[i]);
+							
+							if(!action.name)
+								continue;
+							
+							// auto modifiers
+							if(options.autoModifiers && options.autoModifiers[action.name]){
+								for(var h=0; h<options.autoModifiers[action.name].length; h++)
+									_applyModifier(_parseAction(options.autoModifiers[action.name][h]), this);
+							}
+							
+							if(action.name == 'required')
+								var flagRequired = 1;
+							else if(action.name == 'ajax')
+								var flagAjax = 1;
+							
+							if(action.name == 'valempty')
+								var flagValempty = 1;
+							else
+								action_data[++k] = action; // action objects, with name and params
+							
+						}
+					}
+					else
+						return true; // no actions for validation
+						
+					var inputValue = _getValue($(this)), // value of input field for validation;
+					 errorMessages = [], validationResult;
+					
+					// call async ajax validation and skip element
+					if(!forceAjaxSync && flagAjax && typeof ajaxResponse === 'undefined'){
+						
+						var skipAjaxAction = 0;
+						
+						// call all validators till ajax
+						for(var i=0; i<action_data.length; i++){
+							if(action_data[i].name == 'ajax')
+								break;
+							
+							if(!_callValidator(action_data[i], this, inputValue)){
+								skipAjaxAction = 1;
+								break;
+							}
+						}
+						
+						if(!skipAjaxAction){
+							ajaxResponse = _ajaxValidation($(this), instanceName, action.params[0]);
+							if(typeof ajaxResponse === 'undefined'){
+								return true;
+							}
+						}
+					}
+						
 					// do not show message if exists for instance specified by noMsgIfExistsForInstance option
 					if(options.noMsgIfExistsForInstance.length && _isMsgFromInstanceExists($(this), options.noMsgIfExistsForInstance))
 						doNotshowMessages = 1;
-					
-					// value of validateActionsAttr input attribute
-					var actionsStr = $.trim($(this).attr(options.validateActionsAttr).replace(new RegExp('\\s*\\' + options.validatorsDelimiter + '\\s*', 'g'), options.validatorsDelimiter)),
-					 is_valid = 0;
-	
-					if(!actionsStr)
-						return true;
-	
-					var actions = actionsStr.split(options.validatorsDelimiter), // all validation actions
-					 inputValue = _getValue($(this)), // value of input field for validation
-					 errorMessages = [];
 
 					// if value is not required and is empty
-					if($.inArray('valempty', actions) == -1 && $.inArray('required', actions) == -1 && !validator.required(inputValue)){
+					if((!flagRequired && !flagValempty && !validator.required(inputValue)) || $(this).attr(options.forceValidAttr) == 'true')
 						is_valid = 1;
-					}
 
 					if(!is_valid){
 
@@ -483,57 +711,70 @@
 						if(_callBack('onBeforeElementValidation', $(this)) !== false){
 		
 							// for each validation action
-							for(var i=0; i<actions.length; i++){
-		
-								actions[i] = $.trim(actions[i]);
-		
-								if(!actions[i])
+							for(var i=0; i<action_data.length; i++){
+								
+								if(action_data[i].name == 'valempty')
 									continue;
-		
-								if(_callBack('onBeforeValidate', $(this), actions[i]) === false)
+								
+								if(_callBack('onBeforeValidate', $(this), action_data[i].name) === false)
 									continue;
-		
-								// check if we have some parameters for validator
-								var validatorParams = actions[i].match(/^(.*?)\[(.*?)\]/);
-		
-								if(validatorParams && validatorParams.length == 3){
-									var validatorName = validatorParams[1];
-									validatorParams = validatorParams[2].split(options.paramsDelimiter);
+
+								// if validator exists
+								if(action_data[i].name == 'ajax'){
+									
+									if(skipAjaxAction)
+										continue;
+										
+									if(forceAjaxSync || typeof ajaxResponse === 'undefined'){
+										if(!errorMessages.length){
+											validationResult = _ajaxValidation($(this), instanceName, action_data[i].params[0], 1);
+										}
+										else
+											validationResult = true; // skip ajax validation if value is already invalid
+									}
+									else{
+										validationResult = validator.ajax.apply(this, [ajaxResponse]);
+									}
 								}
 								else{
-									validatorParams = [];
-									validatorName = actions[i];
+									validationResult = _callValidator(action_data[i], this, inputValue);
 								}
-		
-								// if validator exists
-								if(typeof validator[validatorName] == 'function'){
-									validatorParams.unshift(inputValue); // add input value to beginning of validatorParams
-									var validationResult = validator[validatorName].apply(validator, validatorParams); // call validator function
-								}
-								// call custom user defined function
-								else if(typeof window[validatorName] == 'function'){
-									validatorParams.unshift(inputValue.value);
-									validationResult = window[validatorName].apply(validator, validatorParams);
-								}
-		
-								if(_callBack('onAfterValidate', $(this), actions[i], validationResult) === false)
+								
+								if(_callBack('onAfterValidate', $(this), action_data[i].name, validationResult) === false)
 									continue;
 		
 								// if validation failed
 								if(!validationResult){
 									if(!doNotshowMessages){
 		
-										if(!skip_messages && validatorName != 'valempty'){
+										if(!skip_messages){
 											if(!errMsg){
-		
-												if(options.errorMessages[options.lang] && options.errorMessages[options.lang][validatorName])
-													errMsg = options.errorMessages[options.lang][validatorName];
-												else if(options.errorMessages.en[validatorName])
-													errMsg = options.errorMessages.en[validatorName];
-												else if(options.errorMessages[options.lang] && options.errorMessages[options.lang]['default'])
-													errMsg = options.errorMessages[options.lang]['default'];
-												else
-													errMsg = options.errorMessages.en['default'];
+												
+												if (options.singleError && errorMessages.length){
+													skip_messages = 1;
+													errMsg = '';
+												}
+												else{
+													// lang set
+													if(options.errorMessages[options.lang] && options.errorMessages[options.lang][action_data[i].name])
+														errMsg = options.errorMessages[options.lang][action_data[i].name];
+													// lang en
+													else if(options.errorMessages.en[action_data[i].name])
+														errMsg = options.errorMessages.en[action_data[i].name];
+													else{
+														// action msg attribute
+														var tt = $(this).attr(options.errorMessageAttr + '-' + action_data[i].name);
+														if(tt)
+															errMsg = tt;
+														// lang set default msg
+														else if(options.errorMessages[options.lang] && options.errorMessages[options.lang]['default'])
+															errMsg = options.errorMessages[options.lang]['default'];
+														// lang en default msg
+														else
+															errMsg = options.errorMessages.en['default'];
+													}
+												}
+												
 											}
 											else{
 												skip_messages = 1;
@@ -541,11 +782,11 @@
 		
 											// replace values in braces
 											if(errMsg.indexOf('{')){
-												for(var j=0; j<validatorParams.length-1; j++)
-													errMsg = errMsg.replace(new RegExp("\\{" + j + "\\}", "g"), validatorParams[j+1]);
+												for(var j=0; j<action_data[i].params.length-1; j++)
+													errMsg = errMsg.replace(new RegExp("\\{" + j + "\\}", "g"), action_data[i].params[j+1]);
 											}
 		
-											if(!(errorMessages.length && validatorName == 'required'))
+											if(!(errorMessages.length && action_data[i].name == 'required'))
 												errorMessages[errorMessages.length] = errMsg;
 		
 											errMsg = null;
@@ -556,10 +797,10 @@
 		
 									ret = false;
 		
-									_callBack('onValidateFail', $(this), actions[i], errorMessages);
+									_callBack('onValidateFail', $(this), action_data[i].name, errorMessages);
 								}
 								else{
-									_callBack('onValidateSuccess', $(this), actions[i]);
+									_callBack('onValidateSuccess', $(this), action_data[i].name);
 								}
 							}
 						}
@@ -588,7 +829,7 @@
 							// input validation event
 							if (options.errorValidateOn){
 								if(options.validateOn)
-									$(this).unbind(options.validateOn + '.bV + instanceName');
+									$(this).unbind(options.validateOn + '.bV' + instanceName);
 	
 								var evt = chk_rad || $(this).is('select,input:file') ? 'change' : options.errorValidateOn;
 	
@@ -606,9 +847,6 @@
 									});
 								}
 							}
-	
-							if (options.singleError)
-								return false;
 						}
 						else{
 							if(onAfterElementValidation !== 0)
@@ -620,8 +858,6 @@
 									$(this).addClass(options.classNamePrefix+options.validClass);
 							}
 	
-							//if (options.errorValidateOn)
-							//	$(this).unbind('.bVerror' + instanceName);
 							if (options.validateOn){
 								$(this).unbind(options.validateOn + '.bV' + instanceName);
 								_bindValidateOn($(this));
@@ -649,14 +885,19 @@
 			return options;
 		}
 		
-		// returns actions object
-		this.getActions = function(){
+		// returns validator object
+		this.getValidators = this.getActions = function(){
 			return validator;
-		} 
+		}
+		
+		// returns modifier object
+		this.getModifiers = function(){
+			return modifier;
+		}
 
 		// checks validity
 		this.isValid = function(elements){
-			return this.validate(true, elements);
+			return this.validate(true, elements, 1);
 		}
 
 		// deletes message
@@ -694,6 +935,9 @@
 				$(this).unbind('.bVerror' + instanceName);
 				$(this).removeClass(options.classNamePrefix+options.errorClass);
 				$(this).removeClass(options.classNamePrefix+options.validClass);
+				$(this).removeData('ajaxData.bV' + instanceName);
+				$(this).removeData('errMsg.bV' + instanceName);
+				$(this).removeData('checked.bV' + instanceName);
 			});
 		}
 
