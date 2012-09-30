@@ -5,11 +5,10 @@
  *
  * Copyright (c) 2012 Bojan Mauser
  *
- * $Id$
+ * Released under the MIT license
+ * http://www.opensource.org/licenses/mit-license.php
  *
- * Dual licensed under the MIT and GPL licenses:
- *   http://www.opensource.org/licenses/mit-license.php
- *   http://www.gnu.org/licenses/gpl.html
+ * $Id$
  */
 
 (function($){
@@ -67,6 +66,7 @@
 			validateOnSubmit: true,  // should validation occur on form submit if validator is bind to a form
 			stopSubmitPropagation: true, // should submit event be stopped on error if validator is bind to a form
 			noMsgIfExistsForInstance: [],
+			validateTillInvalid: false,
 			
 			autoModifiers: {
 				'digit':  ['trim'],
@@ -356,28 +356,26 @@
 		// calls modifier
 		_callModifier = function(action, el){
 
-			action.params.unshift($(el).val());
+			var apply_params = [$(el).val()].concat(action.params);
 			
 			if(typeof modifier[action.name] == 'function')
-				return modifier[action.name].apply(el, action.params);
+				return modifier[action.name].apply(el, apply_params);
 			else if(typeof window[action.name] == 'function')
-				return window[action.name].apply(el, action.params);
+				return window[action.name].apply(el, apply_params);
 			else if(window.console.warn)
 				window.console.warn('[bValidator] unknown modifier: ' + action.name);
 		},
 		
 		// calls validator
 		_callValidator = function(action, el, value){
-
+			
 			if(typeof validator[action.name] == 'function'){
-				action.params.unshift(value); // add input value to beginning of action.params
-				return validator[action.name].apply(el, action.params);
+				return validator[action.name].apply(el, [value].concat(action.params)); // add input value to beginning of action.params
 			}
 			
 			// call custom user defined function
 			if(typeof window[action.name] == 'function'){
-				action.params.unshift(value.value);
-				return window[action.name].apply(el, action.params);
+				return window[action.name].apply(el, [value.value].concat(action.params));
 			}
 			
 			if(window.console.warn)
@@ -603,7 +601,7 @@
 		// API functions:
 
 		// validation function
-		this.validate = function(doNotshowMessages, elementsOverride, forceAjaxSync, ajaxResponse){
+		this.validate = function(doNotshowMessages, elementsOverride, forceAjaxSync, ajaxResponse, onlyIsValidCheck){
 
 			// return value, elements to validate
 			var ret = true, 
@@ -715,11 +713,14 @@
 								
 								if(action_data[i].name == 'valempty')
 									continue;
+									
+								if((options.validateTillInvalid || onlyIsValidCheck) && errorMessages.length){
+									break;
+								}
 								
 								if(_callBack('onBeforeValidate', $(this), action_data[i].name) === false)
 									continue;
 
-								// if validator exists
 								if(action_data[i].name == 'ajax'){
 									
 									if(skipAjaxAction)
@@ -745,9 +746,13 @@
 		
 								// if validation failed
 								if(!validationResult){
+									
+									// if messages needs to be shown
 									if(!doNotshowMessages){
 		
 										if(!skip_messages){
+											
+											// if there is no message from errorMessageAttr
 											if(!errMsg){
 												
 												if (options.singleError && errorMessages.length){
@@ -782,8 +787,8 @@
 		
 											// replace values in braces
 											if(errMsg.indexOf('{')){
-												for(var j=0; j<action_data[i].params.length-1; j++)
-													errMsg = errMsg.replace(new RegExp("\\{" + j + "\\}", "g"), action_data[i].params[j+1]);
+												for(var j=0; j<action_data[i].params.length; j++)
+													errMsg = errMsg.replace(new RegExp("\\{" + j + "\\}", "g"), action_data[i].params[j]);
 											}
 		
 											if(!(errorMessages.length && action_data[i].name == 'required'))
@@ -866,6 +871,10 @@
 							$(this).data('checked.bV' + instanceName, 0);
 						}
 					}
+					
+					if((options.singleError || onlyIsValidCheck) && ret === false)
+						return false;
+					
 				});
 			}
 
@@ -897,7 +906,7 @@
 
 		// checks validity
 		this.isValid = function(elements){
-			return this.validate(true, elements, 1);
+			return this.validate(true, elements, 1, undefined, true);
 		}
 
 		// deletes message
