@@ -245,6 +245,7 @@ h3 {
 <link href="../themes/bvalidator.theme.red.css" rel="stylesheet" type="text/css" />
 <link href="../themes/bvalidator.theme.gray2.css" rel="stylesheet" type="text/css" />
 <link href="../themes/bvalidator.theme.postit.css" rel="stylesheet" type="text/css" />
+<link href="../themes/bvalidator.theme.bootstrap.css" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -297,6 +298,7 @@ h3 {
 			<li><a href="#themes">Themes</a>
 				<ol>
 					<li><a href="#themegray2">Gray 2</a></li>
+					<li><a href="#themebootstrap">Bootstrap</a></li>
 					<li><a href="#themepostit">Post-it</a></li>
 					<li><a href="#themeorange">Orange</a></li>
 					<li><a href="#themered">Red</a></li>
@@ -508,13 +510,15 @@ h3 {
 			<tr>
 				<td nowrap="nowrap" class="fp">template</td>
 				<td class="insource">&lt;div class=&quot;{errMsgClass}&quot;&gt;<br />					&lt;em/&gt;{message}&lt;/div&gt;</td>
-				<td><p><span class="fp"><a name="template" id="validateActionsAttr5"></a></span>HTML template for the error message tooltip. This HTML code will be put inside the container div element and appended after the input field. <span class="insource">{errMsgClass}</span> will be replaced with value of the <span class="insource">errMsgClass</span> propery and <span class="insource">{message}</span> will be replaced with error messages text.</p></td>
+				<td><p><span class="fp"><a name="template" id="validateActionsAttr5"></a></span>HTML template for the error message tooltip. This HTML code will be put inside the container div element and appended after the input field. <span class="insource">{errMsgClass}</span> will be replaced with value of the <span class="insource"><a href="#errMsgClass">errMsgClass</a></span> option and <span class="insource">{message}</span> will be replaced with error messages text.</p></td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">templateCloseIcon</td>
-				<td class="insource">&lt;div style=&quot;display:table&quot;&gt;<br />					&lt;div style=&quot;display:table-cell&quot;&gt;{message}&lt;/div&gt;&lt;div style=&quot;display:table-cell&quot;&gt;&lt;div class=&quot;{closeIconClass}&quot;&gt;x&lt;/div&gt;<br />					
-				&lt;/div&gt;&lt;/div&gt;</td>
-				<td><span class="fp"><a name="templateCloseIcon" id="validateActionsAttr4"></a></span>This piece of HTML will be used only when <span class="insource"><a href="#showCloseIcon">showCloseIcon</a></span> option is <span class="insource">true</span>. <span class="insource">{message}</span> tag in the HTML code specified by <span class="insource"><a href="#template">template</a></span> option will be replaced by this code. With these two options you have full control over the error messages layout. See <a href="#oldbrowser">example 9</a> where this option is used to support IE6.<br />
+				<td class="insource">&lt;div style=&quot;display:table&quot;&gt;<br />					&lt;div style=&quot;display:table-cell&quot;&gt;<br />
+				{message}&lt;/div&gt;<br />				
+				&lt;div style=&quot;display:table-cell&quot;&gt;<br />
+				&lt;div class=&quot;{closeIconClass}&quot;&gt;x&lt;/div&gt;<br />				&lt;/div&gt;&lt;/div&gt;</td>
+				<td><span class="fp"><a name="templateCloseIcon" id="validateActionsAttr4"></a></span>This piece of HTML will be used  when <span class="insource"><a href="#showCloseIcon">showCloseIcon</a></span> option is <span class="insource">true</span>. <span class="insource">{message}</span> tag in the HTML code specified by <span class="insource"><a href="#template">template</a></span> option will be replaced by this code. With these two options you have full control over the error messages layout. See <a href="#oldbrowser">example 9</a> where this option is used to support IE6.<br />
 				<span class="insource">{message}</span> tag in this code will be replaced with the error messages text, <span class="insource">{closeIconClass}</span> will be replaced with the value of <span class="insource"><a href="#closeIconClass">closeIconClass</a></span> option.</td>
 			</tr>
 			<tr>
@@ -563,6 +567,14 @@ h3 {
 				<td nowrap="nowrap" class="fp">ajaxParamName</td>
 				<td class="insource">'bValue'</td>
 				<td><span class="fp"><a name="ajaxParamName" id="validateOnSubmit3"></a></span>Name of the GET/POST parameter  with the value to validate on the server side.</td>
+			</tr>
+			<tr>
+				<td nowrap="nowrap" class="fp">validateTillInvalid</td>
+				<td class="insource">false</td>
+				<td><p>By default, if there are more validation actions in <span class="insource">data-bvalidator</span> attribute they are all invoked when validation is triggered. <br />
+					If you set this option to <span class="insource">true</span> actions will be invoked till value is invalid by one action and check by rest of the actions will be skipped. For example: <br />
+						<span class="insource">data-bvalidator=&quot;number,max[10]&quot;</span><br />
+				if check with <span class="insource">number</span> action fails <span class="insource">max</span> action will not be called.</p></td>
 			</tr>
 		</table>
 	</div>
@@ -1537,7 +1549,7 @@ h3 {
 		position:absolute;
 		bottom:-9px;
 		left:5px;
-		background-image: url(http://karmela.fsb.hr/~bmauser/bvalidator/arrow.gif);
+		background-image: url(http://bojan-mauser.from.hr/bvalidator/arrow.gif);
 		background-repeat: no-repeat;
 	}
 </style>
@@ -1993,7 +2005,56 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 </form>
 </div>
 	<p>
-		Download CSS file for this theme <a href="themes/bvalidator.theme.gray.css">here</a>.</p>
+		Download CSS file for this theme <a href="../themes/bvalidator.theme.gray2.css">here</a>.</p>
+
+	</div>
+
+<!-- section -->
+
+
+	<h2>Bootstrap<a name="themebootstrap" id="themebootstrap"></a>
+		<input type="button" value="Example source" onclick="showsource('theme5');"/></h2>
+	<div id="theme5s" class="showsource_ex" style="display:none"> </div>
+	<div class="content">
+<div id="theme5sv">
+<script type="text/javascript">			
+	
+	var optionsBootstrap = {
+		classNamePrefix:   'bvalidator_bootstrap_',
+		position:          {x:'right', y:'center'},
+		offset:	           {x:15, y:0},
+		template:          '<div class="{errMsgClass}"><div class="bvalidator_bootstrap_arrow"></div><div class="bvalidator_bootstrap_cont1">{message}</div></div>',	
+		templateCloseIcon:   '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="{closeIconClass}">&#215;</div></div></div>'
+	};
+	
+	$(document).ready(function () {
+		$('#formtheme5').bValidator(optionsBootstrap);
+	});
+	
+	
+</script>
+<form id="formtheme5" method="post">
+	<p>&nbsp;</p>
+	<p>Only digits:
+		<input type="text" data-bvalidator="required,digit"/>
+		<br />
+		</p>
+	<p>Enter 10 or more alphabetic characters:
+	<input type="text" data-bvalidator="required,alpha,minlength[10]"/>
+		</p>
+	<p>
+		Select:
+		<input name="ch2zrr43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select checkbox"/>
+		<br />
+	</p>
+	<p>
+		<input type="submit" value="Submit" />
+		<input type="reset" value="Reset" />
+	</p>
+</form>
+</div>
+	<p>
+		This theme is inspired from <a href="http://twitter.github.com/bootstrap/">Bootstrap</a> project. Download CSS file for this theme <a href="../themes/bvalidator.theme.bootstrap.css">here</a>.</p>
 
 	</div>
 	
@@ -2041,7 +2102,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 </form>
 </div>
 	<p>
-		This theme is from <a href="http://www.ninja-scripts.com/?p=40" target="_blank">ninja-scripts</a> blog. Download CSS file for this theme <a href="themes/bvalidator.theme.postit.css">here</a>.</p>
+		This theme is from <a href="http://www.ninja-scripts.com/?p=40" target="_blank">ninja-scripts</a> blog. Download CSS file for this theme <a href="../themes/bvalidator.theme.orange.css">here</a>.</p>
 
 	</div>
 
@@ -2086,7 +2147,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 </form>
 </div>
 	<p>
-		Download CSS file for this theme <a href="themes/bvalidator.theme.orange.css">here</a>.</p>
+		Download CSS file for this theme <a href="../themes/bvalidator.theme.orange.css">here</a>.</p>
 
 	</div>
 	
@@ -2133,7 +2194,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 </form>
 </div>
 	<p>
-		Download CSS file for this theme <a href="themes/bvalidator.theme.red.css">here</a>.</p>
+		Download CSS file for this theme <a href="../themes/bvalidator.theme.red.css">here</a>.</p>
 
 	</div>
 
