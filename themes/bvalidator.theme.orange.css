@@ -1,6 +1,6 @@
 /* invalid input */
 .bvalidator_orange_invalid {
-	background-color: #FFC
+	background-color: #FFC !important;
 }
 /* error message */
 .bvalidator_orange_errmsg {

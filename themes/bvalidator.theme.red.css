@@ -1,6 +1,6 @@
 /* invalid input */
 .bvalidator_red_invalid {
-	background-color: #FCC
+	background-color: #FCC !important;
 }
 /* error message */
 .bvalidator_red_errmsg {

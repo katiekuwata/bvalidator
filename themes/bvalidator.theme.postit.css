@@ -1,6 +1,6 @@
 /* invalid input */
 .bvalidator_postit_invalid {
-	background-color: #FFFFAE
+	background-color: #FFFFAE !important;
 }
 /* error message */
 .bvalidator_postit_errmsg {
