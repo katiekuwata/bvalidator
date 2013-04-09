@@ -1,6 +1,6 @@
 /* invalid input */
 .bvalidator_gray2_invalid {
-	background-color: #FFFFAE
+	background-color: #FFFFAE !important;
 }
 /* error message */
 .bvalidator_gray2_errmsg {
