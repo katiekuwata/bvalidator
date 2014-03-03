@@ -282,7 +282,7 @@
 				return $('input:checkbox').filter(function(){
 					var r = new RegExp(name.match(/^[^\[\]]+/)[0] + '\\[.*\\]$');
 					return this.name.match(r);
-				});	
+				});
 			}
 			
 			return chkbox;
@@ -604,8 +604,16 @@
 		this.validate = function(doNotshowMessages, elementsOverride, forceAjaxSync, ajaxResponse, onlyIsValidCheck){
 
 			// return value, elements to validate
-			var ret = true, 
-			 elementsl = elementsOverride ? elementsOverride : _getElementsForValidation(mainElement);
+			var ret = true, elementsl;
+			
+			if(elementsOverride)
+				elementsl = elementsOverride;
+			else{
+				if(mainElement.attr(options.forceValidAttr) == 'true')
+					return true;
+				
+				elementsl = _getElementsForValidation(mainElement);
+			}
 
 			scroll_to = null;
 
@@ -910,17 +918,21 @@
 		}
 
 		// deletes message
-		this.removeMsg = this.removeErrMsg = function(element){
-			_removeMsg(element);
+		this.removeMsg = this.removeErrMsg = function(elements){
+			elements.each(function(){
+				_removeMsg($(this));
+			});
 		}
 		
 		// shows message
-		this.showMsg = function(element, message){
-			if(element.length){
+		this.showMsg = function(elements, message){
+			if(elements.length){
 				if(typeof(message)=='string')
 					message = [message];
 				
-				_showMsg(element, message);
+				elements.each(function(){
+					_showMsg($(this), message);
+				});
 			}
 		}
 
@@ -930,13 +942,16 @@
 		}
 
 		// binds validateOn event
-		this.bindValidateOn = function(element){
-			_bindValidateOn(element);
+		this.bindValidateOn = function(elements){
+			_bindValidateOn(elements);
 		}
 
 		// resets validation
-		this.reset = function(){
-			elements = _getElementsForValidation(mainElement);
+		this.reset = function(elements){
+			
+			if(!elements || !elements.length)
+				elements = _getElementsForValidation(mainElement);
+				
 			if (options.validateOn)
 				_bindValidateOn(elements);
 			elements.each(function(){
