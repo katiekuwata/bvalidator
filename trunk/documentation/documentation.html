@@ -26,11 +26,21 @@ $(document).ready(function () {
 	$('.showsource').each(function(){
 		$(this).html( formatsource($(this).html()) )
 	});
+	
+	$('.show_source_btt').on('click', function(){
+		
+		var ex = $(this).data('for-example');
+		var btt = this;
+		
+		$('#' + ex + 's').toggle(400, function(){
+			
+			if($('#' + ex + 's').is(":visible"))
+				$(btt).prop('value', 'Hide source');
+			else
+				$(btt).prop('value', 'Show source');
+		});
+	});
 }); 
-
-function showsource(ex){
-	$('#' + ex + 's').toggle(400);
-}
 
 /* prettify */
 var q=null;window.PR_SHOULD_USE_CONTINUATION=!0;
@@ -236,6 +246,22 @@ h3 {
 	border: 1px solid #666
 }
 
+/* show source button */
+.show_source_btt {
+	background-color:#FC6;
+	border: 1px solid #666;
+	float: right;
+	width: 10em;
+	-webkit-border-top-left-radius:6px;
+	-moz-border-radius-topleft:6px;
+	border-top-left-radius:6px;
+	-webkit-border-bottom-left-radius:6px;
+	-moz-border-radius-bottomleft:6px;
+	border-bottom-left-radius:6px;
+	font-size: 11pt;
+	color: #333;
+	cursor: pointer;
+}
 
 /* prettify */
 .pln{color:#000}@media screen{.str{color:#080}.kwd{color:#008}.com{color:#800}.typ{color:#606}.lit{color:#066}.pun,.opn,.clo{color:#660}.tag{color:#008}.atn{color:#606}.atv{color:#080}.dec,.var{color:#606}.fun{color:red}}@media print,projection{.str{color:#060}.kwd{color:#006;font-weight:bold}.com{color:#600;font-style:italic}.typ{color:#404;font-weight:bold}.lit{color:#044}.pun,.opn,.clo{color:#440}.tag{color:#006;font-weight:bold}.atn{color:#404}.atv{color:#060}}pre.prettyprint{padding:2px;border:1px solid #888}ol.linenums{margin-top:0;margin-bottom:0}li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{list-style-type:none}li.L1,li.L3,li.L5,li.L7,li.L9{background:#eee}
@@ -245,14 +271,16 @@ h3 {
 <link href="../themes/bvalidator.theme.red.css" rel="stylesheet" type="text/css" />
 <link href="../themes/bvalidator.theme.gray2.css" rel="stylesheet" type="text/css" />
 <link href="../themes/bvalidator.theme.postit.css" rel="stylesheet" type="text/css" />
-<link href="../themes/bvalidator.theme.bootstrap.css" rel="stylesheet" type="text/css" />
+<link href="../themes/bvalidator.theme.bootstrap.rt.css" rel="stylesheet" type="text/css" />
+<link href="../themes/bvalidator.theme.bootstrap.rc.css" rel="stylesheet" type="text/css" />
+<link href="../themes/bvalidator.theme.gray3.css" rel="stylesheet" type="text/css" />
 
 </head>
 
 <body>
 <div class="header">
 	<h1>bValidator</h1> 
-<span style="font-size: 12pt;">documentation | <a href="#examples">examples</a></span> | <a href="#themes">themes</a></div>
+<span style="font-size: 12pt;">documentation | <a href="#examples"><strong>examples</strong></a></span> | <a href="#themes">themes</a></div>
 <div class="main_content"><!-- section -->
 	
 	
@@ -260,8 +288,10 @@ h3 {
 	<div class="content">
 		<p>bValidator is a <a href="http://jquery.com/" target="_blank">jQuery</a> plug-in for client side form validation. 
 			It supports fully customized error messages defined with template and CSS, many validation functions (<a href="#actions">actions</a>) like date, email, URL, IP address, validation of dynamic forms, customized validation functions and more. </p>
-		<p>Home page: <a href="http://code.google.com/p/bvalidator/">http://code.google.com/p/bvalidator/</a></p>
-		<h3>Contents of this document:</h3>
+		<p>Home page &amp; <strong>download</strong>: <a href="http://code.google.com/p/bvalidator/">http://code.google.com/p/bvalidator/</a></p>
+		<p><br />
+		</p>
+<h3>Contents of this document:</h3>
 		<ul>
 			<li><a href="#setup">Setup</a></li>
 			<li><a href="#options">Configuration options</a>
@@ -272,7 +302,7 @@ h3 {
 			</li>
 			<li><a href="#actions">Validator actions</a></li>
 			<li><a href="#api">API functions</a></li>
-			<li><a href="#examples">Examples</a>
+			<li><a href="#examples"><strong>Examples</strong></a>
 				<ol>
 					<li><a href="#allvalidators">All validators in action</a></li>
 					<li><a href="#inputerrmsgs">Input specific error message</a></li>
@@ -291,7 +321,7 @@ h3 {
 					<li><a href="#validationajaxaction">Server side validation with <span class="insource">ajax</span> action</a></li>
 				</ol>
 			</li>
-			<li><a href="#themes">Themes</a>
+			<li><a href="#themes"><strong>Themes</strong></a>
 				<ol>
 					<li><a href="#themegray2">Gray 2</a></li>
 					<li><a href="#themebootstrap">Bootstrap</a></li>
@@ -324,12 +354,13 @@ h3 {
 	
 	<h1>Setup<a name="setup" id="setup"></a></h1>
 	<div class="content">
-		<p>For a basic setup you will need to include into your web page which contains form you want to validate <span class="insource">jquery.bvalidator.js</span> file <strong>or</strong> (recommended) compressed file  with <a href="http://developer.yahoo.com/yui/compressor/">YUI compressor</a> <span class="insource">jquery.bvalidator-yc.js</span> and, of course, jQuery:</p>
+		<p>Download bValidator from <a href="http://code.google.com/p/bvalidator/downloads/list" target="_blank">here</a>.</p>
+		<p>For a basic setup you will need to include into your web page which contains a form you want to validate <span class="insource">jquery.bvalidator.js</span> (or <span class="insource">jquery.bvalidator-yc.js</span>) file and jQuery:</p>
 		<blockquote>
 			<p><strong>include javascript:</strong></p>
 			<pre class="showsource">
-&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-1.7.2.min.js&quot;&gt;&lt;/script&gt;<br />&lt;script type=&quot;text/javascript&quot; src=&quot;jquery.bvalidator.js&quot;&gt;&lt;/script&gt;</pre>
-			<p><strong>or</strong> instead of <span class="insource">jquery.bvalidator.js</span> include <span class="insource">jquery.bvalidator-yc.js</span> which is the same file but compressed and much smaller in size:</p>
+&lt;script type=&quot;text/javascript&quot; src=&quot;jquery-X.X.X.min.js&quot;&gt;&lt;/script&gt;<br />&lt;script type=&quot;text/javascript&quot; src=&quot;jquery.bvalidator.js&quot;&gt;&lt;/script&gt;</pre>
+			<p><strong>or</strong> instead of <span class="insource">jquery.bvalidator.js</span> include <span class="insource">jquery.bvalidator-yc.js</span> which is the same file but compressed and  smaller in size:</p>
 			<pre class="showsource">&lt;script type=&quot;text/javascript&quot; src=&quot;jquery.bvalidator-yc.js&quot;&gt;&lt;/script&gt;</pre>
 		</blockquote>
 		<p>You will also need to include CSS file with styles for  message tooltips:</p>
@@ -465,7 +496,7 @@ h3 {
 			<tr>
 				<td nowrap="nowrap" class="fp">forceValidAttr</td>
 				<td class="insource">data-bvalidator-forcevalid</td>
-				<td><a name="forceValidAttr" id="validateActionsAttr6"></a>Input field attribute which tells validator to act like the field is valid regardless of actions set by <span class="insource">data-bvalidator</span> attribute. Value should be set to  '<span class="insource">true</span>' to disable validation. Validation is also disabled for hidden or disabled fields, but sometimes you don't want to make field hidden or disabled and still need to disable (or re-enable) validation on the field. You can also disable validation by removing <span class="insource">data-bvalidator</span> attribute.</td>
+				<td><a name="forceValidAttr" id="validateActionsAttr6"></a>Input field attribute which tells validator to act like the field is valid regardless of actions set by <span class="insource">data-bvalidator</span> attribute. Value should be set to  '<span class="insource">true</span>' to disable validation. Validation is also disabled for hidden or disabled fields, but sometimes you don't want to make field hidden or disabled and still need to disable (or re-enable) validation on the field.  I you set this attribute on the form element (or container element) on wich validator is binded then validation is skipped on submit. You can also disable validation by removing <span class="insource">data-bvalidator</span> attribute.</td>
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">modifyActionsAttr</td>
@@ -710,7 +741,7 @@ h3 {
 	$('#myform').bValidator();
 
 &lt;/script&gt;</pre></blockquote>
-	You can see all default English error messages in <span class="insource">jquery.bvalidator.js</span> file (search for first occurrence of '<span class="insource">errorMessages</span>' inside the file). If you  made translation please post it to <a href="http://groups.google.com/group/bvalidator">bValidator discussion group</a>. I will also put it on <a href="http://code.google.com/p/bvalidator/downloads/list">download page</a>.</div>
+	You can see all default English error messages in <span class="insource">jquery.bvalidator.js</span> file (search for the first occurrence of '<span class="insource">errorMessages</span>' inside the file). If you  made translation please post it to the <a href="http://groups.google.com/group/bvalidator">bValidator discussion group</a>. I will also put it on the <a href="http://code.google.com/p/bvalidator/downloads/list">download page</a>.</div>
 	
 	
 <!-- section -->
@@ -730,7 +761,7 @@ h3 {
 		</blockquote>
 		<p>&nbsp;</p>
 <h3>Validation	actions<a name="validationactions" id="actions2"></a></h3>
-		<p>Here  are listed built-in validator actions but it is very simple to add custom validation functions (see <a href="#customaction">example</a> and <a href="#getActions">getActions</a> API function).</p>
+		<p>Here  are listed built-in validator actions, but it is very simple to add custom validation functions (see <a href="#customaction">example</a> and <a href="#getActions">getActions</a> API function).</p>
 		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table1">
 			<tr>
 				<th nowrap="nowrap">Validator</th>
@@ -998,7 +1029,7 @@ h3 {
 				<td nowrap="nowrap" class="fp">removeMsg</td>
 				<td><ol>
 						<li>jQuery object 
-						containing input</li>
+						containing inputs</li>
 					</ol></td>
 				<td>Removes (hides) the  message</td>
 			</tr>
@@ -1006,7 +1037,7 @@ h3 {
 				<td nowrap="nowrap" class="fp">showMsg</td>
 				<td><ol>
 					<li>jQuery object 
-						containing input</li>
+						containing inputs</li>
 					<li>string message</li>
 				</ol></td>
 				<td>Displays message. This function doesn't have anything with validation, it just displays tooltip message on the element specified with the first argument. Message can be displayed for any element on a page. Element doesn't have to be part of the form  (or container element) for which bValidator is instanced.</td>
@@ -1027,7 +1058,11 @@ h3 {
 			</tr>
 			<tr>
 				<td nowrap="nowrap" class="fp">reset</td>
-				<td>&nbsp;</td>
+				<td><ol>
+					<li>jQuery object 
+						containing inputs<br />
+						(optional)					</li>
+				</ol></td>
 				<td>Resets the validator. Hides all error messages like the validator is only initialized. If you have a reset button on your form this    function is automatically bind to it. </td>
 			</tr>
 			<tr>
@@ -1085,14 +1120,14 @@ h3 {
 
 	
 	<h1>Examples<a name="examples" id="examples"></a></h1>
-	<div class="content">You can see source of each example by clicking on the 'Example source' button.</div>
+	<div class="content">You can see source of each example by clicking on the 'Show  source' button.</div>
 	
 	
 <!-- section -->
 	
 	
 	<h2>1 - All validators in action<a name="allvalidators" id="allvalidators"></a>
-<input type="button" value="Example source" onclick="showsource('ex1');"/></h2>
+<input type="button" data-for-example="ex1" value="Show source" class="show_source_btt"/></h2>
 	<div id="ex1s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 <div id="ex1sv">
@@ -1194,7 +1229,7 @@ h3 {
 	
 	
 	<h2>2 - Input specific error message<a name="inputerrmsgs" id="inputerrmsgs"></a>
-<input type="button" value="Example source" onclick="showsource('ex2');"/></h2>
+<input type="button" value="Show source" class="show_source_btt" data-for-example="ex2"/></h2>
 	<div id="ex2s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 <div id="ex2sv">
@@ -1223,7 +1258,7 @@ h3 {
 
 
 	<h2>3 - Custom validators<a name="customaction" id="customaction"></a> 
-		<input type="button" value="Example source" onclick="showsource('ex3');"/></h2>
+		<input type="button" data-for-example="ex3" value="Show source" class="show_source_btt"/></h2>
 	<div id="ex3s" class="showsource_ex" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex3sv">
@@ -1267,7 +1302,7 @@ h3 {
 	
 	
 	<h2>4 - Dynamic forms<a name="dynamicforms" id="dynamicforms"></a>
-<input type="button" value="Example source" onclick="showsource('ex4');"/></h2>
+<input type="button" data-for-example="ex4" value="Show source" class="show_source_btt"/></h2>
 	<div id="ex4s" class="showsource_ex" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex4sv">
@@ -1307,7 +1342,7 @@ h3 {
 	
 	
 	<h2>5 - Server side validation<a name="serversidevalidation" id="serversidevalidation"></a>
-<input type="button" value="Example source" onclick="showsource('ex5');"/></h2>
+<input type="button" data-for-example="ex5" value="Show source" class="show_source_btt"/></h2>
 	<div id="ex5s" class="showsource_ex" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex5sv">
@@ -1359,7 +1394,7 @@ h3 {
 	
 	
 	<h2>6 - Error message position and style<a name="positionstyle" id="positionstyle"></a>
-		<input type="button" value="Example source" onclick="showsource('ex6');"/></h2>
+		<input type="button" data-for-example="ex6" value="Show source" class="show_source_btt"/></h2>
 	<div id="ex6s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 <div id="ex6sv">
@@ -1406,7 +1441,7 @@ h3 {
 	
 	
 	<h2>7 - Instance on &lt;div&gt; element<a name="divvalidation" id="divvalidation"></a>
-		<input type="button" value="Example source" onclick="showsource('ex7');"/></h2>
+		<input type="button" value="Show source" class="show_source_btt" data-for-example="ex7"/></h2>
 	<div id="ex7s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 <div id="ex7sv">
@@ -1441,7 +1476,7 @@ h3 {
 	
 	
 	<h2>8 - Groups of checkboxes and radio buttons<a name="groups" id="groups"></a>
-		<input type="button" value="Example source" onclick="showsource('ex8');"/></h2>
+		<input type="button" value="Show source" class="show_source_btt" data-for-example="ex8"/></h2>
 	<div id="ex8s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 	<div id="ex8sv">
@@ -1499,7 +1534,7 @@ h3 {
 
 
 <h2>9 - For old browsers<a name="oldbrowser" id="oldbrowser"></a>
-	<input type="button" value="Example source" onclick="showsource('ex9');"/></h2>
+	<input type="button" value="Show source" class="show_source_btt" data-for-example="ex9"/></h2>
 	<div id="ex9s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 <div id="ex9sv">
@@ -1580,7 +1615,7 @@ h3 {
 
 
 <h2>10 - Put error messages into container<a name="allerrors" id="allerrors"></a> 
-	<input type="button" value="Example source" onclick="showsource('ex10');"/></h2>
+	<input type="button" value="Show source" class="show_source_btt" data-for-example="ex10"/></h2>
 	<div id="ex10s" class="showsource_ex" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex10sv">
@@ -1672,7 +1707,7 @@ h3 {
 
 
 <h2>11 - Depending inputs<a name="dependinginputs" id="dependinginputs"></a> 
-	<input type="button" value="Example source" onclick="showsource('ex11');"/></h2>
+	<input type="button" value="Show source" class="show_source_btt" data-for-example="ex11"/></h2>
 	<div id="ex11s" class="showsource_ex" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex11sv">
@@ -1724,7 +1759,7 @@ h3 {
 
 
 <h2>12 - More types of error messages<a name="moreinstances" id="moreinstances"></a> 
-	<input type="button" value="Example source" onclick="showsource('ex12');"/></h2>
+	<input type="button" value="Show source" class="show_source_btt" data-for-example="ex12"/></h2>
 	<div id="ex12s" class="showsource_ex" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex12sv">
@@ -1784,7 +1819,7 @@ h3 {
 
 
 <h2>13 - Just displaying messages<a name="justmessages" id="justmessages"></a> 
-	<input type="button" value="Example source" onclick="showsource('ex13');"/></h2>
+	<input type="button" value="Show source" class="show_source_btt" data-for-example="ex13"/></h2>
 	<div id="ex13s" class="showsource_ex" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex13sv" style="padding-top:40px">
@@ -1847,7 +1882,7 @@ h3 {
 
 
 <h2>14 - Using modifiers<a name="usingmodifiers" id="usingmodifiers"></a> 
-	<input type="button" value="Example source" onclick="showsource('ex14');"/></h2>
+	<input type="button" value="Show source" class="show_source_btt" data-for-example="ex14"/></h2>
 	<div id="ex14s" class="showsource_ex" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex14sv" style="padding-top:40px">
@@ -1911,7 +1946,7 @@ h3 {
 
 
 <h2>15 - Server side validation with  <span class="insource">ajax</span> action<a name="validationajaxaction" id="validationajaxaction"></a> 
-	<input type="button" value="Example source" onclick="showsource('ex15');"/></h2>
+	<input type="button" value="Show source" class="show_source_btt" data-for-example="ex15"/></h2>
 	<div id="ex15s" class="showsource_ex" style="display:none"> </div>
 	<div class="content"> 
 <div id="ex15sv" style="padding-top:40px">
@@ -1948,6 +1983,7 @@ h3 {
 
 <h1>Themes<a name="themes" id="themes"></a></h1>
 <div class="content">In the examples below you can see how to make your own theme for bValidator by changing CSS and some configuration options. See also <a href="#oldbrowser">example 9</a> and <a href="#positionstyle">example 6</a>.<br />
+	CSS files for all themes listed here are also included in the <a href="http://code.google.com/p/bvalidator/downloads/list">download archive</a>.<br />
 	If you  make a nice theme
 please send  it to <span id="myEmail">me</span> and I will include it into this section.</div>
 
@@ -1956,7 +1992,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 
 
 	<h2>Gray 2<a name="themegray2" id="themegray2"></a>
-	<input type="button" value="Example source" onclick="showsource('theme3');"/></h2>
+	<input type="button" value="Show source" class="show_source_btt" data-for-example="theme3"/></h2>
 	<div id="theme3s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 <div id="theme3sv">
@@ -1986,7 +2022,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 		</p>
 	<p>
 		Select:
-		<input name="ch2zv43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select checkbox"/>
+		<input name="ch2zv43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select the checkbox"/>
 		<br />
 	</p>
 	<p>
@@ -2003,18 +2039,18 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 <!-- section -->
 
 
-	<h2>Bootstrap<a name="themebootstrap" id="themebootstrap"></a>
-		<input type="button" value="Example source" onclick="showsource('theme5');"/></h2>
+	<h2>Bootstrap (right-center)<a name="themebootstrap" id="themebootstrap"></a>
+		<input type="button" value="Show source" class="show_source_btt" data-for-example="theme5"/></h2>
 	<div id="theme5s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 <div id="theme5sv">
 <script type="text/javascript">			
 	
 	var optionsBootstrap = {
-		classNamePrefix:   'bvalidator_bootstrap_',
+		classNamePrefix:   'bvalidator_bootstraprc_',
 		position:          {x:'right', y:'center'},
 		offset:	           {x:15, y:0},
-		template:          '<div class="{errMsgClass}"><div class="bvalidator_bootstrap_arrow"></div><div class="bvalidator_bootstrap_cont1">{message}</div></div>',	
+		template:          '<div class="{errMsgClass}"><div class="bvalidator_bootstraprc_arrow"></div><div class="bvalidator_bootstraprc_cont1">{message}</div></div>',	
 		templateCloseIcon:   '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="{closeIconClass}">&#215;</div></div></div>'
 	};
 	
@@ -2035,7 +2071,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 		</p>
 	<p>
 		Select:
-		<input name="ch2zrr43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select checkbox"/>
+		<input name="ch2zrr43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select the checkbox"/>
 		<br />
 	</p>
 	<p>
@@ -2045,16 +2081,117 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 </form>
 </div>
 	<p>
-		This theme is inspired from <a href="http://twitter.github.com/bootstrap/">Bootstrap</a> project. Download CSS file for this theme <a href="../themes/bvalidator.theme.bootstrap.css">here</a>.</p>
+		This theme is inspired from <a href="http://getbootstrap.com">Bootstrap</a> project. Download CSS file for this theme <a href="../themes/bvalidator.theme.bootstrap.rc.css">here</a>.</p>
 
 	</div>
+	
+
+<!-- section -->
+
+
+	<h2>Bootstrap (right-top)<a name="themebootstrap2" id="themebootstrap2"></a>
+		<input type="button" value="Show source" class="show_source_btt" data-for-example="theme6"/></h2>
+	<div id="theme6s" class="showsource_ex" style="display:none"> </div>
+	<div class="content">
+<div id="theme6sv">
+<script type="text/javascript">			
+	
+	var optionsBootstrap2 = {
+		classNamePrefix:   'bvalidator_bootstraprt_',
+		offset:	           {x:-27, y:-6},
+		template:          '<div class="{errMsgClass}"><div class="bvalidator_bootstraprt_arrow"></div><div class="bvalidator_bootstraprt_cont1">{message}</div></div>',	
+		templateCloseIcon:   '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="{closeIconClass}">&#215;</div></div></div>'
+	};
+	
+	$(document).ready(function () {
+		$('#formtheme6').bValidator(optionsBootstrap2);
+	});
+	
+	
+</script>
+<form id="formtheme6" method="post">
+	<p>&nbsp;</p>
+	<p>Only digits:
+		<input type="text" data-bvalidator="required,digit"/>
+		<br />
+		</p>
+	<p>Enter 10 or more alphabetic characters:
+	<input type="text" data-bvalidator="required,alpha,minlength[10]"/>
+		</p>
+	<p>
+		Select:
+		<input name="ch2zrr43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select the checkbox"/>
+		<br />
+	</p>
+	<p>
+		<input type="submit" value="Submit" />
+		<input type="reset" value="Reset" />
+	</p>
+</form>
+</div>
+	<p>
+		This theme is inspired from <a href="http://getbootstrap.com">Bootstrap</a> project. Download CSS file for this theme <a href="../themes/bvalidator.theme.bootstrap.rt.css">here</a>.</p>
+
+	</div>
+
+
+<!-- section -->
+
+
+	<h2>Gray 3<a name="themegray3" id="themegray3"></a>
+		<input type="button" value="Show source" class="show_source_btt" data-for-example="theme7"/></h2>
+	<div id="theme7s" class="showsource_ex" style="display:none"> </div>
+	<div class="content">
+<div id="theme7sv">
+<script type="text/javascript">			
+	
+	var optionsGray3 = {
+		classNamePrefix:   'bvalidator_gray3_',
+		offset:	           {x:-27, y:-6},
+		template:          '<div class="{errMsgClass}"><div class="bvalidator_gray3_arrow"></div><div class="bvalidator_gray3_cont1">{message}</div></div>',	
+		templateCloseIcon:   '<div style="display:table"><div style="display:table-cell">{message}</div><div style="display:table-cell"><div class="{closeIconClass}">&#215;</div></div></div>'
+	};
+	
+	$(document).ready(function () {
+		$('#formtheme7').bValidator(optionsGray3);
+	});
+	
+	
+</script>
+<form id="formtheme7" method="post">
+	<p>&nbsp;</p>
+	<p>Only digits:
+		<input type="text" data-bvalidator="required,digit"/>
+		<br />
+		</p>
+	<p>Enter 10 or more alphabetic characters:
+	<input type="text" data-bvalidator="required,alpha,minlength[10]"/>
+		</p>
+	<p>
+		Select:
+		<input name="ch2zrr43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select the checkbox"/>
+		<br />
+	</p>
+	<p>
+		<input type="submit" value="Submit" />
+		<input type="reset" value="Reset" />
+	</p>
+</form>
+</div>
+	<p>
+		Download CSS file for this theme <a href="../themes/bvalidator.theme.gray3.css">here</a>.</p>
+
+	</div>
+	
+
+
 	
 	
 <!-- section -->
 
 
 	<h2>Post-it<a name="themepostit" id="themepostit"></a>
-	<input type="button" value="Example source" onclick="showsource('theme4');"/></h2>
+	<input type="button" value="Show source" class="show_source_btt" data-for-example="theme4"/></h2>
 	<div id="theme4s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 <div id="theme4sv">
@@ -2083,7 +2220,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 		</p>
 	<p>
 		Select:
-		<input name="ch2zrr43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select checkbox"/>
+		<input name="ch2zrr43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select the checkbox"/>
 		<br />
 	</p>
 	<p>
@@ -2101,7 +2238,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 <!-- section -->
 
 	<h2>Orange<a name="themeorange" id="themeorange"></a>
-	<input type="button" value="Example source" onclick="showsource('theme1');"/></h2>
+	<input type="button" class="show_source_btt" value="Show source" data-for-example="theme1"/></h2>
 	<div id="theme1s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 <div id="theme1sv">
@@ -2128,7 +2265,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 		</p>
 	<p>
 		Select:
-		<input name="ch23123" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select checkbox"/>
+		<input name="ch23123" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select the checkbox"/>
 		<br />
 	</p>
 	<p>
@@ -2148,7 +2285,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 
 
 	<h2>Red<a name="themered" id="themered"></a>
-	<input type="button" value="Example source" onclick="showsource('theme2');"/></h2>
+	<input type="button" value="Show source" class="show_source_btt" data-for-example="theme2"/></h2>
 	<div id="theme2s" class="showsource_ex" style="display:none"> </div>
 	<div class="content">
 <div id="theme2sv">
@@ -2175,7 +2312,7 @@ please send  it to <span id="myEmail">me</span> and I will include it into this 
 		</p>
 	<p>
 		Select:
-		<input name="ch234f43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select checkbox"/>
+		<input name="ch234f43" type="checkbox" value="1" data-bvalidator="required" data-bvalidator-msg="Please select the checkbox"/>
 		<br />
 	</p>
 	<p>
