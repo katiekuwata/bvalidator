@@ -1,9 +1,9 @@
 /* invalid input */
-.bvalidator_bootstrap_invalid {
+.bvalidator_bootstraprc_invalid {
 	background-color: #fcf8e3 !important;
 }
 /* error message */
-.bvalidator_bootstrap_errmsg {
+.bvalidator_bootstraprc_errmsg {
 	font-size: 14px;
 	display: none;
 	white-space: nowrap;
@@ -27,7 +27,7 @@
 	z-index:1010;
 }
 /* close icon */
-.bvalidator_bootstrap_errmsg .bvalidator_bootstrap_close_icon {
+.bvalidator_bootstraprc_errmsg .bvalidator_bootstraprc_close_icon {
 	margin-left: 5px;
 	margin-top: -2px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -38,7 +38,7 @@
 	opacity: 0.2;
 	filter: alpha(opacity=20);
 }
-.bvalidator_bootstrap_errmsg .bvalidator_bootstrap_close_icon:hover {
+.bvalidator_bootstraprc_errmsg .bvalidator_bootstraprc_close_icon:hover {
 	color: #000000;
 	text-decoration: none;
 	cursor: pointer;
@@ -46,27 +46,29 @@
 	filter: alpha(opacity=40);
 }
 /* arrow */
-.bvalidator_bootstrap_errmsg .bvalidator_bootstrap_arrow {
-	display: inline-block;
+.bvalidator_bootstraprc_errmsg .bvalidator_bootstraprc_arrow {
+	display: block;
 	height: 0;
 	width: 0;
-	position: relative;
-	left: -14px;
+	position: absolute;
+	left: -10px;
 	vertical-align: middle;
 	border-color: transparent;
 	border-right-color: #ffffff;
 	border-width: 10px 10px 10px 0;
 	border-style: solid;
+	top:50%;
+	margin-top:-10px;
 }
-.bvalidator_bootstrap_errmsg .bvalidator_bootstrap_arrow:after {
-	position: relative;
+.bvalidator_bootstraprc_errmsg .bvalidator_bootstraprc_arrow:after {
+	position: absolute;
 	vertical-align: middle;
 	top: -11px;
 	left: -1px;
 	border-width: 11px 11px 11px 0;
 	content: "";
 	z-index: -1;
-	display: inline-block;
+	display: block;
 	width: 0;
 	height: 0;
 	border-color: transparent;
@@ -75,7 +77,8 @@
 	z-index:-1;
 }
 /* message container  */
-.bvalidator_bootstrap_errmsg .bvalidator_bootstrap_cont1 {
+.bvalidator_bootstraprc_errmsg .bvalidator_bootstraprc_cont1 {
 	display: inline-block;
-	vertical-align: middle
+	vertical-align: middle;
+	margin: 5px;
 }
