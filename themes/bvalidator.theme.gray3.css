@@ -8,19 +8,14 @@
 	display: none;
 	white-space: nowrap;
 	padding-top: 2px;
-	padding-right: 10px;
 	padding-bottom: 2px;
 	padding-left: 5px;
 	font-family: Arial, Helvetica, sans-serif;
-	border: 1px solid #ccc;
-	border: 1px solid rgba(0, 0, 0, 0.3);
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;
-	border-radius: 6px;
+	border: 1px solid #666666;
 	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
-	z-index:1010;
+	z-index: 1010;
 	background: #c6c6c6; /* Old browsers */
 	background: -moz-linear-gradient(top,  #c6c6c6 0%, #3f3f3f 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c6c6c6), color-stop(100%,#3f3f3f)); /* Chrome,Safari4+ */
