@@ -4,4 +4,4 @@ http://bvalidator.googlecode.com/svn/trunk/
 
 or GIT:
 
-https://github.com/bmauser/bValidator
+https://github.com/bmauser/bValidator.git
