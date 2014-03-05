@@ -1,0 +1,7 @@
+Checkout from SVN:
+
+http://bvalidator.googlecode.com/svn/trunk/
+
+or GIT:
+
+https://github.com/bmauser/bValidator
