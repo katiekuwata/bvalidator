@@ -136,7 +136,7 @@
 			ajaxOptions.url = ajaxUrl;
 			
 			if(options.ajaxParams)
-				$.extend(true, ajaxOptions.data, typeof options.ajaxParams == 'function' ? options.ajaxParams.call(element) : options.ajaxParams);
+				$.extend(true, ajaxOptions.data, typeof options.ajaxParams == 'function' ? options.ajaxParams.call(element[0]) : options.ajaxParams);
 			
 			if(sync){
 				var ret = false;
