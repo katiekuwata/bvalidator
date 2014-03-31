@@ -1,4 +1,5 @@
 Download from here:
 http://bojanmauser.from.hr/bvalidator/download/
 
-older versions:
+Older versions:
+http://code.google.com/p/bvalidator/downloads/list
